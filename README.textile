@@ -1,0 +1,11 @@
+"Duel Shooting Online":http://duelshooting-online.herokuapp.com/
+
+|*Action|*Type Key|
+|Move Right|Cursor Right|
+|Move Left|Cursor Left|
+|Wait|Cursor Down|
+|Attack1|Cursor Up|
+|Attack2|F|
+|Attack3|M|
+
+Coming soon.
