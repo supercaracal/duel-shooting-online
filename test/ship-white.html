@@ -26,9 +26,9 @@
 <script type="text/javascript" src="/js/sprite/funnel-slider.js"></script>
 <script type="text/javascript" src="/js/sprite/i-field.js"></script>
 
+<script type="text/javascript" src="/js/sprite/ship.js"></script>
 <script type="text/javascript" src="/js/sprite/ship-white.js"></script>
 <script type="text/javascript" src="/js/sprite/ship-red.js"></script>
-
 
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
@@ -40,8 +40,16 @@ Event.observe(window, 'load', function () {
     var bg = new Background();
 
     sound = new SoundCreater();
-    ship.setSoundLose(sound.createAudio('/se/hit.mp3'));
-    ship.setSoundLose(sound.createAudio('/se/lose.mp3'));
+    var hitSE = sound.createAudio('/se/hit.mp3');
+    var loseSE = sound.createAudio('/se/lose.mp3');
+    var newtypeSE = sound.createAudio('/se/newtype.mp3');
+
+    ship.setSoundHit(hitSE);
+    ship.setSoundLose(loseSE);
+
+    enemy.setSoundHit(hitSE);
+    enemy.setSoundLose(loseSE);
+    enemy.setSoundNewtype(newtypeSE);
 
     var auto = new AutomaticControls(ship, enemy, isEnemy);
     auto.setSoundAttack(sound.createAudio('/se/attack.mp3'));
@@ -54,7 +62,7 @@ Event.observe(window, 'load', function () {
     var game = new Game(function() {
         command.execute(action.getCommand());
         auto.move();
-        ship.getIField().move();
+        enemy.getIField().move();
     });
     
     bg.renderElement();

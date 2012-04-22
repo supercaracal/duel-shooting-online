@@ -28,6 +28,7 @@
 <script type="text/javascript" src="/js/sprite/funnel-defence-right.js"></script>
 <script type="text/javascript" src="/js/sprite/i-field.js"></script>
 
+<script type="text/javascript" src="/js/sprite/ship.js"></script>
 <script type="text/javascript" src="/js/sprite/ship-white.js"></script>
 <script type="text/javascript" src="/js/sprite/ship-red.js"></script>
 
@@ -42,9 +43,16 @@ Event.observe(window, 'load', function () {
     var bg = new Background();
 
     sound = new SoundCreater();
-    ship.setSoundHit(sound.createAudio('/se/hit.mp3'));
-    ship.setSoundLose(sound.createAudio('/se/lose.mp3'));
-    ship.setSoundNewtype(sound.createAudio('/se/newtype.mp3'));
+    var hitSE = sound.createAudio('/se/hit.mp3');
+    var loseSE = sound.createAudio('/se/lose.mp3');
+    var newtypeSE = sound.createAudio('/se/newtype.mp3');
+
+    ship.setSoundHit(hitSE);
+    ship.setSoundLose(loseSE);
+    ship.setSoundNewtype(newtypeSE);
+
+    enemy.setSoundHit(hitSE);
+    enemy.setSoundLose(loseSE);
 
     var auto = new AutomaticControls(ship, enemy, isEnemy);
     auto.setSoundAttack(sound.createAudio('/se/attack.mp3'));
