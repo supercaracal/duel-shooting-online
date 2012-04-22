@@ -18,7 +18,6 @@ var AutomaticControls = Class.create({
     iFieldWaitCount: null,
     megaCannonWaitCount: null,
     megaCannonHeightCount: null,
-
     isEnemyMegaCannon: null,
 
     soundFunnelGo: null,
@@ -98,14 +97,18 @@ var AutomaticControls = Class.create({
     },
 
     addBulletLinear: function(isEnemy) {
-        var elm = new BulletLinear(this.ship, this.enemy, isEnemy);
+        var elm = isEnemy ? 
+            new BulletLinear(this.enemy, this.ship) : 
+            new BulletLinear(this.ship, this.enemy);
         this.elms.push(elm);
         elm.renderElement();
         this.playSoundAttack();
     },
 
     addBulletLinearFromFunnel: function(left, isEnemy) {
-        var elm = new BulletLinear(this.ship, this.enemy, isEnemy);
+        var elm = isEnemy ?
+            new BulletLinear(this.enemy, this.ship) :
+            new BulletLinear(this.ship, this.enemy);
         elm.setPos({top: (isEnemy ? 60 : elm.clientHeight - 120), left: left});
         this.elms.push(elm);
         elm.renderElement();
@@ -116,29 +119,53 @@ var AutomaticControls = Class.create({
         if (this.FUNNEL_SLIDER_MAX <= this.funnelSliderCount) {
             return;
         }
-        var elm = new FunnelSlider(this.ship, isEnemy, this.enemy);
+        var elm = isEnemy ?
+            new FunnelSlider(this.enemy, this.ship) :
+            new FunnelSlider(this.ship, this.enemy);
         this.elms.push(elm);
         ++this.funnelSliderCount;
         elm.renderElement();
         this.playSoundFunnelGo();
     },
 
+    addIField: function(isEnemy) {
+        var iField = new IField(isEnemy ? this.enemy : this.ship);
+        this.elms.push(iField);
+        iField.renderElement();
+    },
+
     fireMegaCannon: function(isEnemy) {
         if (0 < this.megaCannonWaitCount) {
             return;
         }
+        this.isEnemyMegaCannon = isEnemy;
         this.megaCannonWaitCount = this.MEGA_CANNON_WAIT;
         this.megaCannonHeightCount = this.MEGA_CANNON_HEIGHT;
         this.playSoundMegaCannon();
     },
 
     addBulletFromMegaCannon: function(isEnemy) {
-        var elmL = new BulletLinear(this.ship, this.enemy, isEnemy);
-        var elmM = new BulletLinear(this.ship, this.enemy, isEnemy);
-        var elmR = new BulletLinear(this.ship, this.enemy, isEnemy);
-        elmL.setPos({top: this.ship.clientHeight - 90, left: (isEnemy ? this.enemy.getLeft() : this.ship.getLeft())});
-        elmM.setPos({top: this.ship.clientHeight - 90, left: (isEnemy ? this.enemy.getLeft() : this.ship.getLeft()) + 30});
-        elmR.setPos({top: this.ship.clientHeight - 90, left: (isEnemy ? this.enemy.getLeft() : this.ship.getLeft()) + 60});
+        var elmL = isEnemy ?
+            new BulletLinear(this.enemy, this.ship) :
+            new BulletLinear(this.ship, this.enemy);
+        var elmM = isEnemy ?
+            new BulletLinear(this.enemy, this.ship) :
+            new BulletLinear(this.ship, this.enemy);
+        var elmR = isEnemy ?
+            new BulletLinear(this.enemy, this.ship) :
+            new BulletLinear(this.ship, this.enemy);
+        elmL.setPos({
+            top: (isEnemy ? 60 : this.ship.clientHeight - 90),
+            left: (isEnemy ? this.enemy.getLeft() : this.ship.getLeft())
+        });
+        elmM.setPos({
+            top: (isEnemy ? 60 : this.ship.clientHeight - 90),
+            left: (isEnemy ? this.enemy.getLeft() : this.ship.getLeft()) + 30
+        });
+        elmR.setPos({
+            top: (isEnemy ? 60 : this.ship.clientHeight - 90),
+            left: (isEnemy ? this.enemy.getLeft() : this.ship.getLeft()) + 60
+        });
         this.elms.push(elmL);
         this.elms.push(elmM);
         this.elms.push(elmR);

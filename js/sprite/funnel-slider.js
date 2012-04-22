@@ -5,12 +5,12 @@ var FunnelSlider = Class.create(Funnel, {
     isFunnelSliderAttack: null,
     isFunnelSlider: null,
 
-    initialize: function($super, carrier, isEnemy, target) {
+    initialize: function($super, carrier, target) {
         this.isComeback = false;
         this.isFunnelSliderAttack = false;
         this.isFunnelSlider = true;
         this.target = target;
-        $super(carrier, isEnemy);
+        $super(carrier);
     },
 
     getInitTop: function() {

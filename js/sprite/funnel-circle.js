@@ -5,12 +5,12 @@ var FunnelCircle = Class.create(Funnel, {
     speed: null,
     isClockwise: null,
 
-    initialize: function($super, carrier, isEnemy) {
+    initialize: function($super, carrier) {
         this.r = 70;
         this.theta = 0;
         this.speed = 3;
         this.isCloclwise = true;
-        $super(carrier, isEnemy);
+        $super(carrier);
     },
 
     getInitTop: function() {

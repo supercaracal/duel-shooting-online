@@ -35,40 +35,38 @@
 <script type="text/javascript">
 Event.observe(window, 'load', function () {
 
-    var isEnemy = false;
-    var ship = new ShipWhite(isEnemy);
-    var enemy = new ShipRed(!isEnemy);
+    var white = new ShipWhite(false);
+    var red = new ShipRed(true);
     var bg = new Background();
 
-    sound = new SoundCreater();
+    var sound = new SoundCreater();
     var hitSE = sound.createAudio('/se/hit.mp3');
     var loseSE = sound.createAudio('/se/lose.mp3');
     var newtypeSE = sound.createAudio('/se/newtype.mp3');
 
-    ship.setSoundHit(hitSE);
-    ship.setSoundLose(loseSE);
+    white.setSoundHit(hitSE);
+    white.setSoundLose(loseSE);
 
-    enemy.setSoundHit(hitSE);
-    enemy.setSoundLose(loseSE);
-    enemy.setSoundNewtype(newtypeSE);
+    red.setSoundHit(hitSE);
+    red.setSoundLose(loseSE);
+    red.setSoundNewtype(newtypeSE);
 
-    var auto = new AutomaticControls(ship, enemy, isEnemy);
+    var auto = new AutomaticControls(white, red);
     auto.setSoundAttack(sound.createAudio('/se/attack.mp3'));
     auto.setSoundMegaCannon(sound.createAudio('/se/mega.mp3'));
     auto.setSoundFunnelGo(sound.createAudio('/se/funnel1.mp3'));
     auto.setSoundFunnelAttack(sound.createAudio('/se/funnel2.mp3'));
 
     var action = new ActionShipWhite();
-    var command = new CommandShipWhite(ship, auto);
+    var command = new CommandShipWhite(white, auto);
     var game = new Game(function() {
         command.execute(action.getCommand());
         auto.move();
-        enemy.getIField().move();
     });
     
     bg.renderElement();
-    ship.renderElement();
-    enemy.renderElement();
+    white.renderElement();
+    red.renderElement();
 
     game.start();
 

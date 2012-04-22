@@ -4,10 +4,10 @@ var Command = Class.create({
     audo: null,
     isEnemy: null,
 
-    initialize: function(ship, auto, isEnemy) {
+    initialize: function(ship, auto) {
         this.ship = ship;
         this.auto = auto;
-        this.isEnemy = isEnemy;
+        this.isEnemy = ship.isEnemy;
     },
 
     execute: function(command) {

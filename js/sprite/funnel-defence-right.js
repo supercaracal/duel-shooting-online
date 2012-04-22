@@ -2,9 +2,9 @@ var FunnelDefenceRight = Class.create(Funnel, {
 
     iField: null,
 
-    initialize: function($super, carrier, isEnemy, iField) {
+    initialize: function($super, carrier, iField) {
         this.iField = iField;
-        $super(carrier, isEnemy);
+        $super(carrier);
     },
 
     getInitTop: function() {

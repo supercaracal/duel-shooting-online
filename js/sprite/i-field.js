@@ -4,11 +4,12 @@ var IField = Class.create(Sprite, {
     carrier: null,
     isEnemy: null,
 
-    initialize: function($super, carrier, isEnemy) {
+    initialize: function($super, carrier) {
         this.isActive = false;
         this.carrier = carrier;
-        this.isEnemy = isEnemy;
+        this.isEnemy = carrier.isEnemy;
         $super();
+        this.carrier.setIField(this);
     },
 
     createElement: function() {

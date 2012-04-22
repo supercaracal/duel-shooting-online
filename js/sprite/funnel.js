@@ -4,9 +4,9 @@ var Funnel = Class.create(Sprite, {
     isEnemy: null,
     isDelete: null,
 
-    initialize: function($super, carrier, isEnemy) {
+    initialize: function($super, carrier) {
         this.carrier = carrier;
-        this.isEnemy = isEnemy;
+        this.isEnemy = carrier.isEnemy;
         this.isDelete = false;
         $super();
     },

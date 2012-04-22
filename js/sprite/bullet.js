@@ -5,10 +5,10 @@ var Bullet = Class.create(Sprite, {
     isFall: null,
     isDelete: null,
 
-    initialize: function($super, ship, enemy, isFall) {
+    initialize: function($super, ship, enemy) {
         this.ship = ship;
         this.enemy = enemy;
-        this.isFall = isFall;
+        this.isFall = ship.isEnemy;
         this.isDelete = false;
         $super();
     },
