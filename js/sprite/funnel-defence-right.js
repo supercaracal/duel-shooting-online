@@ -9,7 +9,7 @@ var FunnelDefenceRight = Class.create(Funnel, {
     },
 
     getInitTop: function() {
-        return this.carrier.getTop() + (this.isEnemy ? 70 : -30);
+        return this.carrier.getTop() + (this.isEnemy ? 60 : -30);
     },
 
     getInitLeft: function() {
