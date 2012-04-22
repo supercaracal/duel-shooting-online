@@ -52,6 +52,8 @@ Event.observe(window, 'load', function () {
     red.setSoundNewtype(newtypeSE);
 
     var auto = new AutomaticControls(white, red);
+    auto.addIField(false);
+    auto.addFunnelDefences(false);
     auto.setSoundAttack(sound.createAudio('/se/attack.mp3'));
     auto.setSoundMegaCannon(sound.createAudio('/se/mega.mp3'));
     auto.setSoundFunnelGo(sound.createAudio('/se/funnel1.mp3'));

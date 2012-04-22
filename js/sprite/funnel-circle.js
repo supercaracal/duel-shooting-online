@@ -4,13 +4,15 @@ var FunnelCircle = Class.create(Funnel, {
     theta: null,
     speed: null,
     isClockwise: null,
+    isFunnelCircle: null,
 
     initialize: function($super, carrier) {
-        this.r = 70;
-        this.theta = 0;
-        this.speed = 3;
-        this.isCloclwise = true;
         $super(carrier);
+        this.r = 70;
+        this.theta = this.isEnemy ? 0 : 180;
+        this.speed = 3;
+        this.isCloclwise = this.isEnemy;
+        this.isFunnelCircle = true;
     },
 
     getInitTop: function() {
@@ -26,8 +28,8 @@ var FunnelCircle = Class.create(Funnel, {
     },
 
     move: function() {
-        var y = this.initTop + Math.sin(Math.PI / 180 * this.theta) * this.r;
-        var x = this.initLeft + this.r - Math.cos(Math.PI / 180 * this.theta) * this.r;
+        var y = this.initLeft + Math.sin(Math.PI / 180 * this.theta) * this.r;
+        var x = this.initTop + (this.isEnemy ? 0 : -140) + this.r - Math.cos(Math.PI / 180 * this.theta) * this.r;
         this.setPos({top: x, left: y});
         this.theta += this.isClockwise ? this.speed : -this.speed;
         if (this.theta < 0 || 360 < this.theta ) {

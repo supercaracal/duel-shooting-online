@@ -28,7 +28,7 @@ var IField = Class.create(Sprite, {
     },
 
     getInitTop: function() {
-        return this.carrier.getTop() + (this.isEnemy ? 65 : -30); 
+        return this.carrier.getTop() + (this.isEnemy ? 65 : -25); 
     },
 
     getInitLeft: function() {

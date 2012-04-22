@@ -21,6 +21,7 @@
 <script type="text/javascript" src="/js/sprite/base/sprite.js"></script>
 <script type="text/javascript" src="/js/sprite/background.js"></script>
 <script type="text/javascript" src="/js/sprite/bullet.js"></script>
+<script type="text/javascript" src="/js/sprite/bullet-linear.js"></script>
 <script type="text/javascript" src="/js/sprite/bullet-homing.js"></script>
 <script type="text/javascript" src="/js/sprite/funnel.js"></script>
 <script type="text/javascript" src="/js/sprite/funnel-circle.js"></script>
@@ -54,6 +55,8 @@ Event.observe(window, 'load', function () {
     white.setSoundLose(loseSE);
 
     var auto = new AutomaticControls(red, white);
+    auto.addIField(false);
+    auto.addFunnelDefences(false);
     auto.setSoundAttack(sound.createAudio('/se/attack.mp3'));
     auto.setSoundMegaCannon(sound.createAudio('/se/mega.mp3'));
     auto.setSoundFunnelGo(sound.createAudio('/se/funnel1.mp3'));

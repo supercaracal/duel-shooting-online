@@ -6,23 +6,23 @@ var BulletHoming = Class.create(Bullet, {
 
     move: function() {
         var enemyLeft = this.enemy.getLeft();
-        var top = this.elm.getTop();
-        var left = this.elm.getLeft();
-        var range = this.isEnemy ? 10 : -10;
+        var top = this.getTop();
+        var left = this.getLeft();
+        var range = this.isFall ? 5 : -5;
 
-        if ((enemyLeft - 25 < left) && (left <= enemyLeft + 5) && ((top + range) > (this.clientHeight - 30))) {
+        if ((enemyLeft - 25 < left) && (left <= enemyLeft + 5) && (this.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
             this.isDelete = true;
             this.elm.remove();
             this.enemy.hit();
             return;
         }
-        if ((enemyLeft + 5 < left) && (left < enemyLeft + 60) && ((top + range) > (this.clientHeight - 60))) {
+        if ((enemyLeft + 5 < left) && (left < enemyLeft + 60) && (this.isFall ? top + range > this.clientHeight - 90 : top + range <60)) {
             this.isDelete = true;
             this.elm.remove();
             this.enemy.hit();
             return;
         }
-        if ((enemyLeft + 60 <= left) && (left < enemyLeft + 90) && ((top + range) > (this.clientHeight - 30))) {
+        if ((enemyLeft + 60 <= left) && (left < enemyLeft + 90) && (this.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
             this.isDelete = true;
             this.elm.remove();
             this.enemy.hit();
@@ -33,7 +33,8 @@ var BulletHoming = Class.create(Bullet, {
             this.elm.remove();
             return;
         }
-        if ((this.clientHeight / 2) < top) {
+        if (this.isFall ? (this.clientHeight / 2) < top : (this.clientHeight / 2) > top) {
+            range = range * 3;
             distance = 0;
         } else if (left < enemyLeft) {
             distance = 10;
@@ -42,6 +43,6 @@ var BulletHoming = Class.create(Bullet, {
         } else {
             distance = 0;
         }
-        this.elm.setPos({top: top + range, left: left + distance});
+        this.setPos({top: top + range, left: left + distance});
     }
 });

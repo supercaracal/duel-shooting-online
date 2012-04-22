@@ -98,10 +98,10 @@ var Sprite = Class.create({
 
     setTransformRotate: function (theta) {
         this.elm.setStyle({
-            webkitTransform: 'rotate(' + value + 'deg)',
-            MozTransform: 'rotate(' + value + 'deg)',
-            msTransform: 'rotate(' + value + 'deg)',
-            transform: 'rotate(' + value + 'deg)'
+            webkitTransform: 'rotate(' + theta + 'deg)',
+            MozTransform: 'rotate(' + theta + 'deg)',
+            msTransform: 'rotate(' + theta + 'deg)',
+            transform: 'rotate(' + theta + 'deg)'
         });
         this.currentTransformRotate = theta;
     }

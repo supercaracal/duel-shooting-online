@@ -13,9 +13,6 @@ var CommandShipRed = Class.create(Command, {
     },
 
     barrier: function() {
-        if (!this.ship.getIField()) {
-            this.auto.addIField(this.isEnemy);
-        }
         this.ship.barrier();
     },
 

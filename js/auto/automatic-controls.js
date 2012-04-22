@@ -2,7 +2,7 @@ var AutomaticControls = Class.create({
 
     FUNNEL_SLIDER_MAX: 5,
 
-    FUNNEL_CIRCLE_MAP: 2,
+    FUNNEL_CIRCLE_MAX: 2,
 
     MEGA_CANNON_WAIT: 250,
 
@@ -53,6 +53,13 @@ var AutomaticControls = Class.create({
             if (this.elms[i].isFunnelSliderAttack) {
                 this.addBulletLinearFromFunnel(this.elms[i].getLeft(), this.elms[i].isEnemy);
                 this.elms[i].isFunnelSliderAttack = false;
+            }
+            if (this.elms[i].isFunnelCircle && (99).isTiming()) {
+                this.addBulletHomingFromFunnel(
+                    this.elms[i].getTop() + (this.elms[i].isEnemy ? 30 : -30),
+                    this.elms[i].getLeft(),
+                    this.elms[i].isEnemy
+                );
             }
             if (this.elms[i].isDelete) {
                 if (this.elms[i].isFunnelSlider) {
@@ -105,11 +112,30 @@ var AutomaticControls = Class.create({
         this.playSoundAttack();
     },
 
+    addBulletHoming: function(isEnemy) {
+        var elm = isEnemy ?
+            new BulletHoming(this.enemy, this.ship) :
+            new BulletHoming(this.ship, this.enemy);
+        this.elms.push(elm);
+        elm.renderElement();       
+        this.playSoundAttack();
+    },
+
     addBulletLinearFromFunnel: function(left, isEnemy) {
         var elm = isEnemy ?
             new BulletLinear(this.enemy, this.ship) :
             new BulletLinear(this.ship, this.enemy);
-        elm.setPos({top: (isEnemy ? 60 : elm.clientHeight - 120), left: left});
+        elm.setPos({top: (isEnemy ? 90 : elm.clientHeight - 120), left: left});
+        this.elms.push(elm);
+        elm.renderElement();
+        this.playSoundFunnelAttack();
+    },
+
+    addBulletHomingFromFunnel: function(top, left, isEnemy) {
+        var elm = isEnemy ?
+            new BulletHoming(this.enemy, this.ship) :
+            new BulletHoming(this.ship, this.enemy);
+        elm.setPos({top: top, left: left});
         this.elms.push(elm);
         elm.renderElement();
         this.playSoundFunnelAttack();
@@ -128,10 +154,31 @@ var AutomaticControls = Class.create({
         this.playSoundFunnelGo();
     },
 
+    addFunnelCircle: function(isEnemy) {
+        if (this.FUNNEL_CIRCLE_MAX <= this.funnelCircleCount) {
+            return;
+        }
+        var funnel = new FunnelCircle(isEnemy ? this.enemy : this.ship);
+        this.elms.push(funnel);
+        ++this.funnelCircleCount;
+        funnel.renderElement();
+        this.playSoundFunnelGo();
+    },
+
     addIField: function(isEnemy) {
         var iField = new IField(isEnemy ? this.enemy : this.ship);
         this.elms.push(iField);
         iField.renderElement();
+    },
+
+    addFunnelDefences: function(isEnemy) {
+        var carrier = isEnemy ? this.enemy : this.ship;
+        var l = new FunnelDefenceLeft(carrier, carrier.getIField());
+        var r = new FunnelDefenceRight(carrier, carrier.getIField());
+        this.elms.push(l);
+        this.elms.push(r);
+        l.renderElement();
+        r.renderElement();
     },
 
     fireMegaCannon: function(isEnemy) {
