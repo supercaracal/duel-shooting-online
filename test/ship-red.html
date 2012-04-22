@@ -10,10 +10,10 @@
 <script type="text/javascript" src="/js/game/game.js"></script>
 
 <script type="text/javascript" src="/js/action/base/action.js"></script>
-<script type="text/javascript" src="/js/action/action-ship-white.js"></script>
+<script type="text/javascript" src="/js/action/action-ship-red.js"></script>
 
 <script type="text/javascript" src="/js/command/base/command.js"></script>
-<script type="text/javascript" src="/js/command/command-ship-white.js"></script>
+<script type="text/javascript" src="/js/command/command-ship-red.js"></script>
 
 <script type="text/javascript" src="/js/sound/sound-creater.js"></script>
 <script type="text/javascript" src="/js/auto/automatic-controls.js"></script>
@@ -21,9 +21,11 @@
 <script type="text/javascript" src="/js/sprite/base/sprite.js"></script>
 <script type="text/javascript" src="/js/sprite/background.js"></script>
 <script type="text/javascript" src="/js/sprite/bullet.js"></script>
-<script type="text/javascript" src="/js/sprite/bullet-linear.js"></script>
+<script type="text/javascript" src="/js/sprite/bullet-homing.js"></script>
 <script type="text/javascript" src="/js/sprite/funnel.js"></script>
-<script type="text/javascript" src="/js/sprite/funnel-slider.js"></script>
+<script type="text/javascript" src="/js/sprite/funnel-circle.js"></script>
+<script type="text/javascript" src="/js/sprite/funnel-defence-left.js"></script>
+<script type="text/javascript" src="/js/sprite/funnel-defence-right.js"></script>
 <script type="text/javascript" src="/js/sprite/i-field.js"></script>
 
 <script type="text/javascript" src="/js/sprite/ship-white.js"></script>
@@ -35,13 +37,14 @@
 Event.observe(window, 'load', function () {
 
     var isEnemy = false;
-    var ship = new ShipWhite(isEnemy);
-    var enemy = new ShipRed(!isEnemy);
+    var ship = new ShipRed(isEnemy);
+    var enemy = new ShipWhite(!isEnemy);
     var bg = new Background();
 
     sound = new SoundCreater();
-    ship.setSoundLose(sound.createAudio('/se/hit.mp3'));
+    ship.setSoundHit(sound.createAudio('/se/hit.mp3'));
     ship.setSoundLose(sound.createAudio('/se/lose.mp3'));
+    ship.setSoundNewtype(sound.createAudio('/se/newtype.mp3'));
 
     var auto = new AutomaticControls(ship, enemy, isEnemy);
     auto.setSoundAttack(sound.createAudio('/se/attack.mp3'));
@@ -49,8 +52,8 @@ Event.observe(window, 'load', function () {
     auto.setSoundFunnelGo(sound.createAudio('/se/funnel1.mp3'));
     auto.setSoundFunnelAttack(sound.createAudio('/se/funnel2.mp3'));
 
-    var action = new ActionShipWhite();
-    var command = new CommandShipWhite(ship, auto);
+    var action = new ActionShipRed();
+    var command = new CommandShipRed(ship, auto);
     var game = new Game(function() {
         command.execute(action.getCommand());
         auto.move();

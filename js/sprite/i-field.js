@@ -5,10 +5,10 @@ var IField = Class.create(Sprite, {
     isEnemy: null,
 
     initialize: function($super, carrier, isEnemy) {
-        $super();
         this.isActive = false;
         this.carrier = carrier;
         this.isEnemy = isEnemy;
+        $super();
     },
 
     createElement: function() {
@@ -27,7 +27,7 @@ var IField = Class.create(Sprite, {
     },
 
     getInitTop: function() {
-        return this.isEnemy ? 65 : this.clientHeight - 75; 
+        return this.carrier.getTop() + (this.isEnemy ? 65 : -30); 
     },
 
     getInitLeft: function() {

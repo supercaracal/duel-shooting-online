@@ -1,32 +1,54 @@
 var ShipWhite = Class.create(Sprite, {
 
     hitPoint: null,
+    soundHit: null,
     soundLose: null,
+    isEnemy: null,
 
-    initialize: function($super) {
-        $super();
+    initialize: function($super, isEnemy) {
+        this.isEnemy = isEnemy;
         this.hitPoint = 100;
+        $super();
         this.setHitPoint(this.hitPoint);
     },
 
     createElement: function() {
         var color = '#FFFFFF';
-        var obj = new Element('div').setStyle({width: '90px', height: '60px', zIndex: this.Z_INDEX_BASE + 10, position: 'fixed', top: this.clientHeight - 60 + 'px', left: this.clientWidth - 90 + 'px'});
-        obj.insert(new Element('div').setStyle({width: '30px', height: '30px', backgroundColor: color, borderRadius: '6px', boxShadow: '0px 0px 10px ' + color, marginLeft: '30px'}));
-        obj.insert(new Element('div').setStyle({width: '90px', height: '30px', backgroundColor: color, borderRadius: '6px', boxShadow: '0px 0px 10px ' + color, textAlign: 'center', fontWeight: 800, fontSize: '20px'}).update(this.hitPoint));
-        return obj;
+        return this.isEnemy ? this.createEnemy(color) : this.createShip(color);
+    },
+
+    createEnemy: function(color) {
+        var elm = new Element('div').setStyle({width: '90px', height: '60px', zIndex: this.Z_INDEX_BASE + 10, position: 'fixed', top: '0px', left: '0px'});
+        elm.insert(new Element('div').setStyle({width: '90px', height: '30px', backgroundColor: color, borderRadius: '6px', boxShadow: '0px 0px 30px ' + color, textAlign: 'center', fontWeight: 800, fontSize: '20px'}).update(this.hitPoint));
+        elm.insert(new Element('div').setStyle({width: '30px', height: '30px', backgroundColor: color, borderRadius: '6px', boxShadow: '0px 0px 30px ' + color, marginLeft: '30px'}));
+        return elm;                
+    },
+
+    createShip: function(color) {
+        var elm = new Element('div').setStyle({width: '90px', height: '60px', zIndex: this.Z_INDEX_BASE + 10, position: 'fixed', top: this.clientHeight - 60 + 'px', left: this.clientWidth - 90 + 'px'});
+        elm.insert(new Element('div').setStyle({width: '30px', height: '30px', backgroundColor: color, borderRadius: '6px', boxShadow: '0px 0px 10px ' + color, marginLeft: '30px'}));
+        elm.insert(new Element('div').setStyle({width: '90px', height: '30px', backgroundColor: color, borderRadius: '6px', boxShadow: '0px 0px 10px ' + color, textAlign: 'center', fontWeight: 800, fontSize: '20px'}).update(this.hitPoint));
+        return elm;
     },
 
     getInitTop: function() {
-        return this.clientHeight - 60;
+        return this.isEnemy ? 0 : this.clientHeight - 60;
     },
 
     getInitLeft: function() {
-        return this.clientWidth - 90;
+        return this.isEnemy ? 0 : this.clientWidth - 90;
+    },
+
+    setSoundHit: function(audio) {
+        this.soundHit = audio;
     },
 
     setSoundLose: function(audio) {
         this.soundLose = audio;
+    },
+
+    playSoundHit: function() {
+        if (this.soundHit) this.soundHit.replay();
     },
 
     playSoundLose: function() {
@@ -40,7 +62,7 @@ var ShipWhite = Class.create(Sprite, {
 
     setHitPoint: function (num) {
         this.hitPoint = num;
-        this.elm.down(1).update(num);
+        this.elm.down(this.isEnemy ? 0 : 1).update(num);
     },
 
     stepRight: function () {

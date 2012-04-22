@@ -41,6 +41,4 @@ var DuelShooting = Class.create({
             this.ship.resetPosition();
         }).bind(this).defer();
     }
-
-    // new Element('audio', {src: '/se/hit.mp3'}),
 });
