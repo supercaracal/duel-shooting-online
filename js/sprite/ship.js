@@ -57,11 +57,14 @@ var Ship = Class.create(Sprite, {
 
     hit: function() {
         if (this.hitPoint < 1) {
-            this.playSoundLose();
             return;
         }
         this.setHitPoint(--this.hitPoint);
-        this.playSoundHit();
+        if (this.hitPoint === 0) {
+            this.playSoundLose();
+        } else {
+            this.playSoundHit();
+        }
     },
 
     setHitPoint: function(num) {

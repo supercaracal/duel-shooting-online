@@ -1,29 +1,13 @@
-var ShipAfterimage = Class.create({
+var ShipAfterimage = Class.create(Ship, {
 
-    isRed: null,
-
-    initialize: function($super, isRed) {
-        this.isRed = isRed;
-        $super();
+    getColor: function() {
+        return '#FF5555';
     },
 
-    createElement: function() {
-        var color = this.isRed ? '#FF5555' : '#FFFFFF';
-        var obj = new Element('div').setStyle({width: '90px', height: '60px', zIndex: this.Z_INDEX_BASE + 1, position: 'fixed', top: '0px', left: '0px', opacity: '0.2'});
-        obj.insert(new Element('div').setStyle({width: '90px', height: '30px', backgroundColor: color, borderRadius: '6px', textAlign: 'center'}).update(this.enemyHP));
-        obj.insert(new Element('div').setStyle({width: '30px', height: '30px', backgroundColor: color, borderRadius: '6px', marginLeft: '30px'}));
-        return obj;
-    },
-
-    move: function() {
-        if (!lefts) {
-            return;
-        }
-        lefts.each((function (left) {
-            var afterimage = this.getEnemyAfterimage();
-            afterimage.setPos({top: this.enemy.getTop(), left: left});
-            $(document.body).insert(afterimage);
-            (function () { afterimage.remove(); }).delay(0.3);
-        }).bind(this));
+    spot: function(top, left) {
+        this.elm.setOpacity(0.2);
+        this.setPos({top: top, left: left});
+        this.renderElement();
+        (function() { this.elm.remove(); }).bind(this).delay(0.3);
     }
 });

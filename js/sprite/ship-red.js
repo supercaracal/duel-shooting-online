@@ -30,6 +30,14 @@ var ShipRed = Class.create(Ship, {
     },
 
     avoid: function() {
-        this.playSoundNewtype();
+        var sign = this.getLeft() < this.clientWidth / 2 ? 1 : -1;
+        var top = this.getTop();
+        var left = this.getLeft();
+        this.setLeft(left + 90 * sign);
+        [left, left + (10 * 3 * sign), left + (10 * 6 * sign)].each((function(left) {
+            var shadow = new ShipAfterimage(this.isEnemy);
+            shadow.spot(top, left);
+            this.playSoundNewtype();
+        }).bind(this));
     }
 });
