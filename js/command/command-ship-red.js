@@ -17,10 +17,10 @@ var CommandShipRed = Class.create(Command, {
     },
 
     attack: function() {
-        this.auto.addBulletHoming(this.isEnemy);
+        this.auto.addBulletHoming();
     },
 
     funnel: function() {
-        this.auto.addFunnelCircle(this.isEnemy);
+        this.auto.addFunnelCircle();
     }
 });

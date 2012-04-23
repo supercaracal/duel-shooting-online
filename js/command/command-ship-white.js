@@ -11,14 +11,14 @@ var CommandShipWhite = Class.create(Command, {
     wait: Prototype.emptyFunction,
 
     attack: function() {
-        this.auto.addBulletLinear(this.isEnemy);
+        this.auto.addBulletLinear();
     },
 
     funnel: function() {
-        this.auto.addFunnelSlider(this.isEnemy);
+        this.auto.addFunnelSlider();
     },
 
     megaCannon: function() {
-        this.auto.fireMegaCannon(this.isEnemy);
+        this.auto.fireMegaCannon();
     }
 });

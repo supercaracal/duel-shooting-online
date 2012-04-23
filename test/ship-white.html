@@ -37,35 +37,42 @@
 <script type="text/javascript">
 Event.observe(window, 'load', function () {
 
-    var white = new ShipWhite(false);
-    var red = new ShipRed(true);
-    var bg = new Background();
-
     var sound = new SoundCreater();
     var hitSE = sound.createAudio('/se/hit.mp3');
     var loseSE = sound.createAudio('/se/lose.mp3');
     var newtypeSE = sound.createAudio('/se/newtype.mp3');
 
+    var white = new ShipWhite(false);
     white.setSoundHit(hitSE);
     white.setSoundLose(loseSE);
 
+    var red = new ShipRed(true);
     red.setSoundHit(hitSE);
     red.setSoundLose(loseSE);
     red.setSoundNewtype(newtypeSE);
 
-    var auto = new AutomaticControls(white, red);
-    auto.addIField(true);
-    auto.addFunnelDefences(true);
-    auto.setSoundAttack(sound.createAudio('/se/attack.mp3'));
-    auto.setSoundMegaCannon(sound.createAudio('/se/mega.mp3'));
-    auto.setSoundFunnelGo(sound.createAudio('/se/funnel1.mp3'));
-    auto.setSoundFunnelAttack(sound.createAudio('/se/funnel2.mp3'));
+    var bg = new Background();
+
+    var shipWeapons = new AutomaticControls(white, red);
+    shipWeapons.setSoundAttack(sound.createAudio('/se/attack.mp3'));
+    shipWeapons.setSoundMegaCannon(sound.createAudio('/se/mega.mp3'));
+    shipWeapons.setSoundFunnelGo(sound.createAudio('/se/funnel1.mp3'));
+    shipWeapons.setSoundFunnelAttack(sound.createAudio('/se/funnel2.mp3'));
+
+    var enemyWeapons = new AutomaticControls(red, white);
+    enemyWeapons.addIField(false);
+    enemyWeapons.addFunnelDefences(false);
+    enemyWeapons.setSoundAttack(sound.createAudio('/se/attack.mp3'));
+    enemyWeapons.setSoundMegaCannon(sound.createAudio('/se/mega.mp3'));
+    enemyWeapons.setSoundFunnelGo(sound.createAudio('/se/funnel1.mp3'));
+    enemyWeapons.setSoundFunnelAttack(sound.createAudio('/se/funnel2.mp3'));
 
     var action = new ActionShipWhite();
-    var command = new CommandShipWhite(white, auto);
+    var command = new CommandShipWhite(white, shipWeapons);
     var game = new Game(function() {
         command.execute(action.getCommand());
-        auto.move();
+        shipWeapons.move();
+        enemyWeapons.move();
     });
     
     bg.renderElement();

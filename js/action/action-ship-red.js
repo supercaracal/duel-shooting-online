@@ -33,16 +33,6 @@ var ActionShipRed = Class.create(Action, {
         }
     },
 
-    handlerMouse: function (e) {
-        e.stop();
-        this.convertToAction(e.pageX, e.pageY);
-    },
-
-    handlerSmart: function (e) {
-        e.stop();
-        this.convertToAction(e.touches[0].pageX, e.touches[0].pageY);
-    },
-
     convertToAction: function (x, y) {
         if ((this.clientHeight / 2 < y) && (x < this.sprite.clientWidth / 3)) {
             this.nextCommand = 'stepLeft';

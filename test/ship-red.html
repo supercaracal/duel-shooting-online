@@ -36,37 +36,44 @@
 
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
-Event.observe(window, 'load', function () {
+Event.observe(window, 'load', function() {
 
-    var red = new ShipRed(false);
-    var white = new ShipWhite(true);
-    var bg = new Background();
-
-    sound = new SoundCreater();
+    var sound = new SoundCreater();
     var hitSE = sound.createAudio('/se/hit.mp3');
     var loseSE = sound.createAudio('/se/lose.mp3');
     var newtypeSE = sound.createAudio('/se/newtype.mp3');
 
+    var red = new ShipRed(false);
     red.setSoundHit(hitSE);
     red.setSoundLose(loseSE);
     red.setSoundNewtype(newtypeSE);
 
+    var white = new ShipWhite(true);
     white.setSoundHit(hitSE);
     white.setSoundLose(loseSE);
 
-    var auto = new AutomaticControls(red, white);
-    auto.addIField(false);
-    auto.addFunnelDefences(false);
-    auto.setSoundAttack(sound.createAudio('/se/attack.mp3'));
-    auto.setSoundMegaCannon(sound.createAudio('/se/mega.mp3'));
-    auto.setSoundFunnelGo(sound.createAudio('/se/funnel1.mp3'));
-    auto.setSoundFunnelAttack(sound.createAudio('/se/funnel2.mp3'));
+    var bg = new Background();
+
+    var shipWeapons = new AutomaticControls(red, white);
+    shipWeapons.addIField(false);
+    shipWeapons.addFunnelDefences(false);
+    shipWeapons.setSoundAttack(sound.createAudio('/se/attack.mp3'));
+    shipWeapons.setSoundMegaCannon(sound.createAudio('/se/mega.mp3'));
+    shipWeapons.setSoundFunnelGo(sound.createAudio('/se/funnel1.mp3'));
+    shipWeapons.setSoundFunnelAttack(sound.createAudio('/se/funnel2.mp3'));
+
+    var enemyWeapons = new AutomaticControls(white, red);
+    enemyWeapons.setSoundAttack(sound.createAudio('/se/attack.mp3'));
+    enemyWeapons.setSoundMegaCannon(sound.createAudio('/se/mega.mp3'));
+    enemyWeapons.setSoundFunnelGo(sound.createAudio('/se/funnel1.mp3'));
+    enemyWeapons.setSoundFunnelAttack(sound.createAudio('/se/funnel2.mp3'));
 
     var action = new ActionShipRed();
-    var command = new CommandShipRed(red, auto);
+    var command = new CommandShipRed(red, shipWeapons);
     var game = new Game(function() {
         command.execute(action.getCommand());
-        auto.move();
+        shipWeapons.move();
+        enemyWeapons.move();
     });
     
     bg.renderElement();
