@@ -7,14 +7,15 @@
 <script type="text/javascript">google.load('prototype', '1.7')</script>
 
 
-<script type="text/javascript" src="/js/game/game.js"></script>
-
 <script type="text/javascript" src="/js/action/base/action.js"></script>
 <script type="text/javascript" src="/js/action/action-ship-red.js"></script>
+<script type="text/javascript" src="/js/action/action-ship-white.js"></script>
 
 <script type="text/javascript" src="/js/command/base/command.js"></script>
 <script type="text/javascript" src="/js/command/command-ship-red.js"></script>
+<script type="text/javascript" src="/js/command/command-ship-white.js"></script>
 
+<script type="text/javascript" src="/js/game/game.js"></script>
 <script type="text/javascript" src="/js/sound/sound-creater.js"></script>
 <script type="text/javascript" src="/js/auto/automatic-controls.js"></script>
 
@@ -27,6 +28,7 @@
 <script type="text/javascript" src="/js/sprite/funnel-circle.js"></script>
 <script type="text/javascript" src="/js/sprite/funnel-defence-left.js"></script>
 <script type="text/javascript" src="/js/sprite/funnel-defence-right.js"></script>
+<script type="text/javascript" src="/js/sprite/funnel-slider.js"></script>
 <script type="text/javascript" src="/js/sprite/i-field.js"></script>
 
 <script type="text/javascript" src="/js/sprite/ship.js"></script>
@@ -42,6 +44,10 @@ Event.observe(window, 'load', function() {
     var hitSE = sound.createAudio('/se/hit.mp3');
     var loseSE = sound.createAudio('/se/lose.mp3');
     var newtypeSE = sound.createAudio('/se/newtype.mp3');
+    var attackSE = sound.createAudio('/se/attack.mp3')
+    var megaCannonSE = sound.createAudio('/se/mega.mp3')
+    var funnelGoSE = sound.createAudio('/se/funnel1.mp3')
+    var funnelAtkSE = sound.createAudio('/se/funnel2.mp3')
 
     var red = new ShipRed(false);
     red.setSoundHit(hitSE);
@@ -57,16 +63,16 @@ Event.observe(window, 'load', function() {
     var shipWeapons = new AutomaticControls(red, white);
     shipWeapons.addIField(false);
     shipWeapons.addFunnelDefences(false);
-    shipWeapons.setSoundAttack(sound.createAudio('/se/attack.mp3'));
-    shipWeapons.setSoundMegaCannon(sound.createAudio('/se/mega.mp3'));
-    shipWeapons.setSoundFunnelGo(sound.createAudio('/se/funnel1.mp3'));
-    shipWeapons.setSoundFunnelAttack(sound.createAudio('/se/funnel2.mp3'));
+    shipWeapons.setSoundAttack(attackSE);
+    shipWeapons.setSoundMegaCannon(megaCannonSE);
+    shipWeapons.setSoundFunnelGo(funnelGoSE);
+    shipWeapons.setSoundFunnelAttack(funnelAtkSE);
 
     var enemyWeapons = new AutomaticControls(white, red);
-    enemyWeapons.setSoundAttack(sound.createAudio('/se/attack.mp3'));
-    enemyWeapons.setSoundMegaCannon(sound.createAudio('/se/mega.mp3'));
-    enemyWeapons.setSoundFunnelGo(sound.createAudio('/se/funnel1.mp3'));
-    enemyWeapons.setSoundFunnelAttack(sound.createAudio('/se/funnel2.mp3'));
+    enemyWeapons.setSoundAttack(attackSE);
+    enemyWeapons.setSoundMegaCannon(megaCannonSE);
+    enemyWeapons.setSoundFunnelGo(funnelGoSE);
+    enemyWeapons.setSoundFunnelAttack(funnelAtkSE);
 
     var action = new ActionShipRed();
     var command = new CommandShipRed(red, shipWeapons);
@@ -81,7 +87,6 @@ Event.observe(window, 'load', function() {
     white.renderElement();
 
     game.start();
-
 
 
     var socket = io.connect('http://localhost:3000');
