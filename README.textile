@@ -4,20 +4,20 @@ Coming soon.
 
 h4. White Demon
 
-|*Action|*Type Key|
-|Move Right|Cursor Right|
-|Move Left|Cursor Left|
-|Wait|Cursor Down|
-|Attack1|Cursor Up|
-|Attack2|F|
-|Attack3|M|
+|_. Action |_. Type Key |
+|>. Move Right | Cursor Right |
+|>. Move Left | Cursor Left |
+|>. Wait | Cursor Down |
+|>. Attack1 | Cursor Up |
+|>. Attack2 | F |
+|>. Attack3 | M |
 
 h4. Red Comet
 
-|*Action|*Type Key|
-|Move Right|Cursor Right|
-|Move Left|Cursor Left|
-|Avoid|N|
-|Barrier|I|
-|Attack1|Cursor Up|
-|Attack2|F|
+|_. Action |_. Type Key |
+|>. Move Right | Cursor Right |
+|>. Move Left | Cursor Left |
+|>. Avoid | N |
+|>. Barrier | I |
+|>. Attack1 | Cursor Up |
+|>. Attack2 | F |
