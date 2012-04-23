@@ -3,6 +3,7 @@ Coming soon.
 "Duel Shooting Online":http://duelshooting-online.herokuapp.com/
 
 h4. White Demon
+
 |*Action|*Type Key|
 |Move Right|Cursor Right|
 |Move Left|Cursor Left|
@@ -12,6 +13,7 @@ h4. White Demon
 |Attack3|M|
 
 h4. Red Comet
+
 |*Action|*Type Key|
 |Move Right|Cursor Right|
 |Move Left|Cursor Left|
