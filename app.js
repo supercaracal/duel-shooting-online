@@ -19,6 +19,10 @@ try {
 var io = require(LIB_PATH + 'socket.io').listen(app);
 app.listen(LISTEN_PORT, SERVER_URI);
 
+app.get('/', function(req, res) {
+    res.sendfile(__dirname + '/index.html');
+});
+
 app.get('/*', function(req, res) {
     res.sendfile(__dirname + req.url);
 });
