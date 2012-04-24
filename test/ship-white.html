@@ -81,9 +81,7 @@ Event.observe(window, 'load', function () {
     sync.listenShipRedCommand(enemyCmd, red);
 
     var game = new Game(function() {
-        var cmd = action.getCommand();
-        sync.pushShipWhiteCommand(cmd, white.getHitPoint());
-        shipCmd.execute(cmd);
+        sync.pushShipWhiteCommand(action.getCommand(), white.getHitPoint());
         shipWeapons.move();
         enemyWeapons.move();
     });

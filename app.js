@@ -25,9 +25,11 @@ app.get('/*', function(req, res) {
 
 io.sockets.on('connection', function(socket) {
     socket.on('white', function(data) {
+        socket.emit('white', data);
         socket.broadcast.emit('white', data);
     });
     socket.on('red', function(data) {
+        socket.emit('red', data);
         socket.broadcast.emit('red', data);
     });
 });
