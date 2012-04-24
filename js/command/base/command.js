@@ -1,7 +1,7 @@
 var Command = Class.create({
 
     ship: null,
-    audo: null,
+    auto: null,
 
     initialize: function(ship, auto) {
         this.ship = ship;
