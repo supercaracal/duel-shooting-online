@@ -73,7 +73,7 @@ var Ship = Class.create(Sprite, {
         var top = bullet.getTop();
         var left = bullet.getLeft();
         if (enemyIField && enemyIField.isActive && (bullet.isFall ? top + range > this.clientHeight - 110 : top + range < 80) && enemyLeft - 25 < left && left < enemyLeft + 95) {
-            this.hit();
+            enemyIField.hit();
             return true;
         }
         if ((enemyLeft - 25 < left) && (left <= enemyLeft + 5) && (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
