@@ -10,7 +10,7 @@ var AutomaticControls = Class.create({
     enemy: null,
 
     funnelSliderCount: null,
-    funnelCircleCount: null,
+    funnelCircles: null,
     iFieldWaitCount: null,
     megaCannonWaitCount: null,
     megaCannonHeightCount: null,
@@ -27,7 +27,7 @@ var AutomaticControls = Class.create({
         this.enemy = enemy;
 
         this.funnelSliderCount = 0;
-        this.funnelCircleCount = 0;
+        this.funnelCircles = [];
         this.iFieldWaitCount = 0;
         this.megaCannonWaitCount = 0;
         this.megaCannonHeightCount = 0;
@@ -48,12 +48,6 @@ var AutomaticControls = Class.create({
             if (this.elms[i].isFunnelSliderAttack) {
                 this.addBulletLinearFromFunnel(this.elms[i].getLeft());
                 this.elms[i].isFunnelSliderAttack = false;
-            }
-            if (this.elms[i].isFunnelCircle && (99).isTiming()) {
-                this.addBulletHomingFromFunnel(
-                    this.elms[i].getTop() + (this.elms[i].isEnemy ? 30 : -30),
-                    this.elms[i].getLeft()
-                );
             }
             if (this.elms[i].isDelete) {
                 if (this.elms[i].isFunnelSlider) {
@@ -163,12 +157,18 @@ var AutomaticControls = Class.create({
     },
 
     addFunnelCircle: function() {
-        if (this.FUNNEL_CIRCLE_MAX <= this.funnelCircleCount) {
+        if (this.FUNNEL_CIRCLE_MAX <= this.funnelCircles.size()) {
+            this.funnelCircles.each((function(x) {
+                this.addBulletHomingFromFunnel(
+                    x.getTop() + (x.isEnemy ? 30 : -30),
+                    x.getLeft()
+                );                       
+            }).bind(this));
             return;
         }
         var funnel = new FunnelCircle(this.ship);
         this.elms.push(funnel);
-        ++this.funnelCircleCount;
+        this.funnelCircles.push(funnel);
         funnel.renderElement();
         this.playSoundFunnelGo();
     },

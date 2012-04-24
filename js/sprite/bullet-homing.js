@@ -5,34 +5,15 @@ var BulletHoming = Class.create(Bullet, {
     },
 
     move: function() {
-        var enemyLeft = this.enemy.getLeft();
+        var range = this.isFall ? 5 : -5;
+        if (this.enemy.isHit(this, range)) {
+            this.isDelete = true;
+            this.elm.remove();
+            return;
+        }
         var top = this.getTop();
         var left = this.getLeft();
-        var range = this.isFall ? 5 : -5;
-
-        if ((enemyLeft - 25 < left) && (left <= enemyLeft + 5) && (this.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
-            this.isDelete = true;
-            this.elm.remove();
-            this.enemy.hit();
-            return;
-        }
-        if ((enemyLeft + 5 < left) && (left < enemyLeft + 60) && (this.isFall ? top + range > this.clientHeight - 90 : top + range <60)) {
-            this.isDelete = true;
-            this.elm.remove();
-            this.enemy.hit();
-            return;
-        }
-        if ((enemyLeft + 60 <= left) && (left < enemyLeft + 90) && (this.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
-            this.isDelete = true;
-            this.elm.remove();
-            this.enemy.hit();
-            return;
-        }
-        if (this.clientHeight < (top + range)) {
-            this.isDelete = true;
-            this.elm.remove();
-            return;
-        }
+        var enemyLeft = this.enemy.getLeft();
         if (this.isFall ? (this.clientHeight / 2) < top : (this.clientHeight / 2) > top) {
             range = range * 3;
             distance = 0;

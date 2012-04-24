@@ -67,9 +67,40 @@ var Ship = Class.create(Sprite, {
         }
     },
 
+    isHit: function(bullet, range) {
+        var enemyLeft = this.getLeft();
+        var enemyIField = this.getIField ? this.getIField() : null;
+        var top = bullet.getTop();
+        var left = bullet.getLeft();
+        if (enemyIField && enemyIField.isActive && (bullet.isFall ? top + range > this.clientHeight - 110 : top + range < 80) && enemyLeft - 25 < left && left < enemyLeft + 95) {
+            this.hit();
+            return true;
+        }
+        if ((enemyLeft - 25 < left) && (left <= enemyLeft + 5) && (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
+            this.hit();
+            return true;
+        }
+        if ((enemyLeft + 5 < left) && (left < enemyLeft + 60) && (bullet.isFall ? top + range > this.clientHeight - 90 : top + range < 60)) {
+            this.hit();
+            return true;
+        }
+        if ((enemyLeft + 60 <= left) && (left < enemyLeft + 90) && (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
+            this.hit();
+            return true;
+        }
+        if ((top + range < 0) || (this.clientHeight < (top + range))) {
+            return true;
+        }
+        return false;
+    },
+
     setHitPoint: function(num) {
         this.hitPoint = num;
         this.elm.down(this.isEnemy ? 0 : 1).update(num);
+    },
+
+    getHitPoint: function() {
+        return this.hitPoint;
     },
 
     stepRight: function() {

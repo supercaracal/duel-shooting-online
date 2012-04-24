@@ -18,6 +18,7 @@
 <script type="text/javascript" src="/js/game/game.js"></script>
 <script type="text/javascript" src="/js/sound/sound-creater.js"></script>
 <script type="text/javascript" src="/js/auto/automatic-controls.js"></script>
+<script type="text/javascript" src="/js/sync/synchronizer.js"></script>
 
 <script type="text/javascript" src="/js/sprite/base/sprite.js"></script>
 <script type="text/javascript" src="/js/sprite/background.js"></script>
@@ -70,15 +71,19 @@ Event.observe(window, 'load', function () {
     var enemyWeapons = new AutomaticControls(red, white);
     enemyWeapons.addIField(false);
     enemyWeapons.addFunnelDefences(false);
-    enemyWeapons.setSoundAttack(attackSE);
-    enemyWeapons.setSoundMegaCannon(megaCannonSE);
-    enemyWeapons.setSoundFunnelGo(funnelGoSE);
-    enemyWeapons.setSoundFunnelAttack(funnelAtkSE);
 
     var action = new ActionShipWhite();
-    var command = new CommandShipWhite(white, shipWeapons);
+    var shipCmd = new CommandShipWhite(white, shipWeapons);
+    var enemyCmd = new CommandShipRed(red, enemyWeapons);
+
+    var sync = new Synchronizer('http://localhost:3000/');
+    sync.listenShipWhiteCommand(shipCmd, white);
+    sync.listenShipRedCommand(enemyCmd, red);
+
     var game = new Game(function() {
-        command.execute(action.getCommand());
+        var cmd = action.getCommand();
+        sync.pushShipWhiteCommand(cmd, white.getHitPoint());
+        shipCmd.execute(cmd);
         shipWeapons.move();
         enemyWeapons.move();
     });

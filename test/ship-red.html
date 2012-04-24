@@ -18,6 +18,7 @@
 <script type="text/javascript" src="/js/game/game.js"></script>
 <script type="text/javascript" src="/js/sound/sound-creater.js"></script>
 <script type="text/javascript" src="/js/auto/automatic-controls.js"></script>
+<script type="text/javascript" src="/js/sync/synchronizer.js"></script>
 
 <script type="text/javascript" src="/js/sprite/base/sprite.js"></script>
 <script type="text/javascript" src="/js/sprite/background.js"></script>
@@ -69,15 +70,19 @@ Event.observe(window, 'load', function() {
     shipWeapons.setSoundFunnelAttack(funnelAtkSE);
 
     var enemyWeapons = new AutomaticControls(white, red);
-    enemyWeapons.setSoundAttack(attackSE);
-    enemyWeapons.setSoundMegaCannon(megaCannonSE);
-    enemyWeapons.setSoundFunnelGo(funnelGoSE);
-    enemyWeapons.setSoundFunnelAttack(funnelAtkSE);
 
     var action = new ActionShipRed();
-    var command = new CommandShipRed(red, shipWeapons);
+    var shipCmd = new CommandShipRed(red, shipWeapons);
+    var enemyCmd = new CommandShipWhite(white, enemyWeapons);
+
+    var sync = new Synchronizer('http://localhost:3000/');
+    sync.listenShipRedCommand(shipCmd, red);
+    sync.listenShipWhiteCommand(enemyCmd, white);
+
     var game = new Game(function() {
-        command.execute(action.getCommand());
+        var cmd = action.getCommand();
+        sync.pushShipRedCommand(cmd, red.getHitPoint());
+        shipCmd.execute(cmd);
         shipWeapons.move();
         enemyWeapons.move();
     });
@@ -87,13 +92,6 @@ Event.observe(window, 'load', function() {
     white.renderElement();
 
     game.start();
-
-
-    var socket = io.connect('http://localhost:3000');
-    socket.emit('news', {message: 'Hello World from client'});
-    socket.on('news', function(data) {
-        console.log(data);
-    });
 });
 </script>
 </head>

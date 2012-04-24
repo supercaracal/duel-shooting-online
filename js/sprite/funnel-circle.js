@@ -4,7 +4,6 @@ var FunnelCircle = Class.create(Funnel, {
     theta: null,
     speed: null,
     isClockwise: null,
-    isFunnelCircle: null,
 
     initialize: function($super, carrier) {
         $super(carrier);
@@ -12,7 +11,6 @@ var FunnelCircle = Class.create(Funnel, {
         this.theta = this.isEnemy ? 0 : 180;
         this.speed = 3;
         this.isCloclwise = this.isEnemy;
-        this.isFunnelCircle = true;
     },
 
     getInitTop: function() {
