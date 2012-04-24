@@ -19,20 +19,8 @@ try {
 var io = require(LIB_PATH + 'socket.io').listen(app);
 app.listen(LISTEN_PORT, SERVER_URI);
 
-app.get('/', function(req, res) {
-    res.sendfile(__dirname + '/index.html');
-});
-
-app.get('/:dir/:file', function(req, res) {
-    res.sendfile(__dirname + '/' + req.params.dir + '/' + req.params.file);
-});
-
-app.get('/:dir1/:dir2/:file', function(req, res) {
-    res.sendfile(__dirname + '/' + req.params.dir1 + '/' + req.params.dir2 + '/' + req.params.file);
-});
-
-app.get('/:dir1/:dir2/:dir3/:file', function(req, res) {
-    res.sendfile(__dirname + '/' + req.params.dir1 + '/' + req.params.dir2 + '/' + req.params.dir3 + '/' + req.params.file);
+app.get('/*', function(req, res) {
+    res.sendfile(__dirname + req.url);
 });
 
 io.sockets.on('connection', function(socket) {
