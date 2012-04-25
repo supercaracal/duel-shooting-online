@@ -26,7 +26,7 @@ var FunnelDefenceLeft = Class.create(Funnel, {
 
     move: function() {
         if (this.iField.isActive) {
-            this.setTransformRotate(90);
+            this.setTransformRotate(this.isEnemy ? 270 : 90);
         } else {
             var deg = this.getTransformRotate();
             deg = deg > 360 ? 0 : deg;

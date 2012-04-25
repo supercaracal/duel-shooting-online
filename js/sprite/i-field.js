@@ -1,13 +1,18 @@
 var IField = Class.create(Sprite, {
 
+    WAIT: 250,
+
     isActive: null,
     carrier: null,
     isEnemy: null,
+
+    waitCount: null,
 
     initialize: function($super, carrier) {
         this.isActive = false;
         this.carrier = carrier;
         this.isEnemy = carrier.isEnemy;
+        this.waitCount = 0;
         $super();
         this.carrier.setIField(this);
     },
@@ -39,7 +44,7 @@ var IField = Class.create(Sprite, {
         h = this.elm.getHeight();
         h -= 2;
         this.elm.setStyle({height: h + 'px'});
-        this.setTop(this.getTop() + (this.isEnemy ? 1 : -1)); 
+        this.setTop(this.getTop() + 1); 
         if (h <= 0) {
             this.isActive = false;
             this.elm.hide();
@@ -47,15 +52,22 @@ var IField = Class.create(Sprite, {
     },
 
     barrier: function() {
+        if (0 < this.waitCount) {
+            return;
+        }
         this.isActive = true;
         this.elm.setStyle({height: '20px'});
         this.setTop(this.getInitTop());
+        this.waitCount = this.WAIT;
         this.elm.show();
     },
 
     move: function() {
         this.setLeft(this.carrier.getLeft() - 5);
         this.changeColor();
+        if (0 < this.waitCount) {
+            --this.waitCount;
+        }
     },
 
     changeColor: function () {

@@ -104,13 +104,29 @@ var Ship = Class.create(Sprite, {
     },
 
     stepRight: function() {
+        if (this.isEnemy) {
+            this.moveLeft();
+            return;
+        }
+        this.moveRight();
+    },
+
+    stepLeft: function() {
+        if (this.isEnemy) {
+            this.moveRight();
+            return;
+        }
+        this.moveLeft();
+    },
+    
+    moveRight: function() {
         var max = this.clientWidth - 90;
         if (this.currentLeft + 10 <= max) {
             this.setLeft(this.currentLeft + 10);
         }
     },
 
-    stepLeft: function() {
+    moveLeft: function() {
         var min = 0;
         if (min <= this.currentLeft - 10) {
             this.setLeft(this.currentLeft - 10);

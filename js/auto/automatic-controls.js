@@ -2,7 +2,6 @@ var AutomaticControls = Class.create({
 
     FUNNEL_SLIDER_MAX: 5,
     FUNNEL_CIRCLE_MAX: 2,
-    I_FIELD_WAIT: 250,
     MEGA_CANNON_WAIT: 250,
     MEGA_CANNON_HEIGHT: 29,
 
@@ -11,7 +10,6 @@ var AutomaticControls = Class.create({
 
     funnelSliderCount: null,
     funnelCircles: null,
-    iFieldWaitCount: null,
     megaCannonWaitCount: null,
     megaCannonHeightCount: null,
 
@@ -28,7 +26,6 @@ var AutomaticControls = Class.create({
 
         this.funnelSliderCount = 0;
         this.funnelCircles = [];
-        this.iFieldWaitCount = 0;
         this.megaCannonWaitCount = 0;
         this.megaCannonHeightCount = 0;
 

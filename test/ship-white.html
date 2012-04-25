@@ -91,14 +91,6 @@ Event.observe(window, 'load', function () {
     red.renderElement();
 
     game.start();
-
-
-
-    var socket = io.connect('http://localhost:3000');
-    socket.emit('news', {message: 'Hello World from client'});
-    socket.on('news', function(data) {
-        console.log(data);
-    });
 });
 </script>
 </head>
