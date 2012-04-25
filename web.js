@@ -1,5 +1,4 @@
-var LISTEN_PORT = 3000;
-var SERVER_URI = '127.0.0.1';
+var LISTEN_PORT = process.env.PORT || 3000;
 var LIB_PATH = '';
 
 var app;
@@ -17,7 +16,7 @@ try {
 }
 
 var io = require(LIB_PATH + 'socket.io').listen(app);
-app.listen(LISTEN_PORT, SERVER_URI);
+app.listen(LISTEN_PORT);
 
 app.get('/', function(req, res) {
     res.sendfile(__dirname + '/index.html');
