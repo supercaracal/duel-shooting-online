@@ -12,7 +12,8 @@ try {
         app = require(LIB_PATH + 'express').createServer();
     }
 }
-app.listen(process.env.PORT || 3000);
+// app.listen(process.env.PORT || 3000);
+app.listen(3000);
 
 app.get('/', function(req, res) {
     res.sendfile(__dirname + '/index.html');
@@ -21,10 +22,10 @@ app.get('/*', function(req, res) {
     res.sendfile(__dirname + req.url);
 });
 
-var io = require(LIB_PATH + 'socket.io').listen(app);
-
 var white = null;
 var red = null;
+
+var io = require(LIB_PATH + 'socket.io').listen(app);
 
 io.sockets.on('connection', function(socket) {
     if (!white) {
