@@ -62,11 +62,9 @@ var Synchronizer = Class.create({
 
     white: function(data) {
         this.cmdWhite.execute(data.cmd);
-        this.shipWhite.setHitPoint(data.hp);
     },
 
     red: function(data) {
          this.cmdRed.execute(data.cmd);
-         this.shipRed.setHitPoint(data.hp);
     }
 });
