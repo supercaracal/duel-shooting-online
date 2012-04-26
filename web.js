@@ -57,11 +57,9 @@ io.sockets.on('connection', function(socket) {
         }
     });
     socket.on('critical white', function(data) {
-        socket.emit('critical white', data);
         socket.broadcast.emit('critical white', data);
     });
     socket.on('critical red', function(data) {
-        socket.emit('critical red', data);
         socket.broadcast.emit('critical red', data);
     });
     socket.on('white', function(data) {
