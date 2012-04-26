@@ -1,6 +1,4 @@
-var LISTEN_PORT = process.env.PORT || 3000;
 var LIB_PATH = '';
-
 var app;
 
 try {
@@ -14,17 +12,16 @@ try {
         app = require(LIB_PATH + 'express').createServer();
     }
 }
-
-var io = require(LIB_PATH + 'socket.io').listen(app);
-app.listen(LISTEN_PORT);
+app.listen(process.env.PORT || 3000);
 
 app.get('/', function(req, res) {
     res.sendfile(__dirname + '/index.html');
 });
-
 app.get('/*', function(req, res) {
     res.sendfile(__dirname + req.url);
 });
+
+var io = require(LIB_PATH + 'socket.io').listen(app);
 
 var white = null;
 var red = null;
