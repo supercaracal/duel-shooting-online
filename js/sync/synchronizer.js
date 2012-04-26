@@ -22,10 +22,22 @@ var Synchronizer = Class.create({
     pushCriticalInfoInterval: function() {
         switch (this.controlShip) {
             case 'white':
-                if (this.shipWhite) this.socket.emit('critical white', {hp: this.shipWhite.getHitPoint(), left: this.shipWhite.getLeft()});
+                if (this.shipWhite) {
+                    this.socket.emit('critical white', {
+                        hp: this.shipWhite.getHitPoint(),
+                        left: this.shipWhite.getLeft(),
+                        isEnemy: this.shipWhite.isEnemy
+                    });
+                }
                 break;
             case 'red':
-                if (this.shipRed) this.socket.emit('critical red', {hp: this.shipRed.getHitPoint(), left: this.shipRed.getLeft()});
+                if (this.shipRed) {
+                    this.socket.emit('critical red', {
+                        hp: this.shipRed.getHitPoint(),
+                        left: this.shipRed.getLeft(),
+                        isEnemy: this.shipRed.isEnemy
+                    });
+                }
                 break;
         }
     },
@@ -68,12 +80,14 @@ var Synchronizer = Class.create({
 
     criticalWhite: function(data) {
         this.shipWhite.setHitPoint(data.hp);
-        this.shipWhite.setLeft(data.left);
+        var left = data.isEnemy === this.shipWhite.isEnemy ? data.left : this.shipWhite.clientWidth - data.left + (data.isEnemy === true ? 90 : -90);
+        this.shipWhite.setLeft(left);
     },
 
     criticalRed: function(data) {
         this.shipRed.setHitPoint(data.hp);
-        this.shipRed.setLeft(data.left);
+        var left = data.isEnemy === this.shipRed.isEnemy ? data.left : this.shipRed.clientWidth - data.left + (data.isEnemy === true ? 90 : -90);
+        this.shipRed.setLeft(left);
     },
 
     youHaveControl: function(data) {
@@ -93,6 +107,6 @@ var Synchronizer = Class.create({
     },
 
     red: function(data) {
-         this.cmdRed.execute(data.cmd);
+        this.cmdRed.execute(data.cmd);
     }
 });

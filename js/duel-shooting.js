@@ -86,8 +86,6 @@ var DuelShooting = Class.create({
             }
             shipWeapons.move();
             enemyWeapons.move();
-            red.stepContinues();
-            white.stepContinues();
         }).bind(this));
     
         bg.renderElement();
