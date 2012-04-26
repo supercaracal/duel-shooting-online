@@ -17,14 +17,14 @@ var Synchronizer = Class.create({
         this.socket.emit('duty', {});
     },
 
-    pushShipWhiteCommand: function(cmd, hp) {
+    pushShipWhiteCommand: function(cmd) {
         if (!cmd) return;
-        this.socket.emit('white', {cmd: cmd, hp: hp});
+        this.socket.emit('white', {cmd: cmd});
     },
 
-    pushShipRedCommand: function(cmd, hp) {
+    pushShipRedCommand: function(cmd) {
         if (!cmd) return;
-        this.socket.emit('red', {cmd: cmd, hp: hp});
+        this.socket.emit('red', {cmd: cmd});
     },
 
     listenShipControl: function() {

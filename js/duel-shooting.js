@@ -77,10 +77,10 @@ var DuelShooting = Class.create({
             if (action) {
                 switch (this.sync.controlShip) {
                     case 'white':
-                        this.sync.pushShipWhiteCommand(action.getCommand(), white.getHitPoint());
+                        this.sync.pushShipWhiteCommand(action.getCommand());
                         break;
                     case 'red':
-                        this.sync.pushShipRedCommand(action.getCommand(), red.getHitPoint());
+                        this.sync.pushShipRedCommand(action.getCommand());
                         break;
                 }
             }
