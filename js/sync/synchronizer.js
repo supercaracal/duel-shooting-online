@@ -15,6 +15,19 @@ var Synchronizer = Class.create({
         this.listenShipControl();
         this.listenDuelReady(callback);
         this.socket.emit('duty', {});
+        this.listenCriticalInfo();
+        setInterval(this.pushCriticalInfoInterval.bind(this), 1000);
+    },
+
+    pushCriticalInfoInterval: function() {
+        switch (this.controlShip) {
+            case 'white':
+                this.socket.emit('critical white', {hp: this.shipWhite.getHitPoint(), left: this.shipWhite.getLeft()});
+                break;
+            case 'red':
+                this.socket.emit('critical red', {hp: this.shipRed.getHitPoint(), left: this.shipRed.getLeft()});
+                break;
+        }
     },
 
     pushShipWhiteCommand: function(cmd) {
@@ -25,6 +38,11 @@ var Synchronizer = Class.create({
     pushShipRedCommand: function(cmd) {
         if (!cmd) return;
         this.socket.emit('red', {cmd: cmd});
+    },
+
+    listenCriticalInfo: function() {
+        this.socket.on('critical white', this.criticalWhite.bind(this));
+        this.socket.on('critical red', this.criticalRed.bind(this));
     },
 
     listenShipControl: function() {
@@ -46,6 +64,16 @@ var Synchronizer = Class.create({
         this.cmdRed = cmd;
         this.shipRed = ship;
         this.socket.on('red', this.red.bind(this));
+    },
+
+    criticalWhite: function(data) {
+        this.shipWhite.setHitPoint(data.hp);
+        this.shipWhite.setLeft(data.left);
+    },
+
+    criticalRed: function(data) {
+        this.shipRed.setHitPoint(data.hp);
+        this.shipRed.setLeft(data.left);
     },
 
     youHaveControl: function(data) {

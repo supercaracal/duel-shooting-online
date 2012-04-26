@@ -3,7 +3,7 @@ var DuelShooting = Class.create({
     sync: null,
 
     initialize: function() {
-        this.sync = new Synchronizer(':3000/', this.callback.bind(this));
+        this.sync = new Synchronizer('/', this.callback.bind(this));
     },
 
     // TODO
