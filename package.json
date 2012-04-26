@@ -2,11 +2,11 @@
   "name": "duel-shooting-online",
   "version": "0.0.1",
   "engines": {
-    "node": "latest",
-    "npm": "latest"
+    "node": "0.6.x",
+    "npm": "1.1.x"
   },
   "dependencies": {
-    "express": "latest",
-    "socket.io": "latest"
+    "express": "2.2.0",
+    "socket.io": "0.9.0"
   }
 }
