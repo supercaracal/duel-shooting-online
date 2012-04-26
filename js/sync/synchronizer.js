@@ -16,7 +16,7 @@ var Synchronizer = Class.create({
         this.listenDuelReady(callback);
         this.socket.emit('duty', {});
         this.listenCriticalInfo();
-        setInterval(this.pushCriticalInfoInterval.bind(this), 1000);
+        setInterval(this.pushCriticalInfoInterval.bind(this), 5000);
     },
 
     pushCriticalInfoInterval: function() {
