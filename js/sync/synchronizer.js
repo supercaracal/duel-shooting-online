@@ -22,10 +22,10 @@ var Synchronizer = Class.create({
     pushCriticalInfoInterval: function() {
         switch (this.controlShip) {
             case 'white':
-                this.socket.emit('critical white', {hp: this.shipWhite.getHitPoint(), left: this.shipWhite.getLeft()});
+                if (this.shipWhite) this.socket.emit('critical white', {hp: this.shipWhite.getHitPoint(), left: this.shipWhite.getLeft()});
                 break;
             case 'red':
-                this.socket.emit('critical red', {hp: this.shipRed.getHitPoint(), left: this.shipRed.getLeft()});
+                if (this.shipRed) this.socket.emit('critical red', {hp: this.shipRed.getHitPoint(), left: this.shipRed.getLeft()});
                 break;
         }
     },
