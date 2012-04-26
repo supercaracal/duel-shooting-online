@@ -12,7 +12,7 @@ var Background = Class.create(Sprite, {
     },
 
     resetPosition: function($super) {
-        $super.resetPosition();
+        $super();
         this.elm.setStyle({
             height: this.clientHeight + 'px',
             width: this.clientWidth + 'px'

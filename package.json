@@ -1,8 +1,12 @@
 {
-  "name": "duelshooting-online",
+  "name": "duel-shooting-online",
   "version": "0.0.1",
+  "engines": {
+    "node": "latest",
+    "npm": "latest"
+  },
   "dependencies": {
-    "express": "2.2.0",
-    "socket.io": "0.9.0"
+    "express": "latest",
+    "socket.io": "latest"
   }
 }

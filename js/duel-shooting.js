@@ -1,9 +1,11 @@
 var DuelShooting = Class.create({
 
     sync: null,
+    opening: null,
 
-    initialize: function() {
+    initialize: function(opening) {
         this.sync = new Synchronizer('/', this.callback.bind(this));
+        this.opening = opening;
     },
 
     // TODO
@@ -93,5 +95,6 @@ var DuelShooting = Class.create({
         white.renderElement();
 
         game.start();
+        this.opening.hide();
     }
 });

@@ -53,16 +53,10 @@ var Sprite = Class.create({
 
     getClientHeight: function() {
         return 480;
-
-        var height = document.viewport.getHeight();
-        return height - (height % 10);
     },
 
     getClientWidth: function() {
         return 720;
-
-        var width = document.viewport.getWidth();
-        return width - (width % 10);
     },
 
     renderElement: function() {

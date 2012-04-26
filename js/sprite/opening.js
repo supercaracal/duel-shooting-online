@@ -8,7 +8,15 @@ var Opening = Class.create(Sprite, {
 
     backgroundOpacity: 1.0,
 
-    timerId; null,
+    timerId: null,
+
+    getClientHeight: function() {
+        return document.viewport.getHeight();
+    },
+
+    getClientWidth: function() {
+        return document.viewport.getWidth();
+    },
 
     createElement: function() {
         var background = new Element('div').setStyle({
@@ -29,6 +37,7 @@ var Opening = Class.create(Sprite, {
             left: '0px'
         }).update(this.TITLE_TEXT).setOpacity(this.titleOpacity);
         background.insert(this.title);
+        $(document.body).insert(this.title);
         return background;
     },
 
@@ -50,13 +59,13 @@ var Opening = Class.create(Sprite, {
     appear: function() {
             if (this.titleOpacity >= 1.0) {
                 clearInterval(this.timerId);
-                setTimeout(this.hide.bind(this), 2000);
             }
             this.titleOpacity += 0.1;
             this.title.setOpacity(this.titleOpacity);
     },
 
     hide: function() {
+        clearInterval(this.timerId);
         this.title.remove();
         this.timerId = setInterval(this.fade.bind(this), 32);
     },

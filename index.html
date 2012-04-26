@@ -2,9 +2,23 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Duel Shooting</title>
+
+<meta name="title" content="Duel Shooting Online -Javascript Game-" />
+<meta name="keywords" content="duel,shooting,online,javascript,prototype.js,node.js,express,socket.io" />
+<meta name="description" content="This is a javascript game." />
+<title>Duel Shooting Online -Javascript Game-</title>
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Duel Shooting Online -Javascript Game-" />
+<meta property="og:url" content="http://duelshooting-online.herokuapp.com/" />
+<meta property="og:image" content="https://github.com/supercaracal/duelshooting/raw/master/screenshot.jpg" />
+<meta property="og:description" content="This is a javascript game." />
+
+
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">google.load('prototype', '1.7')</script>
+
+<script type="text/javascript" src="/js/sprite/base/sprite.js"></script>
+<script type="text/javascript" src="/js/sprite/opening.js"></script>
 
 <script type="text/javascript" src="/js/action/base/action.js"></script>
 <script type="text/javascript" src="/js/action/action-ship-red.js"></script>
@@ -19,7 +33,6 @@
 <script type="text/javascript" src="/js/auto/automatic-controls.js"></script>
 <script type="text/javascript" src="/js/sync/synchronizer.js"></script>
 
-<script type="text/javascript" src="/js/sprite/base/sprite.js"></script>
 <script type="text/javascript" src="/js/sprite/background.js"></script>
 <script type="text/javascript" src="/js/sprite/bullet.js"></script>
 <script type="text/javascript" src="/js/sprite/bullet-linear.js"></script>
@@ -40,8 +53,13 @@
 
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
+var opening;
+Event.observe(window, 'dom:loaded', function() {
+    opening = new Opening();
+    opening.show();
+});
 Event.observe(window, 'load', function() {
-    new DuelShooting();
+    new DuelShooting(opening);
 });
 </script>
 </head>
