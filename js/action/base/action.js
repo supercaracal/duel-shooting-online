@@ -2,12 +2,10 @@ var Action = Class.create({
 
     hasTouchEvent: null,
     nextCommand: null,
-    isContinue: null,
     sprite: null,
 
     initialize: function() {
         this.hasTouchEvent = this.checkTouchEvent();
-        this.isContinue = false;
         this.sprite = new Sprite();
         this.setEventListener();
     },
@@ -27,9 +25,7 @@ var Action = Class.create({
 
     getCommand: function() {
         var command = this.nextCommand;
-        if (!this.isContinue) {
-            this.nextCommand = null;
-        }
+        this.nextCommand = null;
         return command;
     },
 
