@@ -2,100 +2,136 @@ var DuelShooting = Class.create({
 
     sync: null,
     opening: null,
+    sounds: null,
+    ship: null,
+    enemy: null,
+    weapons: null,
+    action: null,
+    cmd: null,
+    game: null,
 
     initialize: function() {
-        this.sync = new Synchronizer('/', this.callback.bind(this));
         this.opening = new Opening();
         this.opening.show();
+        this.sync = new Synchronizer('/', this.callback.bind(this));
     },
 
-    // TODO
     callback: function(data) {
+        this.setupSoundEffect();
+        this.setupShip();
+        this.setupWeaponsSound();
+        this.setupGame();
+        this.renderElements();
+        this.game.start();
+        this.opening.hide();
+    },
 
+    setupSoundEffect: function() {
         var sound = new SoundCreater();
-        var hitSE = sound.createAudio('/se/hit.mp3');
-        var loseSE = sound.createAudio('/se/lose.mp3');
-        var newtypeSE = sound.createAudio('/se/newtype.mp3');
-        var attackSE = sound.createAudio('/se/attack.mp3')
-        var megaCannonSE = sound.createAudio('/se/mega.mp3')
-        var funnelGoSE = sound.createAudio('/se/funnel1.mp3')
-        var funnelAtkSE = sound.createAudio('/se/funnel2.mp3')
+        this.sounds = {};
+        this.sounds.hit = sound.createAudio('/se/hit.mp3');
+        this.sounds.lose = sound.createAudio('/se/lose.mp3');
+        this.sounds.newtype = sound.createAudio('/se/newtype.mp3');
+        this.sounds.attack = sound.createAudio('/se/attack.mp3');
+        this.sounds.megaCannon = sound.createAudio('/se/mega.mp3');
+        this.sounds.funnelGo = sound.createAudio('/se/funnel1.mp3');
+        this.sounds.funnelAtk = sound.createAudio('/se/funnel2.mp3');
+    },
 
-        var bg = new Background();
-
+    setupShip: function() {
         switch (this.sync.controlShip) {
             case 'white':
-                var white = new ShipWhite(false);
-                var red = new ShipRed(true);
-                var shipWeapons = new AutomaticControls(white, red);
-                var enemyWeapons = new AutomaticControls(red, white);
-                enemyWeapons.addIField(true);
-                enemyWeapons.addFunnelDefences(true);
-                var action = new ActionShipWhite();
-                var shipCmd = new CommandShipWhite(white, shipWeapons);
-                var enemyCmd = new CommandShipRed(red, enemyWeapons);
-                this.sync.listenShipWhiteCommand(shipCmd, white);
-                this.sync.listenShipRedCommand(enemyCmd, red);
+                this.setupShipAsWhite();
                 break;
             case 'red':
-                var white = new ShipWhite(true);
-                var red = new ShipRed(false);
-                var shipWeapons = new AutomaticControls(red, white);
-                var enemyWeapons = new AutomaticControls(white, red);
-                shipWeapons.addIField(false);
-                shipWeapons.addFunnelDefences(false);
-                var action = new ActionShipRed();
-                var shipCmd = new CommandShipRed(red, shipWeapons);
-                var enemyCmd = new CommandShipWhite(white, enemyWeapons);
-                this.sync.listenShipRedCommand(shipCmd, red);
-                this.sync.listenShipWhiteCommand(enemyCmd, white);
+                this.setupShipAsRed();
                 break;
             default:
-                var white = new ShipWhite(false);
-                var red = new ShipRed(true);
-                var shipWeapons = new AutomaticControls(white, red);
-                var enemyWeapons = new AutomaticControls(red, white);
-                enemyWeapons.addIField(true);
-                enemyWeapons.addFunnelDefences(true);
-                var shipCmd = new CommandShipWhite(white, shipWeapons);
-                var enemyCmd = new CommandShipRed(red, enemyWeapons);
-                this.sync.listenShipWhiteCommand(shipCmd, white);
-                this.sync.listenShipRedCommand(enemyCmd, red);
+                this.setupShipAsReadOnly();
                 break;
         }
+    },
 
-        red.setSoundHit(hitSE);
-        red.setSoundLose(loseSE);
-        red.setSoundNewtype(newtypeSE);
+    setupShipAsWhite: function() {
+        this.ship = new ShipWhite(false);
+        this.enemy = new ShipRed(true);
+        this.ship.setSoundHit(this.sounds.hit);
+        this.ship.setSoundLose(this.sounds.lose);
+        this.weapons = {};
+        this.weapons.ship = new AutomaticControls(this.ship, this.enemy);
+        this.weapons.enemy = new AutomaticControls(this.enemy, this.ship);
+        this.weapons.enemy.addIField(true);
+        this.weapons.enemy.addFunnelDefences(true);
+        this.action = new ActionShipWhite();
+        this.cmd = {};
+        this.cmd.ship = new CommandShipWhite(this.ship, this.weapons.ship);
+        this.cmd.enemy = new CommandShipRed(this.enemy, this.weapons.enemy);
+        this.sync.listenShipWhiteCommand(this.cmd.ship, this.ship);
+        this.sync.listenShipRedCommand(this.cmd.enemy, this.enemy);
+    },
 
-        white.setSoundHit(hitSE);
-        white.setSoundLose(loseSE);
+    setupShipAsRed: function() {
+        this.ship = new ShipRed(false);
+        this.enemy = new ShipWhite(true);
+        this.ship.setSoundHit(this.sounds.hit);
+        this.ship.setSoundLose(this.sounds.lose);
+        this.ship.setSoundNewtype(this.sounds.newtype);
+        this.weapons = {};
+        this.weapons.ship = new AutomaticControls(this.ship, this.enemy);
+        this.weapons.enemy = new AutomaticControls(this.enemy, this.ship);
+        this.weapons.ship.addIField(false);
+        this.weapons.ship.addFunnelDefences(false);
+        this.action = new ActionShipRed();
+        this.cmd = {};
+        this.cmd.ship = new CommandShipRed(this.ship, this.weapons.ship);
+        this.cmd.enemy = new CommandShipWhite(this.enemy, this.weapons.enemy);
+        this.sync.listenShipRedCommand(this.cmd.ship, this.ship);
+        this.sync.listenShipWhiteCommand(this.cmd.enemy, this.enemy);
+    },
 
-        shipWeapons.setSoundAttack(attackSE);
-        shipWeapons.setSoundMegaCannon(megaCannonSE);
-        shipWeapons.setSoundFunnelGo(funnelGoSE);
-        shipWeapons.setSoundFunnelAttack(funnelAtkSE);
+    setupShipAsReadOnly: function() {
+        this.ship = new ShipWhite(false);
+        this.enemy = new ShipRed(true);
+        this.weapons = {};
+        this.weapons.ship = new AutomaticControls(this.ship, this.enemy);
+        this.weapons.enemy = new AutomaticControls(this.enemy, this.ship);
+        this.weapons.enemy.addIField(true);
+        this.weapons.enemy.addFunnelDefences(true);
+        this.cmd = {};
+        this.cmd.ship = new CommandShipWhite(this.ship, this.weapons.ship);
+        this.cmd.enemy = new CommandShipRed(this.enemy, this.weapons.enemy);
+        this.sync.listenShipWhiteCommand(this.cmd.ship, this.ship);
+        this.sync.listenShipRedCommand(this.cmd.enemy, this.enemy);
+    },
 
-        var game = new Game((function() {
-            if (action) {
-                switch (this.sync.controlShip) {
-                    case 'white':
-                        this.sync.pushShipWhiteCommand(action.getCommand());
-                        break;
-                    case 'red':
-                        this.sync.pushShipRedCommand(action.getCommand());
-                        break;
-                }
+    setupWeaponsSound: function() {
+        this.weapons.ship.setSoundAttack(this.sounds.attack);
+        this.weapons.ship.setSoundMegaCannon(this.sounds.megaCannon);
+        this.weapons.ship.setSoundFunnelGo(this.sounds.funnelGo);
+        this.weapons.ship.setSoundFunnelAttack(this.sounds.funnelAtk);
+    },
+
+    setupGame: function() {
+        this.game = new Game((function() {
+            this.weapons.ship.move();
+            this.weapons.enemy.move();
+            if (!this.action) {
+                return;
             }
-            shipWeapons.move();
-            enemyWeapons.move();
+            switch (this.sync.controlShip) {
+                case 'white':
+                    this.sync.pushShipWhiteCommand(this.action.getCommand());
+                    break;
+                case 'red':
+                    this.sync.pushShipRedCommand(this.action.getCommand());
+                    break;
+            }
         }).bind(this));
-    
-        bg.renderElement();
-        red.renderElement();
-        white.renderElement();
+    },
 
-        game.start();
-        this.opening.hide();
+    renderElements: function() {
+        new Background().renderElement();
+        this.ship.renderElement();
+        this.enemy.renderElement();
     }
 });
