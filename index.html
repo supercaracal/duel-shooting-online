@@ -53,13 +53,8 @@
 
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
-var opening;
-Event.observe(window, 'dom:loaded', function() {
-    opening = new Opening();
-    opening.show();
-});
 Event.observe(window, 'load', function() {
-    new DuelShooting(opening);
+    new DuelShooting();
 });
 </script>
 </head>
