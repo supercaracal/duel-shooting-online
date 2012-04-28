@@ -113,11 +113,13 @@ var Synchronizer = Class.create({
 
     white: function(data) {
         if (!this.cmd.white) return;
+        if (this.ship.white.isEnemy) this.ship.white.nextCmd = data.cmd;
         this.cmd.white.execute(data.cmd);
     },
 
     red: function(data) {
-        if (this.cmd.red) return;
+        if (!this.cmd.red) return;
+        if (this.ship.red.isEnemy) this.ship.red.nextCmd = data.cmd;
         this.cmd.red.execute(data.cmd);
     }
 });

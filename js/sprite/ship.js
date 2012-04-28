@@ -5,6 +5,7 @@ var Ship = Class.create(Sprite, {
     soundLose: null,
     isEnemy: null,
     way: null,
+    nextCmd: null,
 
     initialize: function($super, isEnemy) {
         this.isEnemy = isEnemy;
@@ -195,8 +196,11 @@ var Ship = Class.create(Sprite, {
         }
     },
 
-    move: function(cmd) {
-        if (cmd !== null && cmd !== 'stepRight' && cmd !== 'stepLeft') {
+    move: function() {
+        if (this.nextCmd !== null
+                && this.nextCmd !== 'stepRight'
+                && this.nextCmd !== 'stepLeft') {
+
             this.way = null;
         }
         if (this.way === 'right') this.moveRight();
