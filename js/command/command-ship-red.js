@@ -17,6 +17,9 @@ var CommandShipRed = Class.create(Command, {
     },
 
     attack: function() {
+        if (this.ship.iField && this.ship.iField.isActive) {
+            return;
+        }
         this.auto.addBulletHoming();
     },
 

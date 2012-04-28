@@ -112,21 +112,28 @@ var DuelShooting = Class.create({
     },
 
     setupGame: function() {
-        this.game = new Game((function() {
-            this.weapons.ship.move();
-            this.weapons.enemy.move();
-            if (!this.action) {
-                return;
-            }
-            switch (this.sync.controlShip) {
-                case 'white':
-                    this.sync.pushShipWhiteCommand(this.action.getCommand());
-                    break;
-                case 'red':
-                    this.sync.pushShipRedCommand(this.action.getCommand());
-                    break;
-            }
-        }).bind(this));
+        this.game = new Game(this.routine.bind(this));
+    },
+
+    routine: function() {
+        this.weapons.ship.move();
+        this.weapons.enemy.move();
+        if (!this.action) {
+            return;
+        }
+        if (this.ship.getHitPoint() === 0) {
+            this.game.stop();
+            this.sync.stop();
+            return;
+        }
+        switch (this.sync.controlShip) {
+            case 'white':
+                this.sync.pushShipWhiteCommand(this.action.getCommand());
+                break;
+            case 'red':
+                this.sync.pushShipRedCommand(this.action.getCommand());
+                break;
+        }
     },
 
     renderElements: function() {

@@ -2,6 +2,8 @@ var Synchronizer = Class.create({
 
     socket: null,
 
+    timerId: null,
+
     controlShip: null,
 
     shipWhite: null,
@@ -16,7 +18,12 @@ var Synchronizer = Class.create({
         this.listenDuelReady(callback);
         this.socket.emit('duty', {});
         this.listenCriticalInfo();
-        setInterval(this.pushCriticalInfoInterval.bind(this), 5000);
+        this.timerId = setInterval(this.pushCriticalInfoInterval.bind(this), 5000);
+    },
+
+    stop: function() {
+        clearInterval(this.timerId);
+        this.socket.disconnect();
     },
 
     pushCriticalInfoInterval: function() {
