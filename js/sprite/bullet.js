@@ -23,8 +23,20 @@ var Bullet = Class.create(Sprite, {
 
     createElement: function() {
         var color = this.getColor();
-        var outer = new Element('div').setStyle({width: '30px', height: '30px', zIndex: this.Z_INDEX_BASE + 6, position: 'fixed'});
-        var inner = new Element('div').setStyle({width: '20px', height: '20px', margin: '5px', backgroundColor: color, borderRadius: '20px', boxShadow: '0px 0px 10px ' + color});
+        var outer = new Element('div').setStyle({
+            width: '30px',
+            height: '30px',
+            zIndex: this.Z_INDEX_BASE + 6,
+            position: 'fixed'
+        });
+        var inner = new Element('div').setStyle({
+            width: '20px',
+            height: '20px',
+            margin: '5px',
+            backgroundColor: color,
+            borderRadius: '20px',
+            boxShadow: '0px 0px 10px ' + color
+        });
         return inner.wrap(outer);
     }
 });

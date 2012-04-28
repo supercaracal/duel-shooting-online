@@ -87,13 +87,17 @@ var Synchronizer = Class.create({
 
     criticalWhite: function(data) {
         this.shipWhite.setHitPoint(data.hp);
-        var left = data.isEnemy === this.shipWhite.isEnemy ? data.left : this.shipWhite.clientWidth - data.left + (data.isEnemy === true ? 90 : -90);
+        var left = data.isEnemy === this.shipWhite.isEnemy ?
+            data.left :
+            this.shipWhite.clientWidth - data.left + (data.isEnemy === true ? 90 : -90);
         this.shipWhite.setLeft(left);
     },
 
     criticalRed: function(data) {
         this.shipRed.setHitPoint(data.hp);
-        var left = data.isEnemy === this.shipRed.isEnemy ? data.left : this.shipRed.clientWidth - data.left + (data.isEnemy === true ? 90 : -90);
+        var left = data.isEnemy === this.shipRed.isEnemy ?
+            data.left :
+            this.shipRed.clientWidth - data.left + (data.isEnemy === true ? 90 : -90);
         this.shipRed.setLeft(left);
     },
 

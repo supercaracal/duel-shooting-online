@@ -3,6 +3,7 @@ var DuelShooting = Class.create({
     sync: null,
     opening: null,
     sounds: null,
+    timeKeeper: null,
     ship: null,
     enemy: null,
     weapons: null,
@@ -20,9 +21,11 @@ var DuelShooting = Class.create({
         this.setupSoundEffect();
         this.setupShip();
         this.setupWeaponsSound();
+        this.setupTimeKeeper();
         this.setupGame();
         this.renderElements();
         this.game.start();
+        this.timeKeeper.start();
         this.opening.hide();
     },
 
@@ -111,6 +114,10 @@ var DuelShooting = Class.create({
         this.weapons.ship.setSoundFunnelAttack(this.sounds.funnelAtk);
     },
 
+    setupTimeKeeper: function() {
+        this.timeKeeper = new TimeKeeper();
+    },
+
     setupGame: function() {
         this.game = new Game(this.routine.bind(this));
     },
@@ -122,6 +129,7 @@ var DuelShooting = Class.create({
             return;
         }
         if (this.ship.getHitPoint() === 0) {
+            this.timeKeeper.stop();
             this.game.stop();
             this.sync.stop();
             return;
@@ -138,6 +146,7 @@ var DuelShooting = Class.create({
 
     renderElements: function() {
         new Background().renderElement();
+        this.timeKeeper.renderElement();
         this.ship.renderElement();
         this.enemy.renderElement();
     }

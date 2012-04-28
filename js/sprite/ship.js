@@ -14,20 +14,68 @@ var Ship = Class.create(Sprite, {
 
     createElement: function() {
         var color = this.getColor();
-        return this.isEnemy ? this.createEnemy(color) : this.createShip(color);
+        return this.isEnemy ?
+            this.createEnemy(color) :
+            this.createShip(color);
     },
 
     createEnemy: function(color) {
-        var elm = new Element('div').setStyle({width: '90px', height: '60px', zIndex: this.Z_INDEX_BASE + 10, position: 'fixed', top: '0px', left: '0px'});
-        elm.insert(new Element('div').setStyle({width: '90px', height: '30px', backgroundColor: color, borderRadius: '6px', boxShadow: '0px 0px 30px ' + color, textAlign: 'center', fontWeight: 800, fontSize: '20px'}).update(this.hitPoint));
-        elm.insert(new Element('div').setStyle({width: '30px', height: '30px', backgroundColor: color, borderRadius: '6px', boxShadow: '0px 0px 30px ' + color, marginLeft: '30px'}));
+        var elm = new Element('div').setStyle({
+            width: '90px',
+            height: '60px',
+            zIndex: this.Z_INDEX_BASE + 10,
+            position: 'fixed',
+            top: '0px',
+            left: '0px'
+        });
+        elm.insert(new Element('div').setStyle({
+            width: '90px',
+            height: '30px',
+            backgroundColor: color,
+            borderRadius: '6px',
+            boxShadow: '0px 0px 30px ' + color,
+            textAlign: 'center',
+            fontWeight: 800,
+            fontSize: '20px'
+        }).update(this.hitPoint));
+        elm.insert(new Element('div').setStyle({
+            width: '30px',
+            height: '30px',
+            backgroundColor: color,
+            borderRadius: '6px',
+            boxShadow: '0px 0px 30px ' + color,
+            marginLeft: '30px'
+        }));
         return elm;                
     },
 
     createShip: function(color) {
-        var elm = new Element('div').setStyle({width: '90px', height: '60px', zIndex: this.Z_INDEX_BASE + 10, position: 'fixed', top: this.clientHeight - 60 + 'px', left: this.clientWidth - 90 + 'px'});
-        elm.insert(new Element('div').setStyle({width: '30px', height: '30px', backgroundColor: color, borderRadius: '6px', boxShadow: '0px 0px 10px ' + color, marginLeft: '30px'}));
-        elm.insert(new Element('div').setStyle({width: '90px', height: '30px', backgroundColor: color, borderRadius: '6px', boxShadow: '0px 0px 10px ' + color, textAlign: 'center', fontWeight: 800, fontSize: '20px'}).update(this.hitPoint));
+        var elm = new Element('div').setStyle({
+            width: '90px',
+            height: '60px',
+            zIndex: this.Z_INDEX_BASE + 10,
+            position: 'fixed',
+            top: this.clientHeight - 60 + 'px',
+            left: this.clientWidth - 90 + 'px'
+        });
+        elm.insert(new Element('div').setStyle({
+            width: '30px',
+            height: '30px',
+            backgroundColor: color,
+            borderRadius: '6px',
+            boxShadow: '0px 0px 10px ' + color,
+            marginLeft: '30px'
+        }));
+        elm.insert(new Element('div').setStyle({
+            width: '90px',
+            height: '30px',
+            backgroundColor: color,
+            borderRadius: '6px',
+            boxShadow: '0px 0px 10px ' + color,
+            textAlign: 'center',
+            fontWeight: 800,
+            fontSize: '20px'
+        }).update(this.hitPoint));
         return elm;
     },
 
@@ -68,29 +116,50 @@ var Ship = Class.create(Sprite, {
     },
 
     isHit: function(bullet, range) {
+
         var enemyLeft = this.getLeft();
         var enemyIField = this.getIField ? this.getIField() : null;
         var top = bullet.getTop();
         var left = bullet.getLeft();
-        if (enemyIField && enemyIField.isActive && (bullet.isFall ? top + range > this.clientHeight - 110 : top + range < 80) && enemyLeft - 25 < left && left < enemyLeft + 95) {
+
+        if (enemyIField
+                && enemyIField.isActive
+                && (bullet.isFall ? top + range > this.clientHeight - 110 : top + range < 80)
+                && enemyLeft - 25 < left
+                && left < enemyLeft + 95) {
+
             enemyIField.hit();
             return true;
         }
-        if ((enemyLeft - 25 < left) && (left <= enemyLeft + 5) && (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
+
+        if ((enemyLeft - 25 < left)
+                && (left <= enemyLeft + 5)
+                && (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
+
             this.hit();
             return true;
         }
-        if ((enemyLeft + 5 < left) && (left < enemyLeft + 60) && (bullet.isFall ? top + range > this.clientHeight - 90 : top + range < 60)) {
+
+        if ((enemyLeft + 5 < left)
+                && (left < enemyLeft + 60)
+                && (bullet.isFall ? top + range > this.clientHeight - 90 : top + range < 60)) {
+
             this.hit();
             return true;
         }
-        if ((enemyLeft + 60 <= left) && (left < enemyLeft + 90) && (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
+
+        if ((enemyLeft + 60 <= left)
+                && (left < enemyLeft + 90)
+                && (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
+
             this.hit();
             return true;
         }
+
         if ((top + range < 0) || (this.clientHeight < (top + range))) {
             return true;
         }
+
         return false;
     },
 

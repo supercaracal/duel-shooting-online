@@ -71,7 +71,10 @@ var IField = Class.create(Sprite, {
     },
 
     changeColor: function () {
-        var color = '#' + Math.floor(Math.random() * 100).toColorPart() + Math.floor(Math.random() * 100).toColorPart() + Math.floor(Math.random() * 100).toColorPart();
+        var color = '#'
+            + Math.floor(Math.random() * 100).toColorPart()
+            + Math.floor(Math.random() * 100).toColorPart()
+            + Math.floor(Math.random() * 100).toColorPart();
         this.elm.setStyle({backgroundColor: color});
     }
 });
