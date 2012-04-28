@@ -82,6 +82,7 @@ var Synchronizer = Class.create({
     },
 
     criticalWhite: function(data) {
+        if (!this.ship.white) return;
         this.ship.white.setHitPoint(data.hp);
         var left = data.isEnemy === this.ship.white.isEnemy ?
             data.left :
@@ -90,6 +91,7 @@ var Synchronizer = Class.create({
     },
 
     criticalRed: function(data) {
+        if (!this.ship.red) return;
         this.ship.red.setHitPoint(data.hp);
         var left = data.isEnemy === this.ship.red.isEnemy ?
             data.left :
@@ -110,10 +112,12 @@ var Synchronizer = Class.create({
     },
 
     white: function(data) {
+        if (!this.cmd.white) return;
         this.cmd.white.execute(data.cmd);
     },
 
     red: function(data) {
+        if (this.cmd.red) return;
         this.cmd.red.execute(data.cmd);
     }
 });
