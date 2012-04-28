@@ -4,6 +4,7 @@ var Ship = Class.create(Sprite, {
     soundHit: null,
     soundLose: null,
     isEnemy: null,
+    way: null,
 
     initialize: function($super, isEnemy) {
         this.isEnemy = isEnemy;
@@ -173,19 +174,11 @@ var Ship = Class.create(Sprite, {
     },
 
     stepRight: function() {
-        if (this.isEnemy) {
-            this.moveLeft();
-            return;
-        }
-        this.moveRight();
+        this.way = this.isEnemy ? 'left' : 'right';
     },
 
     stepLeft: function() {
-        if (this.isEnemy) {
-            this.moveRight();
-            return;
-        }
-        this.moveLeft();
+        this.way = this.isEnemy ? 'right' : 'left';
     },
     
     moveRight: function() {
@@ -200,5 +193,13 @@ var Ship = Class.create(Sprite, {
         if (min <= this.currentLeft - 10) {
             this.setLeft(this.currentLeft - 10);
         }
+    },
+
+    move: function(cmd) {
+        if (cmd !== null && cmd !== 'stepRight' && cmd !== 'stepLeft') {
+            this.way = null;
+        }
+        if (this.way === 'right') this.moveRight();
+        if (this.way === 'left') this.moveLeft();
     }
 });

@@ -1,18 +1,14 @@
 var Synchronizer = Class.create({
 
     socket: null,
-
     timerId: null,
-
     controlShip: null,
-
-    shipWhite: null,
-    shipRed: null,
-
-    cmdWhite: null,
-    cmdRed: null,
+    ship: null,
+    cmd: null,
 
     initialize: function(uri, callback) {
+        this.ship = {};
+        this.cmd = {};
         this.socket = io.connect(uri);
         this.listenShipControl();
         this.listenDuelReady(callback);
@@ -29,20 +25,20 @@ var Synchronizer = Class.create({
     pushCriticalInfoInterval: function() {
         switch (this.controlShip) {
             case 'white':
-                if (this.shipWhite) {
+                if (this.ship.white) {
                     this.socket.emit('critical white', {
-                        hp: this.shipWhite.getHitPoint(),
-                        left: this.shipWhite.getLeft(),
-                        isEnemy: this.shipWhite.isEnemy
+                        hp: this.ship.white.getHitPoint(),
+                        left: this.ship.white.getLeft(),
+                        isEnemy: this.ship.white.isEnemy
                     });
                 }
                 break;
             case 'red':
-                if (this.shipRed) {
+                if (this.ship.red) {
                     this.socket.emit('critical red', {
-                        hp: this.shipRed.getHitPoint(),
-                        left: this.shipRed.getLeft(),
-                        isEnemy: this.shipRed.isEnemy
+                        hp: this.ship.red.getHitPoint(),
+                        left: this.ship.red.getLeft(),
+                        isEnemy: this.ship.red.isEnemy
                     });
                 }
                 break;
@@ -74,31 +70,31 @@ var Synchronizer = Class.create({
     },
 
     listenShipWhiteCommand: function(cmd, ship) {
-        this.cmdWhite = cmd;
-        this.shipWhite = ship;
+        this.cmd.white = cmd;
+        this.ship.white = ship;
         this.socket.on('white', this.white.bind(this));
     },
 
     listenShipRedCommand: function(cmd, ship) {
-        this.cmdRed = cmd;
-        this.shipRed = ship;
+        this.cmd.red = cmd;
+        this.ship.red = ship;
         this.socket.on('red', this.red.bind(this));
     },
 
     criticalWhite: function(data) {
-        this.shipWhite.setHitPoint(data.hp);
-        var left = data.isEnemy === this.shipWhite.isEnemy ?
+        this.ship.white.setHitPoint(data.hp);
+        var left = data.isEnemy === this.ship.white.isEnemy ?
             data.left :
-            this.shipWhite.clientWidth - data.left + (data.isEnemy === true ? 90 : -90);
-        this.shipWhite.setLeft(left);
+            this.ship.white.clientWidth - data.left + (data.isEnemy === true ? 90 : -90);
+        this.ship.white.setLeft(left);
     },
 
     criticalRed: function(data) {
-        this.shipRed.setHitPoint(data.hp);
-        var left = data.isEnemy === this.shipRed.isEnemy ?
+        this.ship.red.setHitPoint(data.hp);
+        var left = data.isEnemy === this.ship.red.isEnemy ?
             data.left :
-            this.shipRed.clientWidth - data.left + (data.isEnemy === true ? 90 : -90);
-        this.shipRed.setLeft(left);
+            this.ship.red.clientWidth - data.left + (data.isEnemy === true ? 90 : -90);
+        this.ship.red.setLeft(left);
     },
 
     youHaveControl: function(data) {
@@ -114,10 +110,10 @@ var Synchronizer = Class.create({
     },
 
     white: function(data) {
-        this.cmdWhite.execute(data.cmd);
+        this.cmd.white.execute(data.cmd);
     },
 
     red: function(data) {
-        this.cmdRed.execute(data.cmd);
+        this.cmd.red.execute(data.cmd);
     }
 });

@@ -139,7 +139,6 @@ var AutomaticControls = Class.create({
         elm.setPos({top: top, left: left});
         this.elms.push(elm);
         elm.renderElement();
-        this.playSoundFunnelAttack();
     },
 
     addFunnelSlider: function() {
@@ -161,6 +160,7 @@ var AutomaticControls = Class.create({
                     x.getLeft()
                 );                       
             }).bind(this));
+            this.playSoundFunnelAttack();
             return;
         }
         var funnel = new FunnelCircle(this.ship);

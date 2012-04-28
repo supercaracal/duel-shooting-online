@@ -135,14 +135,17 @@ var DuelShooting = Class.create({
             this.sync.stop();
             return;
         }
+        var cmd = this.action.getCommand();
         switch (this.sync.controlShip) {
             case 'white':
-                this.sync.pushShipWhiteCommand(this.action.getCommand());
+                this.sync.pushShipWhiteCommand(cmd);
                 break;
             case 'red':
-                this.sync.pushShipRedCommand(this.action.getCommand());
+                this.sync.pushShipRedCommand(cmd);
                 break;
         }
+        this.ship.move(cmd);
+        this.enemy.move(cmd);
     },
 
     renderElements: function() {
