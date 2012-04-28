@@ -62,7 +62,7 @@ var IField = Class.create(Sprite, {
     },
 
     barrier: function() {
-        if (0 < this.waitCount) {
+        if (0 < this.waitCount || this.isActive) {
             return;
         }
         this.isActive = true;
