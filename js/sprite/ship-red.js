@@ -35,7 +35,7 @@ var ShipRed = Class.create(Ship, {
         [left, left + (10 * 3 * sign), left + (10 * 6 * sign)].each((function(left) {
             var shadow = new ShipAfterimage(this.isEnemy);
             shadow.spot(top, left, this.hitPoint);
-            this.playSoundNewtype();
         }).bind(this));
+        this.playSoundNewtype();
     }
 });

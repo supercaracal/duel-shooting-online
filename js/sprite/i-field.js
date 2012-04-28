@@ -8,6 +8,8 @@ var IField = Class.create(Sprite, {
 
     waitCount: null,
 
+    sound: null,
+
     initialize: function($super, carrier) {
         this.isActive = false;
         this.carrier = carrier;
@@ -40,6 +42,14 @@ var IField = Class.create(Sprite, {
         return this.carrier.getLeft() - 5;
     },
 
+    setSound: function(audio) {
+        this.sound = audio;
+    },
+
+    playSound: function() {
+        if (this.sound) this.sound.replay();
+    },
+
     hit: function() {
         h = this.elm.getHeight();
         h -= 2;
@@ -60,6 +70,7 @@ var IField = Class.create(Sprite, {
         this.setTop(this.getInitTop());
         this.waitCount = this.WAIT;
         this.elm.show();
+        this.playSound();
     },
 
     move: function() {

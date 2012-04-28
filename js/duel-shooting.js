@@ -39,6 +39,7 @@ var DuelShooting = Class.create({
         this.sounds.megaCannon = sound.createAudio('/se/mega.mp3');
         this.sounds.funnelGo = sound.createAudio('/se/funnel1.mp3');
         this.sounds.funnelAtk = sound.createAudio('/se/funnel2.mp3');
+        this.sounds.iField = sound.createAudio('/se/at_field.mp3');
     },
 
     setupShip: function() {
@@ -63,8 +64,8 @@ var DuelShooting = Class.create({
         this.weapons = {};
         this.weapons.ship = new AutomaticControls(this.ship, this.enemy);
         this.weapons.enemy = new AutomaticControls(this.enemy, this.ship);
-        this.weapons.enemy.addIField(true);
-        this.weapons.enemy.addFunnelDefences(true);
+        this.weapons.enemy.addIField();
+        this.weapons.enemy.addFunnelDefences();
         this.action = new ActionShipWhite();
         this.cmd = {};
         this.cmd.ship = new CommandShipWhite(this.ship, this.weapons.ship);
@@ -82,8 +83,8 @@ var DuelShooting = Class.create({
         this.weapons = {};
         this.weapons.ship = new AutomaticControls(this.ship, this.enemy);
         this.weapons.enemy = new AutomaticControls(this.enemy, this.ship);
-        this.weapons.ship.addIField(false);
-        this.weapons.ship.addFunnelDefences(false);
+        this.weapons.ship.addIField(this.sounds.iField);
+        this.weapons.ship.addFunnelDefences();
         this.action = new ActionShipRed();
         this.cmd = {};
         this.cmd.ship = new CommandShipRed(this.ship, this.weapons.ship);
@@ -98,8 +99,8 @@ var DuelShooting = Class.create({
         this.weapons = {};
         this.weapons.ship = new AutomaticControls(this.ship, this.enemy);
         this.weapons.enemy = new AutomaticControls(this.enemy, this.ship);
-        this.weapons.enemy.addIField(true);
-        this.weapons.enemy.addFunnelDefences(true);
+        this.weapons.enemy.addIField();
+        this.weapons.enemy.addFunnelDefences();
         this.cmd = {};
         this.cmd.ship = new CommandShipWhite(this.ship, this.weapons.ship);
         this.cmd.enemy = new CommandShipRed(this.enemy, this.weapons.enemy);

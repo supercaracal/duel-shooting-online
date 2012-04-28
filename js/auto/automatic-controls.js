@@ -170,8 +170,9 @@ var AutomaticControls = Class.create({
         this.playSoundFunnelGo();
     },
 
-    addIField: function() {
+    addIField: function(audio) {
         var iField = new IField(this.ship);
+        iField.setSound(audio);
         this.elms.push(iField);
         iField.renderElement();
     },
