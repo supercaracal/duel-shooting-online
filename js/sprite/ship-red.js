@@ -2,6 +2,7 @@ var ShipRed = Class.create(Ship, {
     
     soundNewtype: null,
     iField: null,
+    funnels: [],
 
     getColor: function() {
         return '#FF5555';
@@ -21,6 +22,23 @@ var ShipRed = Class.create(Ship, {
 
     getIField: function() {
         return this.iField;
+    },
+
+    getIFieldInfo: function() {
+        return {isActive: this.iField.isActive, height: this.iField.getHeight()};
+    },
+
+    getFunnelInfo: function() {
+        return {
+            firstLeft: this.funnels[0] ? this.funnels[0].initLeft : null,
+            firstTheta: this.funnels[0] ? this.funnels[0].theta : null,
+            secondLeft: this.funnels[1] ? this.funnels[1].initLeft : null,
+            secondTheta: this.funnels[1] ? this.funnels[1].theta : null,
+        };
+    },
+
+    addFunnel: function(funnel) {
+        this.funnels.push(funnel);
     },
 
     barrier: function() {

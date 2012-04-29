@@ -11,6 +11,7 @@ var FunnelCircle = Class.create(Funnel, {
         this.theta = this.isEnemy ? 0 : 180;
         this.speed = 3;
         this.isCloclwise = this.isEnemy;
+        carrier.addFunnel(this);
     },
 
     getInitTop: function() {

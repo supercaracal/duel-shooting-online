@@ -5,10 +5,12 @@ var Synchronizer = Class.create({
     controlShip: null,
     ship: null,
     cmd: null,
+    auto: null,
 
     initialize: function(uri, callback) {
         this.ship = {};
         this.cmd = {};
+        this.auto = {};
         this.socket = io.connect(uri);
         this.listenShipControl();
         this.listenDuelReady(callback);
@@ -25,22 +27,26 @@ var Synchronizer = Class.create({
     pushCriticalInfoInterval: function() {
         switch (this.controlShip) {
             case 'white':
-                if (this.ship.white) {
-                    this.socket.emit('critical white', {
-                        hp: this.ship.white.getHitPoint(),
-                        left: this.ship.white.getLeft(),
-                        isEnemy: this.ship.white.isEnemy
-                    });
+                if (!this.ship.white) {
+                    break;
                 }
+                this.socket.emit('critical white', {
+                    hp: this.ship.white.getHitPoint(),
+                    left: this.ship.white.getLeft(),
+                    isEnemy: this.ship.white.isEnemy
+                });
                 break;
             case 'red':
-                if (this.ship.red) {
-                    this.socket.emit('critical red', {
-                        hp: this.ship.red.getHitPoint(),
-                        left: this.ship.red.getLeft(),
-                        isEnemy: this.ship.red.isEnemy
-                    });
+                if (!this.ship.red) {
+                    break;
                 }
+                this.socket.emit('critical red', {
+                    hp: this.ship.red.getHitPoint(),
+                    left: this.ship.red.getLeft(),
+                    isEnemy: this.ship.red.isEnemy,
+                    iField: this.ship.red.getIFieldInfo(),
+                    funnel: this.ship.red.getFunnelInfo()
+                });
                 break;
         }
     },
@@ -81,12 +87,16 @@ var Synchronizer = Class.create({
         this.socket.on('red', this.red.bind(this));
     },
 
+    setShipRedAuto: function(auto) {
+        this.auto.red = auto;
+    },
+
     criticalWhite: function(data) {
         if (!this.ship.white) return;
         this.ship.white.setHitPoint(data.hp);
         var left = data.isEnemy === this.ship.white.isEnemy ?
             data.left :
-            this.ship.white.clientWidth - data.left + (data.isEnemy === true ? 90 : -90);
+            this.ship.white.clientWidth - data.left + (data.isEnemy ? 90 : -90);
         this.ship.white.setLeft(left);
     },
 
@@ -95,20 +105,67 @@ var Synchronizer = Class.create({
         this.ship.red.setHitPoint(data.hp);
         var left = data.isEnemy === this.ship.red.isEnemy ?
             data.left :
-            this.ship.red.clientWidth - data.left + (data.isEnemy === true ? 90 : -90);
+            this.ship.red.clientWidth - data.left + (data.isEnemy ? 90 : -90);
         this.ship.red.setLeft(left);
+        if (data.iField.isActive) {
+            this.ship.red.iField.setHeight(data.iField.height);
+            this.ship.red.iField.invoke();
+        } else {
+            this.ship.red.iField.cancel();
+        }
+        if (!this.auto.red) return;
+        if (data.funnel.firstLeft === null && data.funnel.secondLeft === null) {
+            this.auto.red.removeFunnelCircle(2);
+        }
+        if (data.funnel.firstLeft !== null
+                && data.funnel.secondLeft === null
+                && this.auto.red.funnelCircles.size() === 2) {
+
+            this.auto.red.removeFunnelCircle(1);
+        }
+        var left;
+        if (data.funnel.firstLeft !== null) {
+            if (this.auto.red.funnelCircles.size() === 0) {
+                this.auto.red.addFunnelCircle();
+            }
+            left = data.isEnemy === this.ship.red.isEnemy ?
+                data.funnel.firstLeft :
+                this.ship.red.clientWidth - data.funnel.firstLeft + (data.isEnemy ? 30 : -30);
+            if (left !== this.ship.red.funnels[0].initLeft) {
+                this.ship.red.funnels[0].initLeft = left;
+
+            }
+            this.ship.red.funnels[0].theta = data.funnel.firstTheta;
+        }
+        if (data.funnel.secondLeft !== null) {
+            if (this.auto.red.funnelCircles.size() === 1) {
+                this.auto.red.addFunnelCircle();
+            }
+            left = data.isEnemy === this.ship.red.isEnemy ?
+                data.funnel.secondLeft :
+                this.ship.red.clientWidth - data.funnel.secondLeft + (data.isEnemy ? 30 : -30);
+            if (left !== this.ship.red.funnels[1].initLeft) {
+                this.ship.red.funnels[1].initLeft = left;
+
+            }
+            this.ship.red.funnels[1].theta = data.funnel.secondTheta;
+        }
     },
 
     youHaveControl: function(data) {
         this.controlShip = data.ship;
         this.socket.emit('I have control', {ship: this.controlShip});
-        if (console && typeof console.log == 'function') console.log('I have control: ' + this.controlShip);
+        if (console && typeof console.log == 'function') {
+            console.log('I have control: ' + this.controlShip);
+        }
     },
 
     youHaveNoControl: function(data) {
         this.controlShip = null;
         this.socket.emit('I have no control', {});
-        if (console && typeof console.log == 'function') console.log('I have no control');
+        if (console && typeof console.log == 'function') {
+            console.log('I have no control');
+        }
     },
 
     white: function(data) {

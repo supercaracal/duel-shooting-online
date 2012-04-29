@@ -42,6 +42,15 @@ var IField = Class.create(Sprite, {
         return this.carrier.getLeft() - 5;
     },
 
+    getHeight: function() {
+        return this.elm.getHeight();
+    },
+
+    setHeight: function(h) {
+        this.elm.setStyle({height: h + 'px'});
+        this.setTop(this.getInitTop() + (20 - h) / 2);
+    },
+
     setSound: function(audio) {
         this.sound = audio;
     },
@@ -51,13 +60,11 @@ var IField = Class.create(Sprite, {
     },
 
     hit: function() {
-        h = this.elm.getHeight();
+        h = this.getHeight();
         h -= 2;
-        this.elm.setStyle({height: h + 'px'});
-        this.setTop(this.getTop() + 1); 
+        this.setHeight(h);
         if (h <= 0) {
-            this.isActive = false;
-            this.elm.hide();
+            this.cancel();
             this.waitCount = this.WAIT;
         }
     },
@@ -66,16 +73,24 @@ var IField = Class.create(Sprite, {
         if (0 < this.waitCount || this.isActive) {
             return;
         }
-        this.isActive = true;
-        this.elm.setStyle({height: '20px'});
-        this.setTop(this.getInitTop());
-        this.elm.show();
+        this.setHeight(20);
+        this.invoke();
         this.playSound();
+    },
+
+    invoke: function() {
+        this.isActive = true;
+        this.elm.show();
+    },
+
+    cancel: function() {
+        this.isActive = false;
+        this.elm.hide();
     },
 
     move: function() {
         this.setLeft(this.carrier.getLeft() - 5);
-        this.changeColor();
+        if (this.isActive) this.changeColor();
         if (0 < this.waitCount) {
             --this.waitCount;
         }

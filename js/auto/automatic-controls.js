@@ -40,6 +40,7 @@ var AutomaticControls = Class.create({
             if (this.megaCannonHeightCount % 3 === 0) this.addBulletLinearFromMegaCannon();
             --this.megaCannonHeightCount;
         }
+        this.funnelCircles.each(function(x) { x.move(); });
         for (var i = 0, len = this.elms.size(); i < len; i++) {
             this.elms[i].move();
             if (this.elms[i].isFunnelSliderAttack) {
@@ -164,7 +165,6 @@ var AutomaticControls = Class.create({
             return;
         }
         var funnel = new FunnelCircle(this.ship);
-        this.elms.push(funnel);
         this.funnelCircles.push(funnel);
         funnel.renderElement();
         this.playSoundFunnelGo();
@@ -184,6 +184,18 @@ var AutomaticControls = Class.create({
         this.elms.push(r);
         l.renderElement();
         r.renderElement();
+    },
+
+    removeFunnelCircle: function(num) {
+        var elm;
+        elm = this.funnelCircles.shift();
+        if (elm) elm.remove();
+        this.ship.funnels.shift();
+        if (1 < num) {
+            elm = this.funnelCircles.shift();
+            if (elm) elm.remove();
+            this.ship.funnels.shift();
+        }
     },
 
     fireMegaCannon: function() {

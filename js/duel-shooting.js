@@ -20,7 +20,6 @@ var DuelShooting = Class.create({
     callback: function(data) {
         this.setupSoundEffect();
         this.setupShip();
-        this.setupWeaponsSound();
         this.setupTimeKeeper();
         this.setupGame();
         this.renderElements();
@@ -58,61 +57,75 @@ var DuelShooting = Class.create({
 
     setupShipAsWhite: function() {
         this.ship = new ShipWhite(false);
-        this.enemy = new ShipRed(true);
         this.ship.setSoundHit(this.sounds.hit);
         this.ship.setSoundLose(this.sounds.lose);
+        this.enemy = new ShipRed(true);
+
         this.weapons = {};
         this.weapons.ship = new AutomaticControls(this.ship, this.enemy);
+        this.weapons.ship.setSoundAttack(this.sounds.attack);
+        this.weapons.ship.setSoundMegaCannon(this.sounds.megaCannon);
+        this.weapons.ship.setSoundFunnelGo(this.sounds.funnelGo);
+        this.weapons.ship.setSoundFunnelAttack(this.sounds.funnelAtk);
         this.weapons.enemy = new AutomaticControls(this.enemy, this.ship);
         this.weapons.enemy.addIField();
         this.weapons.enemy.addFunnelDefences();
+
         this.action = new ActionShipWhite();
+
         this.cmd = {};
         this.cmd.ship = new CommandShipWhite(this.ship, this.weapons.ship);
         this.cmd.enemy = new CommandShipRed(this.enemy, this.weapons.enemy);
+
         this.sync.listenShipWhiteCommand(this.cmd.ship, this.ship);
         this.sync.listenShipRedCommand(this.cmd.enemy, this.enemy);
+        this.sync.setShipRedAuto(this.weapons.enemy);
     },
 
     setupShipAsRed: function() {
         this.ship = new ShipRed(false);
-        this.enemy = new ShipWhite(true);
         this.ship.setSoundHit(this.sounds.hit);
         this.ship.setSoundLose(this.sounds.lose);
         this.ship.setSoundNewtype(this.sounds.newtype);
+        this.enemy = new ShipWhite(true);
+
         this.weapons = {};
         this.weapons.ship = new AutomaticControls(this.ship, this.enemy);
-        this.weapons.enemy = new AutomaticControls(this.enemy, this.ship);
         this.weapons.ship.addIField(this.sounds.iField);
         this.weapons.ship.addFunnelDefences();
+        this.weapons.ship.setSoundAttack(this.sounds.attack);
+        this.weapons.ship.setSoundFunnelGo(this.sounds.funnelGo);
+        this.weapons.ship.setSoundFunnelAttack(this.sounds.funnelAtk);
+        this.weapons.enemy = new AutomaticControls(this.enemy, this.ship);
+
         this.action = new ActionShipRed();
+
         this.cmd = {};
         this.cmd.ship = new CommandShipRed(this.ship, this.weapons.ship);
         this.cmd.enemy = new CommandShipWhite(this.enemy, this.weapons.enemy);
+
         this.sync.listenShipRedCommand(this.cmd.ship, this.ship);
         this.sync.listenShipWhiteCommand(this.cmd.enemy, this.enemy);
+        this.sync.setShipRedAuto(this.weapons.ship);
     },
 
     setupShipAsReadOnly: function() {
         this.ship = new ShipWhite(false);
         this.enemy = new ShipRed(true);
+
         this.weapons = {};
         this.weapons.ship = new AutomaticControls(this.ship, this.enemy);
         this.weapons.enemy = new AutomaticControls(this.enemy, this.ship);
         this.weapons.enemy.addIField();
         this.weapons.enemy.addFunnelDefences();
+
         this.cmd = {};
         this.cmd.ship = new CommandShipWhite(this.ship, this.weapons.ship);
         this.cmd.enemy = new CommandShipRed(this.enemy, this.weapons.enemy);
+
         this.sync.listenShipWhiteCommand(this.cmd.ship, this.ship);
         this.sync.listenShipRedCommand(this.cmd.enemy, this.enemy);
-    },
-
-    setupWeaponsSound: function() {
-        this.weapons.ship.setSoundAttack(this.sounds.attack);
-        this.weapons.ship.setSoundMegaCannon(this.sounds.megaCannon);
-        this.weapons.ship.setSoundFunnelGo(this.sounds.funnelGo);
-        this.weapons.ship.setSoundFunnelAttack(this.sounds.funnelAtk);
+        this.sync.setShipRedAuto(this.weapons.enemy);
     },
 
     setupTimeKeeper: function() {
@@ -124,6 +137,8 @@ var DuelShooting = Class.create({
     },
 
     routine: function() {
+        this.ship.move();
+        this.enemy.move();
         this.weapons.ship.move();
         this.weapons.enemy.move();
         if (!this.action) {
@@ -144,8 +159,6 @@ var DuelShooting = Class.create({
                 this.sync.pushShipRedCommand(cmd);
                 break;
         }
-        this.ship.move();
-        this.enemy.move();
     },
 
     renderElements: function() {

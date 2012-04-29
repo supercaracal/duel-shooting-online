@@ -102,5 +102,9 @@ var Sprite = Class.create({
             transform: 'rotate(' + theta + 'deg)'
         });
         this.currentTransformRotate = theta;
+    },
+
+    remove: function() {
+        this.elm.remove();
     }
 });
