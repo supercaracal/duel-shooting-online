@@ -102,13 +102,13 @@ var Synchronizer = Class.create({
     youHaveControl: function(data) {
         this.controlShip = data.ship;
         this.socket.emit('I have control', {ship: this.controlShip});
-        console.log('I have control: ' + this.controlShip);
+        if (console && typeof console.log == 'function') console.log('I have control: ' + this.controlShip);
     },
 
     youHaveNoControl: function(data) {
         this.controlShip = null;
         this.socket.emit('I have no control', {});
-        console.log('I have no control');
+        if (console && typeof console.log == 'function') console.log('I have no control');
     },
 
     white: function(data) {

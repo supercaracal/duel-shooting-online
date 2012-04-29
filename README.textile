@@ -1,5 +1,3 @@
-Coming soon.
-
 "Duel Shooting Online":http://duelshooting-online.herokuapp.com/
 
 h4. White Demon
@@ -21,3 +19,5 @@ h4. Red Comet
 |>. Barrier | I |
 |>. Attack1 | Cursor Up |
 |>. Attack2 | F |
+
+!https://github.com/supercaracal/duelshooting/raw/master/img/screen_shot.gif!
