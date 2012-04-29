@@ -2,7 +2,7 @@
 
 h4. White Demon
 
-|_. Action |_. Keyboard | Mouse or Touch |/7. !https://github.com/supercaracal/duelshooting_online/raw/master/img/white-demon.gif! |
+|_. Action |_. Keyboard |_. Mouse or Touch |/7. !https://github.com/supercaracal/duelshooting_online/raw/master/img/white-demon.gif! |
 |>. Move Right | Cursor Right | Lower part right |
 |>. Move Left | Cursor Left | Lower part left |
 |>. Wait | Cursor Down | Lower part center |
@@ -12,7 +12,7 @@ h4. White Demon
 
 h4. Red Comet
 
-|_. Action |_. Keyboard | Mouse or Touch |/7. !https://github.com/supercaracal/duelshooting_online/raw/master/img/red-comet.gif! |
+|_. Action |_. Keyboard |_. Mouse or Touch |/7. !https://github.com/supercaracal/duelshooting_online/raw/master/img/red-comet.gif! |
 |>. Move Right | Cursor Right | Lower part right |
 |>. Move Left | Cursor Left | Lower part left |
 |>. Avoid | N | Lower part center |
