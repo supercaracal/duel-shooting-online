@@ -144,7 +144,6 @@ var DuelShooting = Class.create({
                 this.sync.pushShipRedCommand(cmd);
                 break;
         }
-        this.ship.nextCmd = cmd;
         this.ship.move();
         this.enemy.move();
     },
