@@ -58,6 +58,7 @@ var IField = Class.create(Sprite, {
         if (h <= 0) {
             this.isActive = false;
             this.elm.hide();
+            this.waitCount = this.WAIT;
         }
     },
 
@@ -68,7 +69,6 @@ var IField = Class.create(Sprite, {
         this.isActive = true;
         this.elm.setStyle({height: '20px'});
         this.setTop(this.getInitTop());
-        this.waitCount = this.WAIT;
         this.elm.show();
         this.playSound();
     },
