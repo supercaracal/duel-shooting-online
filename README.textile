@@ -2,21 +2,20 @@
 
 h4. White Demon
 
-|_. Action |_. Type Key |/7. !https://github.com/supercaracal/duelshooting_online/raw/master/img/white-demon.gif! |
-|>. Move Right | Cursor Right |
-|>. Move Left | Cursor Left |
-|>. Wait | Cursor Down |
-|>. Attack1 | Cursor Up |
-|>. Attack2 | F |
-|>. Attack3 | M |
+|_. Action |_. Keyboard | Mouse or Touch |/7. !https://github.com/supercaracal/duelshooting_online/raw/master/img/white-demon.gif! |
+|>. Move Right | Cursor Right | Lower part right |
+|>. Move Left | Cursor Left | Lower part left |
+|>. Wait | Cursor Down | Lower part center |
+|>. Attack1 | Cursor Up | Upper part center |
+|>. Attack2 | F | Upper part left |
+|>. Attack3 | M | Upper part right |
 
 h4. Red Comet
 
-|_. Action |_. Type Key |/7. !https://github.com/supercaracal/duelshooting_online/raw/master/img/red-comet.gif! |
-|>. Move Right | Cursor Right |
-|>. Move Left | Cursor Left |
-|>. Avoid | N |
-|>. Barrier | I |
-|>. Attack1 | Cursor Up |
-|>. Attack2 | F |
-
+|_. Action |_. Keyboard | Mouse or Touch |/7. !https://github.com/supercaracal/duelshooting_online/raw/master/img/red-comet.gif! |
+|>. Move Right | Cursor Right | Lower part right |
+|>. Move Left | Cursor Left | Lower part left |
+|>. Avoid | N | Lower part center |
+|>. Attack1 | Cursor Up | Upper part center |
+|>. Attack2 | F | Upper part left |
+|>. Barrier | I | Upper part right |
