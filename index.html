@@ -12,6 +12,8 @@
 <meta property="og:image" content="https://github.com/supercaracal/duelshooting/raw/master/screenshot.jpg" />
 <meta property="og:description" content="This is a javascript game." />
 
+<link rel="stylesheet" type="text/css" media="all" href="/css/style.css" />
+
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">google.load('prototype', '1.7')</script>
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
@@ -20,9 +22,9 @@
 <script type="text/javascript" src="/js/action/action-ship-red.js"></script>
 <script type="text/javascript" src="/js/action/action-ship-white.js"></script>
 
-<script type="text/javascript" src="/js/command/base/command.js"></script>
-<script type="text/javascript" src="/js/command/command-ship-red.js"></script>
-<script type="text/javascript" src="/js/command/command-ship-white.js"></script>
+<script type="text/javascript" src="/js/cmd/base/command.js"></script>
+<script type="text/javascript" src="/js/cmd/command-ship-red.js"></script>
+<script type="text/javascript" src="/js/cmd/command-ship-white.js"></script>
 
 <script type="text/javascript" src="/js/game/game.js"></script>
 <script type="text/javascript" src="/js/sound/sound-creater.js"></script>
@@ -52,12 +54,95 @@
 
 <script type="text/javascript" src="/js/duel-shooting.js"></script>
 
-<script type="text/javascript">
-Event.observe(window, 'load', function() {
-    new DuelShooting();
-});
-</script>
+<script type="text/javascript">Event.observe(window, 'load', function() { new DuelShooting(); });</script>
 </head>
 <body>
+<div id="title">
+    <h1>Duel Shooting Online</h1>
+</div>
+<div id="manual">
+    <h2>White Demon</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Keyboard</th>
+                <th>Mouse or Touch</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="right">Move Right</td>
+                <td class="center">→</td>
+                <td>Lower part right</td>
+            </tr>
+            <tr>
+                <td class="right">Move Left</td>
+                <td class="center">←</td>
+                <td>Lower part left</td>
+            </tr>
+            <tr>
+                <td class="right">Wait</td>
+                <td class="center">↓</td>
+                <td>Lower part center</td>
+            </tr>
+            <tr>
+                <td class="right">Attack1</td>
+                <td class="center">↑</td>
+                <td>Upper part center</td>
+            </tr>
+            <tr>
+                <td class="right">Attack2</td>
+                <td class="center">F</td>
+                <td>Upper part left</td>
+            </tr>
+            <tr>
+                <td class="right">Attack3</td>
+                <td class="center">M</td>
+                <td>Upper part right</td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>Red Comet</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Keyboard</th>
+                <th>Mouse or Touch</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="right">Move Right</td>
+                <td class="center">→</td>
+                <td>Lower part right</td>
+            </tr>
+            <tr>
+                <td class="right">Move Left</td>
+                <td class="center">←</td>
+                <td>Lower part left</td>
+            </tr>
+            <tr>
+                <td class="right">Avoid</td>
+                <td class="center">N</td>
+                <td>Lower part center</td>
+            </tr>
+            <tr>
+                <td class="right">Attack1</td>
+                <td class="center">↑</td>
+                <td>Upper part center</td>
+            </tr>
+            <tr>
+                <td class="right">Attack2</td>
+                <td class="center">F</td>
+                <td>Upper part left</td>
+            </tr>
+            <tr>
+                <td class="right">Barrier</td>
+                <td class="center">I</td>
+                <td>Upper part right</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

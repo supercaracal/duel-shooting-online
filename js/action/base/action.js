@@ -29,12 +29,12 @@ var Action = Class.create({
         return command;
     },
 
-    handlerMouse: function (e) {
+    handlerMouse: function(e) {
         e.stop();
         this.convertToAction(e.pageX, e.pageY);
     },
 
-    handlerSmart: function (e) {
+    handlerSmart: function(e) {
         e.stop();
         this.convertToAction(e.touches[0].pageX, e.touches[0].pageY);
     }

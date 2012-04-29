@@ -1,9 +1,10 @@
 var ActionShipWhite = Class.create(Action, {
 
-    handler: function (e) {
+    KEY_F: 70,
+    KEY_M: 77,
+
+    handler: function(e) {
         e.stop();
-        var KEY_F = 70;
-        var KEY_M = 77;
         switch (e.keyCode) {
             case Event.KEY_RIGHT:
                this.nextCommand = 'stepRight';
@@ -17,28 +18,40 @@ var ActionShipWhite = Class.create(Action, {
             case Event.KEY_DOWN:
                this.nextCommand = 'wait';
                break;
-            case KEY_F:
+            case this.KEY_F:
                this.nextCommand = 'funnel';
                break;
-            case KEY_M:
+            case this.KEY_M:
                this.nextCommand = 'megaCannon';
                break;
 
         }
     },
 
-    convertToAction: function (x, y) {
-        if ((this.clientHeight / 2 < y) && (x < this.sprite.clientWidth / 3)) {
+    convertToAction: function(x, y) {
+
+        var screenUpperPart = (0 < y) && (y < this.sprite.clientHeight / 2);
+        var screenLowerPart = (this.sprite.clientHeight / 2 < y) && (y < this.sprite.clientHeight);
+        var screenLeft = (0 < x) && (x < this.sprite.clientWidth / 3);
+        var screenCenter = (this.sprite.clientWidth / 3 < x) && (x < this.sprite.clientWidth / 3 * 2);
+        var screenRight = (this.sprite.clientWidth / 3 * 2 < x) && (x < this.sprite.clientWidth);
+
+        if (screenLowerPart && screenLeft) {
             this.nextCommand = 'stepLeft';
-        } else if ((this.clientHeight / 2 < y) && (this.sprite.clientWidth / 3 < x) && (x < this.sprite.clientWidth / 3 * 2)) {
+
+        } else if (screenLowerPart && screenCenter) {
             this.nextCommand = 'wait';
-        } else if ((this.clientHeight / 2 < y) && (this.sprite.clientWidth / 3 * 2 < x)) {
+
+        } else if (screenLowerPart && screenRight) {
             this.nextCommand = 'stepRight';
-        } else if ((y < this.clientHeight / 2) && (x < this.sprite.clientWidth / 3)) {
+
+        } else if (screenUpperPart && screenLeft) {
             this.nextCommand = 'funnel';
-        } else if ((y < this.clientHeight / 2) && (this.sprite.clientWidth / 3 < x) && (x < this.sprite.clientWidth / 3 * 2)) {
+
+        } else if (screenUpperPart && screenCenter) {
             this.nextCommand = 'attack';
-        } else if ((y < this.clientHeight / 2) && (this.sprite.clientWidth / 3 * 2 < x)) {
+
+        } else if (screenUpperPart && screenRight) {
             this.nextCommand = 'megaCannon';
         }
     }

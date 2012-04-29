@@ -8,6 +8,8 @@ var Background = Class.create(Sprite, {
             backgroundColor: '#333333',
             height: this.clientHeight + 'px',
             width: this.clientWidth + 'px',
+            borderRight: 'solid 1px #AAAAAA',
+            borderBottom: 'solid 1px #AAAAAA'
         }).setOpacity(0.8);
     },
 
