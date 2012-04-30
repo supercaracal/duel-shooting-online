@@ -1,4 +1,4 @@
-var SoundCreater = Class.create({
+var Sound = Class.create({
 
     hasAudioElement: null,
 
