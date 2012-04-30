@@ -155,7 +155,7 @@ var Synchronizer = Class.create({
     youHaveControl: function(data) {
         this.controlShip = data.ship;
         this.socket.emit('I have control', {ship: this.controlShip});
-        if (console && typeof console.log == 'function') {
+        if (typeof console !== 'undefined') {
             console.log('I have control: ' + this.controlShip);
         }
     },
@@ -163,7 +163,7 @@ var Synchronizer = Class.create({
     youHaveNoControl: function(data) {
         this.controlShip = null;
         this.socket.emit('I have no control', {});
-        if (console && typeof console.log == 'function') {
+        if (typeof console !== 'undefined') {
             console.log('I have no control');
         }
     },
