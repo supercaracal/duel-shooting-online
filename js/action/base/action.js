@@ -16,11 +16,20 @@ var Action = Class.create({
 
     setEventListener: function() {
         if (this.hasTouchEvent) {
-            Event.observe(document, 'touchstart', this.handlerSmart.bindAsEventListener(this));
+            $(document).observe('touchstart', this.handlerSmart.bindAsEventListener(this));
             return;
         }
-        Event.observe(document, 'keydown', this.handler.bindAsEventListener(this));
-        Event.observe(document, 'mousedown', this.handlerMouse.bindAsEventListener(this));
+        $(document).observe('keydown', this.handler.bindAsEventListener(this));
+        $(document).observe('mousedown', this.handlerMouse.bindAsEventListener(this));
+    },
+
+    stop: function() {
+        if (this.hasTouchEvent) {
+            $(document).stopObserving('touchstart');
+            return;
+        }
+        $(document).stopObserving('keydown');
+        $(document).stopObserving('mousedown');
     },
 
     getCommand: function() {

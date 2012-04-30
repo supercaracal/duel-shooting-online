@@ -1,4 +1,4 @@
-var AutomaticControls = Class.create({
+var Weapon = Class.create({
 
     FUNNEL_SLIDER_MAX: 5,
     FUNNEL_CIRCLE_MAX: 2,

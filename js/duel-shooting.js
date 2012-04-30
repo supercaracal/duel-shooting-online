@@ -29,7 +29,7 @@ var DuelShooting = Class.create({
     },
 
     setupSoundEffect: function() {
-        var sound = new SoundCreater();
+        var sound = new Sound();
         this.sounds = {};
         this.sounds.hit = sound.createAudio('/se/hit.mp3');
         this.sounds.lose = sound.createAudio('/se/lose.mp3');
@@ -62,12 +62,12 @@ var DuelShooting = Class.create({
         this.enemy = new ShipRed(true);
 
         this.weapons = {};
-        this.weapons.ship = new AutomaticControls(this.ship, this.enemy);
+        this.weapons.ship = new Weapon(this.ship, this.enemy);
         this.weapons.ship.setSoundAttack(this.sounds.attack);
         this.weapons.ship.setSoundMegaCannon(this.sounds.megaCannon);
         this.weapons.ship.setSoundFunnelGo(this.sounds.funnelGo);
         this.weapons.ship.setSoundFunnelAttack(this.sounds.funnelAtk);
-        this.weapons.enemy = new AutomaticControls(this.enemy, this.ship);
+        this.weapons.enemy = new Weapon(this.enemy, this.ship);
         this.weapons.enemy.addIField();
         this.weapons.enemy.addFunnelDefences();
 
@@ -79,7 +79,7 @@ var DuelShooting = Class.create({
 
         this.sync.listenShipWhiteCommand(this.cmd.ship, this.ship);
         this.sync.listenShipRedCommand(this.cmd.enemy, this.enemy);
-        this.sync.setShipRedAuto(this.weapons.enemy);
+        this.sync.setShipRedWeapon(this.weapons.enemy);
     },
 
     setupShipAsRed: function() {
@@ -90,13 +90,13 @@ var DuelShooting = Class.create({
         this.enemy = new ShipWhite(true);
 
         this.weapons = {};
-        this.weapons.ship = new AutomaticControls(this.ship, this.enemy);
+        this.weapons.ship = new Weapon(this.ship, this.enemy);
         this.weapons.ship.addIField(this.sounds.iField);
         this.weapons.ship.addFunnelDefences();
         this.weapons.ship.setSoundAttack(this.sounds.attack);
         this.weapons.ship.setSoundFunnelGo(this.sounds.funnelGo);
         this.weapons.ship.setSoundFunnelAttack(this.sounds.funnelAtk);
-        this.weapons.enemy = new AutomaticControls(this.enemy, this.ship);
+        this.weapons.enemy = new Weapon(this.enemy, this.ship);
 
         this.action = new ActionShipRed();
 
@@ -106,7 +106,7 @@ var DuelShooting = Class.create({
 
         this.sync.listenShipRedCommand(this.cmd.ship, this.ship);
         this.sync.listenShipWhiteCommand(this.cmd.enemy, this.enemy);
-        this.sync.setShipRedAuto(this.weapons.ship);
+        this.sync.setShipRedWeapon(this.weapons.ship);
     },
 
     setupShipAsReadOnly: function() {
@@ -114,8 +114,8 @@ var DuelShooting = Class.create({
         this.enemy = new ShipRed(true);
 
         this.weapons = {};
-        this.weapons.ship = new AutomaticControls(this.ship, this.enemy);
-        this.weapons.enemy = new AutomaticControls(this.enemy, this.ship);
+        this.weapons.ship = new Weapon(this.ship, this.enemy);
+        this.weapons.enemy = new Weapon(this.enemy, this.ship);
         this.weapons.enemy.addIField();
         this.weapons.enemy.addFunnelDefences();
 
@@ -125,7 +125,7 @@ var DuelShooting = Class.create({
 
         this.sync.listenShipWhiteCommand(this.cmd.ship, this.ship);
         this.sync.listenShipRedCommand(this.cmd.enemy, this.enemy);
-        this.sync.setShipRedAuto(this.weapons.enemy);
+        this.sync.setShipRedWeapon(this.weapons.enemy);
     },
 
     setupTimeKeeper: function() {
@@ -145,6 +145,7 @@ var DuelShooting = Class.create({
             return;
         }
         if (this.ship.getHitPoint() === 0) {
+            this.action.stop();
             this.timeKeeper.stop();
             this.game.stop();
             this.sync.stop();

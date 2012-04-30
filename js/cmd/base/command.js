@@ -1,11 +1,11 @@
 var Command = Class.create({
 
     ship: null,
-    auto: null,
+    weapon: null,
 
-    initialize: function(ship, auto) {
+    initialize: function(ship, weapon) {
         this.ship = ship;
-        this.auto = auto;
+        this.weapon = weapon;
     },
 
     execute: function(command) {

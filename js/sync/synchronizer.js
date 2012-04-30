@@ -5,12 +5,12 @@ var Synchronizer = Class.create({
     controlShip: null,
     ship: null,
     cmd: null,
-    auto: null,
+    weapon: null,
 
     initialize: function(uri, callback) {
         this.ship = {};
         this.cmd = {};
-        this.auto = {};
+        this.weapon = {};
         this.socket = io.connect(uri);
         this.listenShipControl();
         this.listenDuelReady(callback);
@@ -87,8 +87,8 @@ var Synchronizer = Class.create({
         this.socket.on('red', this.red.bind(this));
     },
 
-    setShipRedAuto: function(auto) {
-        this.auto.red = auto;
+    setShipRedWeapon: function(weapon) {
+        this.weapon.red = weapon;
     },
 
     criticalWhite: function(data) {
@@ -113,20 +113,20 @@ var Synchronizer = Class.create({
         } else {
             this.ship.red.iField.cancel();
         }
-        if (!this.auto.red) return;
+        if (!this.weapon.red) return;
         if (data.funnel.firstLeft === null && data.funnel.secondLeft === null) {
-            this.auto.red.removeFunnelCircle(2);
+            this.weapon.red.removeFunnelCircle(2);
         }
         if (data.funnel.firstLeft !== null
                 && data.funnel.secondLeft === null
-                && this.auto.red.funnelCircles.size() === 2) {
+                && this.weapon.red.funnelCircles.size() === 2) {
 
-            this.auto.red.removeFunnelCircle(1);
+            this.weapon.red.removeFunnelCircle(1);
         }
         var left;
         if (data.funnel.firstLeft !== null) {
-            if (this.auto.red.funnelCircles.size() === 0) {
-                this.auto.red.addFunnelCircle();
+            if (this.weapon.red.funnelCircles.size() === 0) {
+                this.weapon.red.addFunnelCircle();
             }
             left = data.isEnemy === this.ship.red.isEnemy ?
                 data.funnel.firstLeft :
@@ -138,8 +138,8 @@ var Synchronizer = Class.create({
             this.ship.red.funnels[0].theta = data.funnel.firstTheta;
         }
         if (data.funnel.secondLeft !== null) {
-            if (this.auto.red.funnelCircles.size() === 1) {
-                this.auto.red.addFunnelCircle();
+            if (this.weapon.red.funnelCircles.size() === 1) {
+                this.weapon.red.addFunnelCircle();
             }
             left = data.isEnemy === this.ship.red.isEnemy ?
                 data.funnel.secondLeft :

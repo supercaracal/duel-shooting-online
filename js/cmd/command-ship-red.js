@@ -20,10 +20,10 @@ var CommandShipRed = Class.create(Command, {
         if (this.ship.iField && this.ship.iField.isActive) {
             return;
         }
-        this.auto.addBulletHoming();
+        this.weapon.addBulletHoming();
     },
 
     funnel: function() {
-        this.auto.addFunnelCircle();
+        this.weapon.addFunnelCircle();
     }
 });
