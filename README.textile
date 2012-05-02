@@ -1,4 +1,6 @@
-"Duel Shooting Online":http://duelshooting-online.herokuapp.com/
+"Duel Shooting Online on heroku":http://duelshooting-online.herokuapp.com/
+
+"Duel Shooting Online on dotcloud":http://duelshooting-pocapocaunty.dotcloud.com/
 
 h4. White Demon
 
