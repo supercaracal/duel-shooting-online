@@ -29,11 +29,11 @@ var Opening = Class.create(Sprite, {
     },
 
     appear: function() {
-            if (this.titleOpacity >= 1.0) {
-                clearInterval(this.timerId);
-            }
-            this.titleOpacity += 0.1;
-            this.title.setOpacity(this.titleOpacity);
+        if (this.titleOpacity >= 1.0) {
+            clearInterval(this.timerId);
+        }
+        this.titleOpacity += 0.1;
+        this.title.setOpacity(this.titleOpacity);
     },
 
     hide: function() {

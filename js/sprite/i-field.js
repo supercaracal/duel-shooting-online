@@ -69,6 +69,19 @@ var IField = Class.create(Sprite, {
         }
     },
 
+    isHit: function(bullet, range, enemyLeft) {
+        var top = bullet.getTop();
+        var left = bullet.getLeft();
+        if (this.isActive
+                && (bullet.isFall ? top + range > this.clientHeight - 110 : top + range < 80)
+                && enemyLeft - 25 < left
+                && left < enemyLeft + 95) {
+
+            this.hit();
+            return true;
+        }
+    },
+
     barrier: function() {
         if (0 < this.waitCount || this.isActive) {
             return;
