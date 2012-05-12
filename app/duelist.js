@@ -26,12 +26,8 @@ Duelist.prototype.getId = function() {
     return this.id;
 };
 
-Duelist.prototype.isWhiteColor = function() {
-    return this.color === 'white';
-};
-
-Duelist.prototype.isRedColor = function() {
-    return this.color === 'red';
+Duelist.prototype.getColor = function() {
+    return this.color;
 };
 
 Duelist.prototype.getFoe = function() {

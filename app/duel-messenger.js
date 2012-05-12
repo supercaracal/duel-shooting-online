@@ -20,16 +20,8 @@ DuelMessenger.prototype.onDuty = function(data) {
         this.socket.emit('You have no control', {});
         return;
     }
-    if (duelist.isWhiteColor()) {
-        this.socket.join(duelist.getRoom());
-        this.socket.emit('You have control', {ship: 'white'});
-        return;
-    }
-    if (duelist.isRedColor()) {
-        this.socket.join(duelist.getRoom());
-        this.socket.emit('You have control', {ship: 'red'});
-        return;
-    }
+    this.socket.join(duelist.getRoom());
+    this.socket.emit('You have control', {ship: duelist.getColor()});
 };
 
 DuelMessenger.prototype.onIHaveControl = function(data) {
@@ -47,9 +39,7 @@ DuelMessenger.prototype.onDisconnect = function() {
 DuelMessenger.prototype.onCriticalWhite = function(data) {
     var duelist = this.ctrl.get(this.socket.id);
     if (!duelist) return;
-    this.socket.broadcast
-        .to(this.ctrl.get(this.socket.id).getRoom())
-        .emit('critical white', data);
+    this.socket.broadcast.to(duelist.getRoom()).emit('critical white', data);
 };
 
 DuelMessenger.prototype.onCriticalRed = function(data) {
