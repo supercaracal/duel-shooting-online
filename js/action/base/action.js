@@ -39,12 +39,10 @@ var Action = Class.create({
     },
 
     handlerMouse: function(e) {
-        e.stop();
-        this.convertToAction(e.pageX, e.pageY);
+        if (this.convertToAction(e.pageX, e.pageY)) e.stop();
     },
 
     handlerSmart: function(e) {
-        e.stop();
-        this.convertToAction(e.touches[0].pageX, e.touches[0].pageY);
+        if (this.convertToAction(e.touches[0].pageX, e.touches[0].pageY)) e.stop();
     }
 });

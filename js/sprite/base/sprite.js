@@ -104,6 +104,10 @@ var Sprite = Class.create({
         this.currentTransformRotate = theta;
     },
 
+    setOpacity: function(v) {
+        this.elm.setOpacity(v);
+    },
+
     remove: function() {
         this.elm.remove();
     }

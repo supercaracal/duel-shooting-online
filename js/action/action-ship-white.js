@@ -4,27 +4,32 @@ var ActionShipWhite = Class.create(Action, {
     KEY_M: 77,
 
     handler: function(e) {
-        e.stop();
+        if (e.altGraphKey || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
         switch (e.keyCode) {
             case Event.KEY_RIGHT:
-               this.nextCommand = 'stepRight';
-               break;
+                this.nextCommand = 'stepRight';
+                e.stop();
+                break;
             case Event.KEY_LEFT:
-               this.nextCommand = 'stepLeft';
-               break;
+                this.nextCommand = 'stepLeft';
+                e.stop();
+                break;
             case Event.KEY_UP:
-               this.nextCommand = 'attack';
-               break;
+                this.nextCommand = 'attack';
+                e.stop();
+                break;
             case Event.KEY_DOWN:
-               this.nextCommand = 'wait';
-               break;
+                this.nextCommand = 'wait';
+                e.stop();
+                break;
             case this.KEY_F:
-               this.nextCommand = 'funnel';
-               break;
+                this.nextCommand = 'funnel';
+                e.stop();
+                break;
             case this.KEY_M:
-               this.nextCommand = 'megaCannon';
-               break;
-
+                this.nextCommand = 'megaCannon';
+                e.stop();
+                break;
         }
     },
 
@@ -38,21 +43,28 @@ var ActionShipWhite = Class.create(Action, {
 
         if (screenLowerPart && screenLeft) {
             this.nextCommand = 'stepLeft';
-
-        } else if (screenLowerPart && screenCenter) {
-            this.nextCommand = 'wait';
-
-        } else if (screenLowerPart && screenRight) {
-            this.nextCommand = 'stepRight';
-
-        } else if (screenUpperPart && screenLeft) {
-            this.nextCommand = 'funnel';
-
-        } else if (screenUpperPart && screenCenter) {
-            this.nextCommand = 'attack';
-
-        } else if (screenUpperPart && screenRight) {
-            this.nextCommand = 'megaCannon';
+            return true;
         }
+        if (screenLowerPart && screenCenter) {
+            this.nextCommand = 'wait';
+            return true;
+        }
+        if (screenLowerPart && screenRight) {
+            this.nextCommand = 'stepRight';
+            return true;
+        }
+        if (screenUpperPart && screenLeft) {
+            this.nextCommand = 'funnel';
+            return true;
+        }
+        if (screenUpperPart && screenCenter) {
+            this.nextCommand = 'attack';
+            return true;
+        }
+        if (screenUpperPart && screenRight) {
+            this.nextCommand = 'megaCannon';
+            return true;
+        }
+        return false;
     }
 });

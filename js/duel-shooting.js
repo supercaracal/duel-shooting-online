@@ -12,7 +12,7 @@ var DuelShooting = Class.create({
     game: null,
 
     initialize: function() {
-        this.opening = new Opening();
+        this.opening = new Opening(new Title());
         this.opening.show();
         this.sync = new Synchronizer('/', this.callback.bind(this));
     },
