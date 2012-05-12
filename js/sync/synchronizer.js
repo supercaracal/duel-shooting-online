@@ -161,11 +161,7 @@ var Synchronizer = Class.create({
     },
 
     youHaveNoControl: function(data) {
-        this.controlShip = null;
-        this.socket.emit('I have no control', {});
-        if (typeof console !== 'undefined') {
-            console.log('I have no control');
-        }
+        (function() { this.socket.emit('duty', {}); }).bind(this).delay(5);
     },
 
     white: function(data) {

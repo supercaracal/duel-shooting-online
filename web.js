@@ -6,8 +6,8 @@ var app
 app = require('express').createServer();
 app.listen(process.env.PORT || 8080);
 
-routing = require('./routing');
-new routing(app);
+routing = require('./app/routing');
+new routing(app, __dirname);
 
 io = require('socket.io').listen(app);
 msg = require('./app/messenger');

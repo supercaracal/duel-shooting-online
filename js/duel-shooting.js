@@ -49,9 +49,6 @@ var DuelShooting = Class.create({
             case 'red':
                 this.setupShipAsRed();
                 break;
-            default:
-                this.setupShipAsReadOnly();
-                break;
         }
     },
 
@@ -107,25 +104,6 @@ var DuelShooting = Class.create({
         this.sync.listenShipRedCommand(this.cmd.ship, this.ship);
         this.sync.listenShipWhiteCommand(this.cmd.enemy, this.enemy);
         this.sync.setShipRedWeapon(this.weapons.ship);
-    },
-
-    setupShipAsReadOnly: function() {
-        this.ship = new ShipWhite(false);
-        this.enemy = new ShipRed(true);
-
-        this.weapons = {};
-        this.weapons.ship = new Weapon(this.ship, this.enemy);
-        this.weapons.enemy = new Weapon(this.enemy, this.ship);
-        this.weapons.enemy.addIField();
-        this.weapons.enemy.addFunnelDefences();
-
-        this.cmd = {};
-        this.cmd.ship = new CommandShipWhite(this.ship, this.weapons.ship);
-        this.cmd.enemy = new CommandShipRed(this.enemy, this.weapons.enemy);
-
-        this.sync.listenShipWhiteCommand(this.cmd.ship, this.ship);
-        this.sync.listenShipRedCommand(this.cmd.enemy, this.enemy);
-        this.sync.setShipRedWeapon(this.weapons.enemy);
     },
 
     setupTimeKeeper: function() {
