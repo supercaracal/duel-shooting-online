@@ -6,15 +6,19 @@ var Synchronizer = Class.create({
     ship: null,
     cmd: null,
     weapon: null,
+    duelistCounter: null,
 
     initialize: function(uri, callback, finish) {
         this.ship = {};
         this.cmd = {};
         this.weapon = {};
+        this.duelistCounter = new DuelistCounter();
+        this.duelistCounter.renderElement();
         this.socket = io.connect(uri);
         this.listenShipControl();
         this.listenDuelReady(callback);
         this.listenYouWin(finish);
+        this.listenDuelistCount();
         this.socket.emit('duty', {});
         this.listenCriticalInfo();
         this.timerId = setInterval(this.pushCriticalInfoInterval.bind(this), 5000);
@@ -78,6 +82,10 @@ var Synchronizer = Class.create({
 
     listenYouWin: function(finish) {
         this.socket.on('You win', finish);
+    },
+
+    listenDuelistCount: function() {
+        this.socket.on('duelist count', this.updateDuelistCount.bind(this));
     },
 
     listenShipWhiteCommand: function(cmd, ship) {
@@ -179,5 +187,9 @@ var Synchronizer = Class.create({
         if (!this.cmd.red) return;
         this.ship.red.nextCmd = data.cmd;
         this.cmd.red.execute(data.cmd);
+    },
+
+    updateDuelistCount: function(cnt) {
+        this.duelistCounter.update('Duelists: ' + cnt);
     }
 });

@@ -1,5 +1,7 @@
 var Condition = Class.create(Sprite, {
 
+    timerId: null,
+
     createElement: function() {
         return new Element('div').setStyle({
             display: 'none',
@@ -22,6 +24,7 @@ var Condition = Class.create(Sprite, {
     },
 
     update: function(text, color) {
+        if (this.timerId) clearTimeout(this.timerId);
         this.elm.update(text);
         this.elm.setStyle({color: color});
         this.setupPosition();
@@ -30,6 +33,6 @@ var Condition = Class.create(Sprite, {
 
     updateAndDelayHide: function(text, color) {
         this.update(text, color);
-        this.elm.hide.bind(this.elm).delay(7);
+        this.timerId = this.elm.hide.bind(this.elm).delay(7);
     }
 });

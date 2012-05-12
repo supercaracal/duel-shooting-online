@@ -2,6 +2,7 @@ function DuelMessenger(socket, ctrl){
     this.socket = socket;
     this.ctrl = ctrl;
     this.observe();
+    this.pushDuelistCount();
 }
 
 DuelMessenger.prototype.observe = function() {
@@ -14,6 +15,11 @@ DuelMessenger.prototype.observe = function() {
     this.socket.on('red', this.onRed.bind(this));
 };
 
+DuelMessenger.prototype.pushDuelistCount = function() {
+    this.socket.emit('duelist count', this.ctrl.getDuelistCount());
+    this.socket.broadcast.emit('duelist count', this.ctrl.getDuelistCount());
+};
+
 DuelMessenger.prototype.onDuty = function(data) {
     var duelist = this.ctrl.get(this.socket.id);
     if (!duelist) {
@@ -22,6 +28,7 @@ DuelMessenger.prototype.onDuty = function(data) {
     }
     this.socket.join(duelist.getRoom());
     this.socket.emit('You have control', {ship: duelist.getColor()});
+    this.pushDuelistCount();
 };
 
 DuelMessenger.prototype.onIHaveControl = function(data) {
@@ -35,6 +42,7 @@ DuelMessenger.prototype.onDisconnect = function() {
     this.socket.broadcast.to(duelist.getRoom()).emit('You win', true);
     this.socket.leave(duelist.getRoom());
     this.ctrl.remove(this.socket.id);
+    this.pushDuelistCount();
 };
 
 DuelMessenger.prototype.onCriticalWhite = function(data) {

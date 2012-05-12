@@ -7,6 +7,8 @@ DuelMatchingController.prototype.duelist = require('./duelist');
 DuelMatchingController.prototype.whiteQueue = [];
 DuelMatchingController.prototype.redQueue = [];
 
+DuelMatchingController.prototype.duelistCount = 0;
+
 DuelMatchingController.prototype.duelists = {};
 DuelMatchingController.prototype.bugoutFuckers = {};
 
@@ -23,7 +25,12 @@ DuelMatchingController.prototype.get = function(id) {
 
 DuelMatchingController.prototype.remove = function(id) {
     delete this.duelists[id];
+    --this.duelistCount;
     this.bugoutFuckers[id] = true;
+};
+
+DuelMatchingController.prototype.getDuelistCount = function() {
+    return this.whiteQueue.length + this.redQueue.length + this.duelistCount;
 };
 
 DuelMatchingController.prototype.match = function() {
@@ -41,6 +48,7 @@ DuelMatchingController.prototype.match = function() {
     red.setRoom(roomName);
     this.duelists[white.getId()] = white;
     this.duelists[red.getId()] = red;
+    this.duelistCount += 2;
     return true;
 };
 
