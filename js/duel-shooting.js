@@ -2,6 +2,7 @@ var DuelShooting = Class.create({
 
     sync: null,
     opening: null,
+    condition: null,
     sounds: null,
     timeKeeper: null,
     ship: null,
@@ -13,8 +14,11 @@ var DuelShooting = Class.create({
 
     initialize: function() {
         this.opening = new Opening(new Title());
+        this.condition = new Condition();
         this.opening.show();
-        this.sync = new Synchronizer('/', this.callback.bind(this));
+        this.condition.renderElement();
+        this.condition.update('Scouting for the enemy...', '#99FF99');
+        this.sync = new Synchronizer('/', this.callback.bind(this), this.finish.bind(this));
     },
 
     callback: function(data) {
@@ -25,6 +29,7 @@ var DuelShooting = Class.create({
         this.renderElements();
         this.game.start();
         this.timeKeeper.start();
+        this.condition.updateAndDelayHide('Engaged!', '#FF9999');
         this.opening.hide();
     },
 
@@ -123,13 +128,24 @@ var DuelShooting = Class.create({
             return;
         }
         if (this.ship.getHitPoint() === 0) {
-            this.action.stop();
-            this.timeKeeper.stop();
-            this.game.stop();
-            this.sync.stop();
+            this.finish(false);
             return;
         }
-        var cmd = this.action.getCommand();
+        this.pushCommand(this.action.getCommand());
+    },
+
+    finish: function(isWin) {
+        this.action.stop();
+        this.timeKeeper.stop();
+        this.game.stop();
+        this.sync.stop();
+        this.condition.update(
+            isWin ? 'You win.' : 'You lose.',
+            isWin ? '#9999FF' : '#FF9999'
+        );
+    },
+
+    pushCommand: function(cmd) {
         switch (this.sync.controlShip) {
             case 'white':
                 this.sync.pushShipWhiteCommand(cmd);

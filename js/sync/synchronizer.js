@@ -7,13 +7,14 @@ var Synchronizer = Class.create({
     cmd: null,
     weapon: null,
 
-    initialize: function(uri, callback) {
+    initialize: function(uri, callback, finish) {
         this.ship = {};
         this.cmd = {};
         this.weapon = {};
         this.socket = io.connect(uri);
         this.listenShipControl();
         this.listenDuelReady(callback);
+        this.listenYouWin(finish);
         this.socket.emit('duty', {});
         this.listenCriticalInfo();
         this.timerId = setInterval(this.pushCriticalInfoInterval.bind(this), 5000);
@@ -75,6 +76,10 @@ var Synchronizer = Class.create({
         this.socket.on('ready', callback);
     },
 
+    listenYouWin: function(finish) {
+        this.socket.on('You win', finish);
+    },
+
     listenShipWhiteCommand: function(cmd, ship) {
         this.cmd.white = cmd;
         this.ship.white = ship;
@@ -97,7 +102,7 @@ var Synchronizer = Class.create({
         var left = data.isEnemy === this.ship.white.isEnemy ?
             data.left :
             this.ship.white.clientWidth - data.left + (data.isEnemy ? 90 : -90);
-        this.ship.white.setLeft(left);
+        //this.ship.white.setLeft(left);
     },
 
     criticalRed: function(data) {
@@ -106,7 +111,7 @@ var Synchronizer = Class.create({
         var left = data.isEnemy === this.ship.red.isEnemy ?
             data.left :
             this.ship.red.clientWidth - data.left + (data.isEnemy ? 90 : -90);
-        this.ship.red.setLeft(left);
+        //this.ship.red.setLeft(left);
         if (data.iField.isActive) {
             this.ship.red.iField.setHeight(data.iField.height);
             this.ship.red.iField.invoke();

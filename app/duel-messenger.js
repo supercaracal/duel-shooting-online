@@ -32,6 +32,7 @@ DuelMessenger.prototype.onIHaveControl = function(data) {
 DuelMessenger.prototype.onDisconnect = function() {
     var duelist = this.ctrl.get(this.socket.id);
     if (!duelist) return;
+    this.socket.broadcast.to(duelist.getRoom()).emit('You win', true);
     this.socket.leave(duelist.getRoom());
     this.ctrl.remove(this.socket.id);
 };
