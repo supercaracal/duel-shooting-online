@@ -110,7 +110,9 @@ var Synchronizer = Class.create({
         var left = data.isEnemy === this.ship.white.isEnemy ?
             data.left :
             this.ship.white.clientWidth - data.left + (data.isEnemy ? 90 : -90);
-        //this.ship.white.setLeft(left);
+        if (60 < (this.ship.white.getLeft() - left).abs()) {
+            this.ship.white.setLeft(left);
+        }
     },
 
     criticalRed: function(data) {
@@ -119,7 +121,9 @@ var Synchronizer = Class.create({
         var left = data.isEnemy === this.ship.red.isEnemy ?
             data.left :
             this.ship.red.clientWidth - data.left + (data.isEnemy ? 90 : -90);
-        //this.ship.red.setLeft(left);
+        if (60 < (this.ship.red.getLeft() - left).abs()) {
+            this.ship.red.setLeft(left);
+        }
         if (data.iField.isActive) {
             this.ship.red.iField.setHeight(data.iField.height);
             this.ship.red.iField.invoke();
