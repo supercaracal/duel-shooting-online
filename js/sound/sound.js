@@ -21,11 +21,19 @@ var Sound = Class.create({
         Element.addMethods('audio', {
             stop: function (audio) {
                 audio.pause();
-                audio.currentTime = 0;
+                try {
+                    audio.currentTime = 0;
+                } catch(e) {
+                    if (console) console.log(e);
+                }
             },
             replay: function (audio) {
                 audio.pause();
-                audio.currentTime = 0;
+                try {
+                    audio.currentTime = 0;
+                } catch(e) {
+                    if (console) console.log(e);
+                }
                 audio.play();
             }
         });
