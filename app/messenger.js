@@ -6,7 +6,10 @@ function Messenger(io) {
 }
 
 Messenger.prototype.handler = function(socket) {
-    this.duelCtrl.add(socket.id);
+    this.duelCtrl.add(
+        socket.id,
+        new Date(socket.namespace.manager.handshaken[socket.id].time).getTime()
+    );
     new this.duelMsg(socket, this.duelCtrl);
 };
 

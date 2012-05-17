@@ -1,5 +1,6 @@
-function Duelist(id) {
+function Duelist(id, timestamp) {
     this.id = id;
+    this.timestamp = timestamp;
 }
 
 Duelist.prototype.color = '';
@@ -24,6 +25,10 @@ Duelist.prototype.setRoom = function(name) {
 
 Duelist.prototype.getId = function() {
     return this.id;
+};
+
+Duelist.prototype.getTimestamp = function() {
+    return this.timestamp;
 };
 
 Duelist.prototype.getColor = function() {
