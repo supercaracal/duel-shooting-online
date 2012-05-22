@@ -26,7 +26,11 @@ var NicoNico = Class.create(Sprite, {
     },
 
     getInitLeft: function() {
-        return document.viewport.getWidth();
+        return document.viewport.getWidth()
+            || document.documentElement.clientWidth
+            || document.body.clientWidth
+            || document.body.scrollWidth
+            || this.clientWidth;
     },
 
     renderElement: function($super) {

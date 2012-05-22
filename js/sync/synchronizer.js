@@ -34,6 +34,7 @@ var Synchronizer = Class.create({
     stop: function() {
         clearInterval(this.timerId);
         this.socket.disconnect();
+        this.chatForm.elm.disable();
         this.chatForm.elm.stopObserving('submit');
     },
 
