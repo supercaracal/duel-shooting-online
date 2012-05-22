@@ -6,15 +6,22 @@ var Synchronizer = Class.create({
     ship: null,
     cmd: null,
     weapon: null,
+    chat: null,
     duelistCounter: null,
+    chatForm: null,
 
     initialize: function(uri, callback, finish) {
         this.ship = {};
         this.cmd = {};
         this.weapon = {};
+        this.chat = new Chat();
         this.duelistCounter = new DuelistCounter();
         this.duelistCounter.renderElement();
+        this.chatForm = new ChatForm();
+        this.chatForm.renderElement();
+
         this.socket = io.connect(uri);
+        this.setupChatEvent();
         this.listenShipControl();
         this.listenDuelReady(callback);
         this.listenYouWin(finish);
@@ -27,6 +34,7 @@ var Synchronizer = Class.create({
     stop: function() {
         clearInterval(this.timerId);
         this.socket.disconnect();
+        this.chatForm.stopObserving('submit');
     },
 
     pushCriticalInfoInterval: function() {
@@ -195,5 +203,16 @@ var Synchronizer = Class.create({
 
     updateDuelistCount: function(cnt) {
         this.duelistCounter.update('Duelists: ' + cnt);
+    },
+
+    setupChatEvent: function() {
+        this.chatForm.elm.observe('submit', (function(e) {
+            e.stop();
+            var v = this.chatForm.getValue();
+            if (v) this.socket.emit('chat', v);
+        }).bindAsEventListener(this));
+        this.socket.on('chat', (function(data) {
+            this.chat.add(data);
+        }).bind(this));
     }
 });

@@ -120,6 +120,7 @@ var DuelShooting = Class.create({
     },
 
     routine: function() {
+        this.sync.chat.move();
         this.ship.move();
         this.enemy.move();
         this.weapons.ship.move();

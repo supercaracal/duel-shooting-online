@@ -13,6 +13,7 @@ DuelMessenger.prototype.observe = function() {
     this.socket.on('critical red', this.onCriticalRed.bind(this));
     this.socket.on('white', this.onWhite.bind(this));
     this.socket.on('red', this.onRed.bind(this));
+    this.socket.on('chat', this.onChat.bind(this));
 };
 
 DuelMessenger.prototype.pushDuelistCount = function() {
@@ -69,6 +70,11 @@ DuelMessenger.prototype.onRed = function(data) {
     var duelist = this.ctrl.get(this.socket.id);
     if (!duelist) return;
     this.socket.broadcast.to(duelist.getRoom()).emit('red', data);
+};
+
+DuelMessenger.prototype.onChat = function(data) {
+    this.socket.emit('chat', data);
+    this.socket.broadcast.emit('chat', data);
 };
 
 module.exports = DuelMessenger;
