@@ -1,24 +1,22 @@
 var ShipCreaterWhite = Class.create(ShipCreater, {
 
     createShip: function() {
-        var ship = new ShipWhite(this.isEnemy);
+        this.ship = new ShipWhite(this.isEnemy);
         if (!this.isEnemy) {
-            ship.setSoundHit(this.sounds.hit);
-            ship.setSoundLose(this.sounds.lose);
+            this.ship.setSoundHit(this.sounds.hit);
+            this.ship.setSoundLose(this.sounds.lose);
         }
-        this.ship = ship;
-        return ship;
+        return this.ship;
     },
 
     createWeapon: function(enemy) {
-        var weapon = new Weapon(this.ship, enemy);
-        this.weapon = weapon;
-        if (this.isEnemy) return weapon;
-        weapon.setSoundAttack(this.sounds.attack);
-        weapon.setSoundMegaCannon(this.sounds.megaCannon);
-        weapon.setSoundFunnelGo(this.sounds.funnelGo);
-        weapon.setSoundFunnelAttack(this.sounds.funnelAtk);
-        return weapon;
+        this.weapon = new Weapon(this.ship, enemy);
+        if (this.isEnemy) return this.weapon;
+        this.weapon.setSoundAttack(this.sounds.attack);
+        this.weapon.setSoundMegaCannon(this.sounds.megaCannon);
+        this.weapon.setSoundFunnelGo(this.sounds.funnelGo);
+        this.weapon.setSoundFunnelAttack(this.sounds.funnelAtk);
+        return this.weapon;
     },
 
     createAction: function() {
