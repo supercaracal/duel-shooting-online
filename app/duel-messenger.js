@@ -9,10 +9,8 @@ DuelMessenger.prototype.observe = function() {
     this.socket.on('duty', this.onDuty.bind(this));
     this.socket.on('I have control', this.onIHaveControl.bind(this));
     this.socket.on('disconnect', this.onDisconnect.bind(this));
-    this.socket.on('critical white', this.onCriticalWhite.bind(this));
-    this.socket.on('critical red', this.onCriticalRed.bind(this));
-    this.socket.on('white', this.onWhite.bind(this));
-    this.socket.on('red', this.onRed.bind(this));
+    this.socket.on('critical', this.onCritical.bind(this));
+    this.socket.on('attack', this.onAttack.bind(this));
     this.socket.on('chat', this.onChat.bind(this));
 };
 
@@ -33,8 +31,10 @@ DuelMessenger.prototype.onDuty = function(data) {
 };
 
 DuelMessenger.prototype.onIHaveControl = function(data) {
-    console.log('>>>>>>>>>>>>>>> ready: ' + this.socket.id + ' control ' + data.ship);
-    this.socket.emit('ready', {});
+    var duelistShip = this.ctrl.get(this.socket.id);
+    var duelistEnemy = this.ctrl.get(duelistShip.getFoe());
+    this.socket.emit('ready', {ship: duelistShip.getColor(), enemy: duelistEnemy.getColor()});
+    console.log('>>>>>>>>>>>>>>> ready: ' + duelistShip.getId() + ' vs ' + duelistEnemy.getId());
 };
 
 DuelMessenger.prototype.onDisconnect = function() {
@@ -46,30 +46,17 @@ DuelMessenger.prototype.onDisconnect = function() {
     this.pushDuelistCount();
 };
 
-DuelMessenger.prototype.onCriticalWhite = function(data) {
+DuelMessenger.prototype.onCritical = function(data) {
     var duelist = this.ctrl.get(this.socket.id);
     if (!duelist) return;
-    this.socket.broadcast.to(duelist.getRoom()).emit('critical white', data);
+    this.socket.broadcast.to(duelist.getRoom()).emit('critical', data);
 };
 
-DuelMessenger.prototype.onCriticalRed = function(data) {
+DuelMessenger.prototype.onAttack = function(data) {
+    this.socket.emit('attack', data);
     var duelist = this.ctrl.get(this.socket.id);
     if (!duelist) return;
-    this.socket.broadcast.to(duelist.getRoom()).emit('critical red', data);
-};
-
-DuelMessenger.prototype.onWhite = function(data) {
-    this.socket.emit('white', data);
-    var duelist = this.ctrl.get(this.socket.id);
-    if (!duelist) return;
-    this.socket.broadcast.to(duelist.getRoom()).emit('white', data);
-};
-
-DuelMessenger.prototype.onRed = function(data) {
-    this.socket.emit('red', data);
-    var duelist = this.ctrl.get(this.socket.id);
-    if (!duelist) return;
-    this.socket.broadcast.to(duelist.getRoom()).emit('red', data);
+    this.socket.broadcast.to(duelist.getRoom()).emit('attack', data);
 };
 
 DuelMessenger.prototype.onChat = function(data) {

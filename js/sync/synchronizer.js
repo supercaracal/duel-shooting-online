@@ -28,56 +28,18 @@ var Synchronizer = Class.create({
         this.listenDuelistCount();
         this.socket.emit('duty', {});
         this.listenCriticalInfo();
-        this.timerId = setInterval(this.pushCriticalInfoInterval.bind(this), 5000);
+        this.timerId = setInterval(this.pushCriticalInfo.bind(this), 5000);
     },
 
-    stop: function() {
-        clearInterval(this.timerId);
-        this.socket.disconnect();
-        this.chatForm.elm.disable();
-        this.chatForm.elm.stopObserving('submit');
-    },
-
-    pushCriticalInfoInterval: function() {
-        switch (this.controlShip) {
-            case 'white':
-                if (!this.ship.white) {
-                    break;
-                }
-                this.socket.emit('critical white', {
-                    hp: this.ship.white.getHitPoint(),
-                    left: this.ship.white.getLeft(),
-                    isEnemy: this.ship.white.isEnemy
-                });
-                break;
-            case 'red':
-                if (!this.ship.red) {
-                    break;
-                }
-                this.socket.emit('critical red', {
-                    hp: this.ship.red.getHitPoint(),
-                    left: this.ship.red.getLeft(),
-                    isEnemy: this.ship.red.isEnemy,
-                    iField: this.ship.red.getIFieldInfo(),
-                    funnel: this.ship.red.getFunnelInfo()
-                });
-                break;
-        }
-    },
-
-    pushShipWhiteCommand: function(cmd) {
-        if (!cmd) return;
-        this.socket.emit('white', {cmd: cmd});
-    },
-
-    pushShipRedCommand: function(cmd) {
-        if (!cmd) return;
-        this.socket.emit('red', {cmd: cmd});
-    },
-
-    listenCriticalInfo: function() {
-        this.socket.on('critical white', this.criticalWhite.bind(this));
-        this.socket.on('critical red', this.criticalRed.bind(this));
+    setupChatEvent: function() {
+        this.chatForm.elm.observe('submit', (function(e) {
+            e.stop();
+            var v = this.chatForm.getValue();
+            if (v) this.socket.emit('chat', v);
+        }).bindAsEventListener(this));
+        this.socket.on('chat', (function(data) {
+            this.chat.add(data);
+        }).bind(this));
     },
 
     listenShipControl: function() {
@@ -97,20 +59,39 @@ var Synchronizer = Class.create({
         this.socket.on('duelist count', this.updateDuelistCount.bind(this));
     },
 
-    listenShipWhiteCommand: function(cmd, ship) {
-        this.cmd.white = cmd;
-        this.ship.white = ship;
-        this.socket.on('white', this.white.bind(this));
+    listenCriticalInfo: function() {
+        this.socket.on('critical', this.critical.bind(this));
     },
 
-    listenShipRedCommand: function(cmd, ship) {
-        this.cmd.red = cmd;
-        this.ship.red = ship;
-        this.socket.on('red', this.red.bind(this));
+    listenShipCommand: function() {
+        this.socket.on('attack', this.attack.bind(this));
     },
 
-    setShipRedWeapon: function(weapon) {
-        this.weapon.red = weapon;
+    youHaveControl: function(data) {
+        this.controlShip = data.ship;
+        this.socket.emit('I have control', {ship: this.controlShip});
+        if (typeof console !== 'undefined') {
+            console.log('I have control: ' + this.controlShip);
+        }
+    },
+
+    youHaveNoControl: function(data) {
+        (function() { this.socket.emit('duty', {}); }).bind(this).delay(5);
+    },
+
+    updateDuelistCount: function(cnt) {
+        this.duelistCounter.update('Duelists: ' + cnt);
+    },
+
+    critical: function(data) {
+        switch (data.color) {
+            case 'white':
+                this.criticalWhite(data);
+                break;
+            case 'red':
+                this.criticalRed(data);
+                break;
+        }
     },
 
     criticalWhite: function(data) {
@@ -178,42 +159,47 @@ var Synchronizer = Class.create({
         }
     },
 
-    youHaveControl: function(data) {
-        this.controlShip = data.ship;
-        this.socket.emit('I have control', {ship: this.controlShip});
-        if (typeof console !== 'undefined') {
-            console.log('I have control: ' + this.controlShip);
+    attack: function(data) {
+        if (!this.cmd[data.color]) return;
+        this.ship[data.color].nextCmd = data.cmd;
+        this.cmd[data.color].execute(data.cmd);
+    },
+
+    pushAttackInfo: function(cmd) {
+        if (!cmd) return;
+        this.socket.emit('attack', {color: this.controlShip, cmd: cmd});
+    },
+
+    pushCriticalInfo: function() {
+        if (!this.ship[this.controlShip]) {
+            return;
         }
+        var data = {
+            hp: this.ship[this.controlShip].getHitPoint(),
+            left: this.ship[this.controlShip].getLeft(),
+            isEnemy: this.ship[this.controlShip].isEnemy
+        };
+        if (this.controlShip == 'red') {
+            data.iField = this.ship[this.controlShip].getIFieldInfo();
+            data.funnel = this.ship[this.controlShip].getFunnelInfo();
+        }
+        data.color = this.controlShip;
+        this.socket.emit('critical', data);
     },
 
-    youHaveNoControl: function(data) {
-        (function() { this.socket.emit('duty', {}); }).bind(this).delay(5);
+    stop: function() {
+        clearInterval(this.timerId);
+        this.socket.disconnect();
+        this.chatForm.elm.disable();
+        this.chatForm.elm.stopObserving('submit');
     },
 
-    white: function(data) {
-        if (!this.cmd.white) return;
-        this.ship.white.nextCmd = data.cmd;
-        this.cmd.white.execute(data.cmd);
+    setShipAndCommand: function(color, ship, cmd) {
+        this.ship[color] = ship;
+        this.cmd[color] = cmd;
     },
 
-    red: function(data) {
-        if (!this.cmd.red) return;
-        this.ship.red.nextCmd = data.cmd;
-        this.cmd.red.execute(data.cmd);
-    },
-
-    updateDuelistCount: function(cnt) {
-        this.duelistCounter.update('Duelists: ' + cnt);
-    },
-
-    setupChatEvent: function() {
-        this.chatForm.elm.observe('submit', (function(e) {
-            e.stop();
-            var v = this.chatForm.getValue();
-            if (v) this.socket.emit('chat', v);
-        }).bindAsEventListener(this));
-        this.socket.on('chat', (function(data) {
-            this.chat.add(data);
-        }).bind(this));
+    setShipRedWeapon: function(weapon) {
+        this.weapon.red = weapon;
     }
 });
