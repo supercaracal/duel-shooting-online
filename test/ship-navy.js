@@ -15,8 +15,12 @@ var ShipNavy = Class.create(Ship, {
         $super();
         ++this.shadowSize;
         var color = '#' + this.colors[0];
-        this.elm.down().setStyle({boxShadow: '0px 0px ' + this.shadowSize + 'px ' + color});
-        this.elm.down(1).setStyle({boxShadow: '0px 0px ' + this.shadowSize + 'px ' + color});
+        this.elm.down().setStyle({
+            boxShadow: '0px 0px ' + this.shadowSize + 'px ' + color
+        });
+        this.elm.down(1).setStyle({
+            boxShadow: '0px 0px ' + this.shadowSize + 'px ' + color
+        });
         if (50 < this.shadowSize) {
             this.shadowSize = 20;
             this.colors.push(this.colors.shift());

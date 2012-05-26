@@ -7,33 +7,62 @@
 <script type="text/javascript">google.load('prototype', '1.7');</script>
 
 <script type="text/javascript" src="/js/action/base/action.js"></script>
-
 <script type="text/javascript" src="/js/cmd/base/command.js"></script>
-
 <script type="text/javascript" src="/js/game/game.js"></script>
 <script type="text/javascript" src="/js/sound/sound.js"></script>
 <script type="text/javascript" src="/js/weapon/weapon.js"></script>
-
 <script type="text/javascript" src="/js/factory/ship-creater.js"></script>
 <script type="text/javascript" src="/js/factory/ship-factory.js"></script>
-
 <script type="text/javascript" src="/js/sprite/base/sprite.js"></script>
 <script type="text/javascript" src="/js/sprite/background.js"></script>
 
 <script type="text/javascript" src="/js/sprite/bullet.js"></script>
+<script type="text/javascript" src="/js/sprite/bullet-linear.js"></script>
+<script type="text/javascript" src="/js/sprite/bullet-homing.js"></script>
 
 <script type="text/javascript" src="/js/sprite/funnel.js"></script>
-<script type="text/javascript" src="/js/sprite/i-field.js"></script>
-
 <script type="text/javascript" src="/js/sprite/ship.js"></script>
+
 <script type="text/javascript" src="/test/ship-navy.js"></script>
+<script type="text/javascript" src="/test/action-ship-navy.js"></script>
+<script type="text/javascript" src="/test/command-ship-navy.js"></script>
+<script type="text/javascript" src="/test/ship-creater-navy.js"></script>
+
 
 <script type="text/javascript">
 Event.observe(window, 'load', function() {
-    new Background().renderElement();
-    var ship = new ShipNavy();
+
+    var sound = new Sound();
+    var sounds = {};
+    sounds.hit = sound.createAudio('/se/hit.mp3');
+    sounds.lose = sound.createAudio('/se/lose.mp3');
+    sounds.newtype = sound.createAudio('/se/newtype.mp3');
+    sounds.attack = sound.createAudio('/se/attack.mp3');
+    sounds.megaCannon = sound.createAudio('/se/mega.mp3');
+    sounds.funnelGo = sound.createAudio('/se/funnel1.mp3');
+    sounds.funnelAtk = sound.createAudio('/se/funnel2.mp3');
+    sounds.iField = sound.createAudio('/se/at_field.mp3');
+
+    var creater = {};
+    creater.ship = ShipFactory.getCreater('navy', false, sounds);
+    creater.enemy = ShipFactory.getCreater('navy', true, sounds);
+
+    var ship = creater.ship.createShip();
+    var enemy = creater.enemy.createShip();
+    var weapon = creater.ship.createWeapon(enemy);
+    var action = creater.ship.createAction();
+    var command = creater.ship.createCommand();
+
     ship.renderElement();
-    new Game(function() { ship.move(); }).start();
+    enemy.renderElement();
+    new Background().renderElement();
+
+    new Game(function() {
+        ship.move();
+        enemy.move();
+        weapon.move();
+        command.execute(action.getCommand());
+    }).start();
 });
 </script>
 </head>
