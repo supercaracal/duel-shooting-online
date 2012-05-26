@@ -1,12 +1,13 @@
 function DuelMatchingController() {
     setInterval(this.match.bind(this), 100);
-    setInterval(this.gc.bind(this), 600000);
+    setInterval(this.gc.bind(this), 1000*60*10);
 }
 
 DuelMatchingController.prototype.duelist = require('./duelist');
 
-DuelMatchingController.prototype.whiteQueue = [];
-DuelMatchingController.prototype.redQueue = [];
+DuelMatchingController.prototype.queues = {};
+DuelMatchingController.prototype.queues.white = [];
+DuelMatchingController.prototype.queues.red = [];
 
 DuelMatchingController.prototype.duelistCount = 0;
 
@@ -15,9 +16,10 @@ DuelMatchingController.prototype.bugoutFuckers = {};
 
 DuelMatchingController.prototype.add = function(id, timestamp) {
     var duelist = new this.duelist(id, timestamp);
-    var isWhite = !this.whiteQueue.length || (this.whiteQueue.length <= this.redQueue.length);
+    var isWhite = !this.queues.white.length
+        || (this.queues.white.length <= this.queues.red.length);
     isWhite ? duelist.setColorWhite() : duelist.setColorRed();
-    isWhite ? this.whiteQueue.push(duelist) : this.redQueue.push(duelist);
+    isWhite ? this.queues.white.push(duelist) : this.queues.red.push(duelist);
 };
 
 DuelMatchingController.prototype.get = function(id) {
@@ -31,15 +33,15 @@ DuelMatchingController.prototype.remove = function(id) {
 };
 
 DuelMatchingController.prototype.getDuelistCount = function() {
-    return this.whiteQueue.length + this.redQueue.length + this.duelistCount;
+    return this.queues.white.length + this.queues.red.length + this.duelistCount;
 };
 
 DuelMatchingController.prototype.match = function() {
-    var white = this.shiftWhiteQueue();
-    var red = this.shiftRedQueue();
+    var white = this.shiftQueue('white');
+    var red = this.shiftQueue('red');
     if (!white || !red) {
-        if (white) this.whiteQueue.unshift(white);
-        if (red) this.redQueue.unshift(red);
+        if (white) this.queues.white.unshift(white);
+        if (red) this.queues.red.unshift(red);
         return;
     }
     white.setFoe(red.getId());
@@ -60,31 +62,21 @@ DuelMatchingController.prototype.gc = function() {
             this.remove(duelist.getId());
         }
     };
-    this.whiteQueue.forEach(func, this);
-    this.redQueue.forEach(func, this);
+    this.queues.white.forEach(func, this);
+    this.queues.red.forEach(func, this);
     for (var socketId in this.duelists) {
         func(this.duelists[socketId]);
     }
 };
 
-DuelMatchingController.prototype.shiftWhiteQueue = function() {
-    var white = this.whiteQueue.shift();
-    if (!white) return null;
-    if (this.bugoutFuckers[white.getId()]) {
-        delete this.bugoutFuckers[white.getId()];
-        white = null;
+DuelMatchingController.prototype.shiftQueue = function(color) {
+    var duelist = this.queues[color].shift();
+    if (!duelist) return null;
+    if (this.bugoutFuckers[duelist.getId()]) {
+        delete this.bugoutFuckers[duelist.getId()];
+        duelist = null;
     }
-    return white;
-};
-
-DuelMatchingController.prototype.shiftRedQueue = function() {
-    var red = this.redQueue.shift();
-    if (!red) return null;
-    if (this.bugoutFuckers[red.getId()]) {
-        delete this.bugoutFuckers[red.getId()];
-        red = null;
-    }
-    return red;
+    return duelist;
 };
 
 module.exports = DuelMatchingController;

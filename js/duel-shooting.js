@@ -2,7 +2,7 @@ var DuelShooting = Class.create({
 
     sounds: null,
     weapons: null,
-    cmd: null,
+    cmds: null,
     opening: null,
     condition: null,
     sync: null,
@@ -15,7 +15,7 @@ var DuelShooting = Class.create({
 
     initialize: function() {
         this.weapons = {};
-        this.cmd = {};
+        this.cmds = {};
         this.opening = new Opening(new Title());
         this.condition = new Condition();
         this.opening.show();
@@ -36,10 +36,10 @@ var DuelShooting = Class.create({
         this.weapons.ship = creater.ship.createWeapon(this.enemy);
         this.weapons.enemy = creater.enemy.createWeapon(this.ship);
         this.action = creater.ship.createAction();
-        this.cmd.ship = creater.ship.createCommand();
-        this.cmd.enemy = creater.enemy.createCommand();
-        this.sync.setShipAndCommand(data.ship, this.ship, this.cmd.ship);
-        this.sync.setShipAndCommand(data.enemy, this.enemy, this.cmd.enemy);
+        this.cmds.ship = creater.ship.createCommand();
+        this.cmds.enemy = creater.enemy.createCommand();
+        this.sync.setShipAndCommand(data.ship, this.ship, this.cmds.ship);
+        this.sync.setShipAndCommand(data.enemy, this.enemy, this.cmds.enemy);
         this.sync.listenShipCommand();
         this.setShipRedWeaponForSync(data);
 

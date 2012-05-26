@@ -33,8 +33,14 @@ DuelMessenger.prototype.onDuty = function(data) {
 DuelMessenger.prototype.onIHaveControl = function(data) {
     var duelistShip = this.ctrl.get(this.socket.id);
     var duelistEnemy = this.ctrl.get(duelistShip.getFoe());
-    this.socket.emit('ready', {ship: duelistShip.getColor(), enemy: duelistEnemy.getColor()});
-    console.log('>>>>>>>>>>>>>>> ready: ' + duelistShip.getId() + ' vs ' + duelistEnemy.getId());
+    this.socket.emit('ready', {
+        ship: duelistShip.getColor(),
+        enemy: duelistEnemy.getColor()
+    });
+    console.log('>>>>>>>>>>>>>>> ready: '
+        + duelistShip.getId()
+        + ' vs '
+        + duelistEnemy.getId());
 };
 
 DuelMessenger.prototype.onDisconnect = function() {
