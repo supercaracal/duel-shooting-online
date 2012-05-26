@@ -3,23 +3,17 @@ function DuelMatchingController() {
     setInterval(this.gc.bind(this), 1000*60*10);
 }
 
+DuelMatchingController.prototype.colors = ['white', 'red'];
 DuelMatchingController.prototype.duelist = require('./duelist');
-
-DuelMatchingController.prototype.queues = {};
-DuelMatchingController.prototype.queues.white = [];
-DuelMatchingController.prototype.queues.red = [];
-
+DuelMatchingController.prototype.queue = [];
 DuelMatchingController.prototype.duelistCount = 0;
-
 DuelMatchingController.prototype.duelists = {};
 DuelMatchingController.prototype.bugoutFuckers = {};
 
 DuelMatchingController.prototype.add = function(id, timestamp) {
     var duelist = new this.duelist(id, timestamp);
-    var isWhite = !this.queues.white.length
-        || (this.queues.white.length <= this.queues.red.length);
-    isWhite ? duelist.setColorWhite() : duelist.setColorRed();
-    isWhite ? this.queues.white.push(duelist) : this.queues.red.push(duelist);
+    duelist.setColor(this.colors[this.queue.length % this.colors.length]);
+    this.queue.push(duelist);
 };
 
 DuelMatchingController.prototype.get = function(id) {
@@ -33,24 +27,24 @@ DuelMatchingController.prototype.remove = function(id) {
 };
 
 DuelMatchingController.prototype.getDuelistCount = function() {
-    return this.queues.white.length + this.queues.red.length + this.duelistCount;
+    return this.queue.length + this.duelistCount;
 };
 
 DuelMatchingController.prototype.match = function() {
-    var white = this.shiftQueue('white');
-    var red = this.shiftQueue('red');
-    if (!white || !red) {
-        if (white) this.queues.white.unshift(white);
-        if (red) this.queues.red.unshift(red);
+    var first = this.shiftQueue();
+    var second = this.shiftQueue();
+    if (!first || !second) {
+        if (first) this.queue.unshift(first);
+        if (second) this.queue.unshift(second);
         return;
     }
-    white.setFoe(red.getId());
-    red.setFoe(white.getId());
-    var roomName = white.getId() + '-' + red.getId();
-    white.setRoom(roomName);
-    red.setRoom(roomName);
-    this.duelists[white.getId()] = white;
-    this.duelists[red.getId()] = red;
+    first.setFoe(second.getId());
+    second.setFoe(first.getId());
+    var roomName = first.getId() + '-' + second.getId();
+    first.setRoom(roomName);
+    second.setRoom(roomName);
+    this.duelists[first.getId()] = first;
+    this.duelists[second.getId()] = second;
     this.duelistCount += 2;
     return true;
 };
@@ -62,15 +56,14 @@ DuelMatchingController.prototype.gc = function() {
             this.remove(duelist.getId());
         }
     };
-    this.queues.white.forEach(func, this);
-    this.queues.red.forEach(func, this);
+    this.queue.forEach(func, this);
     for (var socketId in this.duelists) {
         func(this.duelists[socketId]);
     }
 };
 
-DuelMatchingController.prototype.shiftQueue = function(color) {
-    var duelist = this.queues[color].shift();
+DuelMatchingController.prototype.shiftQueue = function() {
+    var duelist = this.queue.shift();
     if (!duelist) return null;
     if (this.bugoutFuckers[duelist.getId()]) {
         delete this.bugoutFuckers[duelist.getId()];

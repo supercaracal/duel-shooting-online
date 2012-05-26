@@ -3,16 +3,12 @@ function Duelist(id, timestamp) {
     this.timestamp = timestamp;
 }
 
-Duelist.prototype.color = '';
+Duelist.prototype.color = null;
 Duelist.prototype.foe = null;
 Duelist.prototype.room = null;
 
-Duelist.prototype.setColorWhite = function () {
-    this.color = 'white';
-};
-
-Duelist.prototype.setColorRed = function() {
-    this.color = 'red';
+Duelist.prototype.setColor = function (color) {
+    this.color = color;
 };
 
 Duelist.prototype.setFoe = function(id) {

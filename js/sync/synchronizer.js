@@ -84,14 +84,7 @@ var Synchronizer = Class.create({
     },
 
     critical: function(data) {
-        switch (data.color) {
-            case 'white':
-                this.criticalWhite(data);
-                break;
-            case 'red':
-                this.criticalRed(data);
-                break;
-        }
+        this['critical' + data.color.capitalize()](data);
     },
 
     criticalWhite: function(data) {
