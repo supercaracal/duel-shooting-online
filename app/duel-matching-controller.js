@@ -3,7 +3,6 @@ function DuelMatchingController() {
     setInterval(this.gc.bind(this), 1000*60*10);
 }
 
-DuelMatchingController.prototype.colors = ['white', 'red'];
 DuelMatchingController.prototype.duelist = require('./duelist');
 DuelMatchingController.prototype.queue = [];
 DuelMatchingController.prototype.duelistCount = 0;
@@ -11,9 +10,7 @@ DuelMatchingController.prototype.duelists = {};
 DuelMatchingController.prototype.bugoutFuckers = {};
 
 DuelMatchingController.prototype.add = function(id, timestamp) {
-    var duelist = new this.duelist(id, timestamp);
-    duelist.setColor(this.colors[this.queue.length % this.colors.length]);
-    this.queue.push(duelist);
+    this.queue.push(new this.duelist(id, timestamp));
 };
 
 DuelMatchingController.prototype.get = function(id) {
@@ -38,6 +35,8 @@ DuelMatchingController.prototype.match = function() {
         if (second) this.queue.unshift(second);
         return;
     }
+    first.setColor('white');
+    second.setColor('red');
     first.setFoe(second.getId());
     second.setFoe(first.getId());
     var roomName = first.getId() + '-' + second.getId();
