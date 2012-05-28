@@ -106,6 +106,9 @@ var DuelShooting = Class.create({
             isWin ? 'You win.' : 'You lose.',
             isWin ? '#9999FF' : '#FF9999'
         );
+        if (isWin) {
+            new ForkMeOnGitHub().renderElement();
+        }
     },
 
     pushCommand: function(cmd) {
