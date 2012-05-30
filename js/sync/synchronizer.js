@@ -84,17 +84,18 @@ var Synchronizer = Class.create({
     },
 
     critical: function(data) {
-        this['critical' + data.color.capitalize()](data);
+        var methodName = 'critical' + data.color.capitalize();
+        this[(methodName in this) ? methodName : 'criticalDefault'](data);
     },
 
-    criticalWhite: function(data) {
-        if (!this.ships.white) return;
-        this.ships.white.setHitPoint(data.hp);
-        var left = data.isEnemy === this.ships.white.isEnemy ?
+    criticalDefault: function(data) {
+        if (!this.ships[data.color]) return;
+        this.ships[data.color].setHitPoint(data.hp);
+        var left = data.isEnemy === this.ships[data.color].isEnemy ?
             data.left :
-            this.ships.white.clientWidth - data.left + (data.isEnemy ? 90 : -90);
-        if (60 < (this.ships.white.getLeft() - left).abs()) {
-            this.ships.white.setLeft(left);
+            this.ships[data.color].clientWidth - data.left + (data.isEnemy ? 90 : -90);
+        if (60 < (this.ships[data.color].getLeft() - left).abs()) {
+            this.ships[data.color].setLeft(left);
         }
     },
 

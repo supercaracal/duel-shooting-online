@@ -35,7 +35,7 @@ DuelMatchingController.prototype.match = function() {
         if (second) this.queue.unshift(second);
         return;
     }
-    first.setColor('white');
+    first.setColor(Math.floor(Math.random() * 100) % 7 === 0 ? 'navy' : 'white');
     second.setColor('red');
     first.setFoe(second.getId());
     second.setFoe(first.getId());

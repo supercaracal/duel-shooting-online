@@ -17,17 +17,9 @@
 <script type="text/javascript" src="/js/sprite/background.js"></script>
 
 <script type="text/javascript" src="/js/sprite/bullet.js"></script>
-<script type="text/javascript" src="/js/sprite/bullet-linear.js"></script>
-<script type="text/javascript" src="/js/sprite/bullet-homing.js"></script>
 
 <script type="text/javascript" src="/js/sprite/funnel.js"></script>
 <script type="text/javascript" src="/js/sprite/ship.js"></script>
-
-<script type="text/javascript" src="/test/ship-navy.js"></script>
-<script type="text/javascript" src="/test/action-ship-navy.js"></script>
-<script type="text/javascript" src="/test/command-ship-navy.js"></script>
-<script type="text/javascript" src="/test/ship-creater-navy.js"></script>
-<script type="text/javascript" src="/test/bullet-bezier.js"></script>
 
 <script type="text/javascript">
 Event.observe(window, 'load', function() {
@@ -43,26 +35,10 @@ Event.observe(window, 'load', function() {
     sounds.funnelAtk = sound.createAudio('/se/funnel2.mp3');
     sounds.iField = sound.createAudio('/se/at_field.mp3');
 
-    var creater = {};
-    creater.ship = ShipFactory.getCreater('navy', false, sounds);
-    creater.enemy = ShipFactory.getCreater('navy', true, sounds);
-
-    var ship = creater.ship.createShip();
-    var enemy = creater.enemy.createShip();
-    var weapon = creater.ship.createWeapon(enemy);
-    var action = creater.ship.createAction();
-    var command = creater.ship.createCommand();
-
-    ship.renderElement();
-    enemy.setLeft(300);
-    enemy.renderElement();
     new Background().renderElement();
 
     new Game(function() {
-        ship.move();
-        enemy.move();
-        weapon.move();
-        command.execute(action.getCommand());
+
     }).start();
 });
 </script>

@@ -103,6 +103,19 @@ var Weapon = Class.create({
         this.playSoundAttack();
     },
 
+    addBulletBezier: function() {
+        var elmL = new BulletBezier(this.ship, this.enemy, -90);
+        var elmC = new BulletBezier(this.ship, this.enemy, 0);
+        var elmR = new BulletBezier(this.ship, this.enemy, 90);
+        this.elms.push(elmL);
+        this.elms.push(elmC);
+        this.elms.push(elmR);
+        elmL.renderElement();
+        elmC.renderElement();
+        elmR.renderElement();
+        this.playSoundAttack();
+    },
+
     addBulletLinearFromFunnel: function(left) {
         var elm = new BulletLinear(this.ship, this.enemy);
         elm.setPos({top: (this.ship.isEnemy ? 90 : elm.clientHeight - 120), left: left});

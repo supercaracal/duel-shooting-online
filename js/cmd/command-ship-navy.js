@@ -9,9 +9,6 @@ var CommandShipNavy = Class.create(Command, {
     },
 
     attack: function() {
-        var elm = new BulletBezier(this.weapon.ship, this.weapon.enemy);
-        this.weapon.elms.push(elm);
-        elm.renderElement();
-        this.weapon.playSoundAttack();
+        this.weapon.addBulletBezier();
     }
 });
