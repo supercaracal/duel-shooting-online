@@ -15,7 +15,7 @@ var BulletBezier = Class.create(Bullet, {
             },
             enemy: {
                 top: enemy.getTop() + (this.isFall ? -30 : 60),
-                left: enemy.getLeft() + 30 + left
+                left: left
             }
         };
         this.leftRange = -(this.pos.ship.left - this.pos.enemy.left) / this.ATTAINABLE_COUNT;

@@ -1,5 +1,14 @@
 var ActionShipNavy = Class.create(Action, {
 
+    KEY_A: 65,
+    KEY_S: 83,
+    KEY_D: 68,
+    KEY_F: 70,
+    KEY_Z: 90,
+    KEY_X: 88,
+    KEY_C: 67,
+    KEY_V: 86,
+
     handler: function(e) {
         if (e.altGraphKey || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
         switch (e.keyCode) {
@@ -13,6 +22,38 @@ var ActionShipNavy = Class.create(Action, {
                 break;
             case Event.KEY_UP:
                 this.nextCommand = 'attack';
+                e.stop();
+                break;
+            case this.KEY_A:
+                this.nextCommand = 'attack1';
+                e.stop();
+                break;
+            case this.KEY_S:
+                this.nextCommand = 'attack2';
+                e.stop();
+                break;
+            case this.KEY_D:
+                this.nextCommand = 'attack3';
+                e.stop();
+                break;
+            case this.KEY_F:
+                this.nextCommand = 'attack4';
+                e.stop();
+                break;
+            case this.KEY_Z:
+                this.nextCommand = 'attack5';
+                e.stop();
+                break;
+            case this.KEY_X:
+                this.nextCommand = 'attack6';
+                e.stop();
+                break;
+            case this.KEY_C:
+                this.nextCommand = 'attack7';
+                e.stop();
+                break;
+            case this.KEY_V:
+                this.nextCommand = 'attack8';
                 e.stop();
                 break;
         }

@@ -182,6 +182,15 @@ var Sprite = Class.create({
 /************************************/
 var ActionShipNavy = Class.create(Action, {
 
+    KEY_A: 65,
+    KEY_S: 83,
+    KEY_D: 68,
+    KEY_F: 70,
+    KEY_Z: 90,
+    KEY_X: 88,
+    KEY_C: 67,
+    KEY_V: 86,
+
     handler: function(e) {
         if (e.altGraphKey || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
         switch (e.keyCode) {
@@ -195,6 +204,38 @@ var ActionShipNavy = Class.create(Action, {
                 break;
             case Event.KEY_UP:
                 this.nextCommand = 'attack';
+                e.stop();
+                break;
+            case this.KEY_A:
+                this.nextCommand = 'attack1';
+                e.stop();
+                break;
+            case this.KEY_S:
+                this.nextCommand = 'attack2';
+                e.stop();
+                break;
+            case this.KEY_D:
+                this.nextCommand = 'attack3';
+                e.stop();
+                break;
+            case this.KEY_F:
+                this.nextCommand = 'attack4';
+                e.stop();
+                break;
+            case this.KEY_Z:
+                this.nextCommand = 'attack5';
+                e.stop();
+                break;
+            case this.KEY_X:
+                this.nextCommand = 'attack6';
+                e.stop();
+                break;
+            case this.KEY_C:
+                this.nextCommand = 'attack7';
+                e.stop();
+                break;
+            case this.KEY_V:
+                this.nextCommand = 'attack8';
                 e.stop();
                 break;
         }
@@ -468,7 +509,7 @@ var BulletBezier = Class.create(Bullet, {
             },
             enemy: {
                 top: enemy.getTop() + (this.isFall ? -30 : 60),
-                left: enemy.getLeft() + 30 + left
+                left: left
             }
         };
         this.leftRange = -(this.pos.ship.left - this.pos.enemy.left) / this.ATTAINABLE_COUNT;
@@ -612,7 +653,39 @@ var CommandShipNavy = Class.create(Command, {
     },
 
     attack: function() {
-        this.weapon.addBulletBezier();
+        this.weapon.addBulletBezierAuto();
+    },
+
+    attack1: function() {
+        this.weapon.addBulletBezierManual(this.ship.isEnemy ? 660 : 30);
+    },
+
+    attack2: function() {
+        this.weapon.addBulletBezierManual(this.ship.isEnemy ? 570 : 120);
+    },
+
+    attack3: function() {
+        this.weapon.addBulletBezierManual(this.ship.isEnemy ? 480 : 210);
+    },
+
+    attack4: function() {
+        this.weapon.addBulletBezierManual(this.ship.isEnemy ? 390 : 300);
+    },
+
+    attack5: function() {
+        this.weapon.addBulletBezierManual(this.ship.isEnemy ? 300 : 390);
+    },
+
+    attack6: function() {
+        this.weapon.addBulletBezierManual(this.ship.isEnemy ? 210 : 480);
+    },
+
+    attack7: function() {
+        this.weapon.addBulletBezierManual(this.ship.isEnemy ? 120 : 570);
+    },
+
+    attack8: function() {
+        this.weapon.addBulletBezierManual(this.ship.isEnemy ? 30 : 660);
     }
 });
 
@@ -873,7 +946,7 @@ var ForkMeOnGitHub = Class.create(Sprite, {
         return new Element('img', {
             src: 'https://s3.amazonaws.com/github/ribbons/forkme_left_white_ffffff.png',
             alt: 'Fork me on GitHub'
-        }).wrap(new Element('a', {
+        }).setStyle({border: 'none'}).wrap(new Element('a', {
             href: 'https://github.com/supercaracal/duelshooting_online'
         })).setStyle({
             position: 'fixed',
@@ -2333,16 +2406,24 @@ var Weapon = Class.create({
         this.playSoundAttack();
     },
 
-    addBulletBezier: function() {
-        var elmL = new BulletBezier(this.ship, this.enemy, -90);
-        var elmC = new BulletBezier(this.ship, this.enemy, 0);
-        var elmR = new BulletBezier(this.ship, this.enemy, 90);
+    addBulletBezierAuto: function() {
+        var enemyLeft = this.enemy.getLeft();
+        var elmL = new BulletBezier(this.ship, this.enemy, enemyLeft - 60);
+        var elmC = new BulletBezier(this.ship, this.enemy, enemyLeft + 30);
+        var elmR = new BulletBezier(this.ship, this.enemy, enemyLeft + 120);
         this.elms.push(elmL);
         this.elms.push(elmC);
         this.elms.push(elmR);
         elmL.renderElement();
         elmC.renderElement();
         elmR.renderElement();
+        this.playSoundAttack();
+    },
+
+    addBulletBezierManual: function(left) {
+        var elm = new BulletBezier(this.ship, this.enemy, left);
+        this.elms.push(elm);
+        elm.renderElement();
         this.playSoundAttack();
     },
 

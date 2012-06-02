@@ -103,16 +103,24 @@ var Weapon = Class.create({
         this.playSoundAttack();
     },
 
-    addBulletBezier: function() {
-        var elmL = new BulletBezier(this.ship, this.enemy, -90);
-        var elmC = new BulletBezier(this.ship, this.enemy, 0);
-        var elmR = new BulletBezier(this.ship, this.enemy, 90);
+    addBulletBezierAuto: function() {
+        var enemyLeft = this.enemy.getLeft();
+        var elmL = new BulletBezier(this.ship, this.enemy, enemyLeft - 60);
+        var elmC = new BulletBezier(this.ship, this.enemy, enemyLeft + 30);
+        var elmR = new BulletBezier(this.ship, this.enemy, enemyLeft + 120);
         this.elms.push(elmL);
         this.elms.push(elmC);
         this.elms.push(elmR);
         elmL.renderElement();
         elmC.renderElement();
         elmR.renderElement();
+        this.playSoundAttack();
+    },
+
+    addBulletBezierManual: function(left) {
+        var elm = new BulletBezier(this.ship, this.enemy, left);
+        this.elms.push(elm);
+        elm.renderElement();
         this.playSoundAttack();
     },
 
