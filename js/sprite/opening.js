@@ -17,7 +17,7 @@ var Opening = Class.create(Sprite, {
             zIndex: this.Z_INDEX_BASE + 100,
             backgroundColor: '#111111',
             height: this.clientHeight + 'px',
-            width: this.clientWidth + 'px',
+            width: this.clientWidth + 'px'
         }).setOpacity(this.backgroundOpacity);
         return background;
     },

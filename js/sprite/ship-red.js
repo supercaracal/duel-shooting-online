@@ -33,7 +33,7 @@ var ShipRed = Class.create(Ship, {
             firstLeft: this.funnels[0] ? this.funnels[0].initLeft : null,
             firstTheta: this.funnels[0] ? this.funnels[0].theta : null,
             secondLeft: this.funnels[1] ? this.funnels[1].initLeft : null,
-            secondTheta: this.funnels[1] ? this.funnels[1].theta : null,
+            secondTheta: this.funnels[1] ? this.funnels[1].theta : null
         };
     },
 

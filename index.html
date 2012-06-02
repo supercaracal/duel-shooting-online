@@ -11,71 +11,14 @@
 <meta property="og:url" content="http://duelshooting-online.herokuapp.com/" />
 <meta property="og:image" content="http://duelshooting-online.herokuapp.com/img/ogp-img.gif" />
 <meta property="og:description" content="This is a javascript game." />
-
 <link rel="shortcut icon" href="/favicon.ico">
 <link rel="stylesheet" type="text/css" media="all" href="/css/style.css" />
 <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.gif" />
-
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">google.load('prototype', '1.7');</script>
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-
-<script type="text/javascript" src="/js/action/base/action.js"></script>
-<script type="text/javascript" src="/js/action/action-ship-white.js"></script>
-<script type="text/javascript" src="/js/action/action-ship-red.js"></script>
-<script type="text/javascript" src="/js/action/action-ship-navy.js"></script>
-
-<script type="text/javascript" src="/js/cmd/base/command.js"></script>
-<script type="text/javascript" src="/js/cmd/command-ship-white.js"></script>
-<script type="text/javascript" src="/js/cmd/command-ship-red.js"></script>
-<script type="text/javascript" src="/js/cmd/command-ship-navy.js"></script>
-
-<script type="text/javascript" src="/js/game/game.js"></script>
-<script type="text/javascript" src="/js/sound/sound.js"></script>
-<script type="text/javascript" src="/js/weapon/weapon.js"></script>
-<script type="text/javascript" src="/js/weapon/chat.js"></script>
-<script type="text/javascript" src="/js/sync/synchronizer.js"></script>
-
-<script type="text/javascript" src="/js/factory/ship-factory.js"></script>
-<script type="text/javascript" src="/js/factory/ship-creater.js"></script>
-<script type="text/javascript" src="/js/factory/ship-creater-white.js"></script>
-<script type="text/javascript" src="/js/factory/ship-creater-red.js"></script>
-<script type="text/javascript" src="/js/factory/ship-creater-navy.js"></script>
-
-<script type="text/javascript" src="/js/sprite/base/sprite.js"></script>
-<script type="text/javascript" src="/js/sprite/title.js"></script>
-<script type="text/javascript" src="/js/sprite/opening.js"></script>
-<script type="text/javascript" src="/js/sprite/condition.js"></script>
-<script type="text/javascript" src="/js/sprite/background.js"></script>
-<script type="text/javascript" src="/js/sprite/time-keeper.js"></script>
-<script type="text/javascript" src="/js/sprite/duelist-counter.js"></script>
-<script type="text/javascript" src="/js/sprite/nico-nico.js"></script>
-<script type="text/javascript" src="/js/sprite/chat-form.js"></script>
-<script type="text/javascript" src="/js/sprite/fork-me-on-github.js"></script>
-
-<script type="text/javascript" src="/js/sprite/bullet.js"></script>
-<script type="text/javascript" src="/js/sprite/bullet-linear.js"></script>
-<script type="text/javascript" src="/js/sprite/bullet-homing.js"></script>
-<script type="text/javascript" src="/js/sprite/bullet-bezier.js"></script>
-
-<script type="text/javascript" src="/js/sprite/funnel.js"></script>
-<script type="text/javascript" src="/js/sprite/funnel-circle.js"></script>
-<script type="text/javascript" src="/js/sprite/funnel-defence-left.js"></script>
-<script type="text/javascript" src="/js/sprite/funnel-defence-right.js"></script>
-<script type="text/javascript" src="/js/sprite/funnel-slider.js"></script>
-<script type="text/javascript" src="/js/sprite/i-field.js"></script>
-
-<script type="text/javascript" src="/js/sprite/ship.js"></script>
-<script type="text/javascript" src="/js/sprite/ship-afterimage.js"></script>
-<script type="text/javascript" src="/js/sprite/ship-white.js"></script>
-<script type="text/javascript" src="/js/sprite/ship-red.js"></script>
-<script type="text/javascript" src="/js/sprite/ship-navy.js"></script>
-
-<script type="text/javascript" src="/js/duel-shooting.js"></script>
-
-<script type="text/javascript">Event.observe(window, 'load', function() { new DuelShooting(); });</script>
-
+<script type="text/javascript" src="/prototype.min.js"></script>
+<script type="text/javascript" src="/duel.min.js"></script>
 <script type="text/javascript">
+  Event.observe(window, 'load', function() { new DuelShooting(); });
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-1455197-5']);
   _gaq.push(['_trackPageview']);

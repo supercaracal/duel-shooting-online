@@ -1,6 +1,6 @@
 var BulletBezier = Class.create(Bullet, {
 
-    ATTAINABLE_COUNT: 50,
+    ATTAINABLE_COUNT: 40,
     pos: null,
     leftRange: null,
     topRange: null,
