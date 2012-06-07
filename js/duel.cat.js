@@ -2027,7 +2027,6 @@ var Sound = Class.create({
 var Synchronizer = Class.create({
 
     socket: null,
-    timerId: null,
     controlShip: null,
     ships: null,
     cmds: null,
@@ -2053,8 +2052,6 @@ var Synchronizer = Class.create({
         this.listenYouWin(finish);
         this.listenDuelistCount();
         this.socket.emit('duty', {});
-        this.listenCriticalInfo();
-        this.timerId = setInterval(this.pushCriticalInfo.bind(this), 5000);
     },
 
     setupChatEvent: function() {
@@ -2085,10 +2082,6 @@ var Synchronizer = Class.create({
         this.socket.on('duelist count', this.updateDuelistCount.bind(this));
     },
 
-    listenCriticalInfo: function() {
-        this.socket.on('critical', this.critical.bind(this));
-    },
-
     listenShipCommand: function() {
         this.socket.on('attack', this.attack.bind(this));
     },
@@ -2107,6 +2100,13 @@ var Synchronizer = Class.create({
 
     updateDuelistCount: function(cnt) {
         this.duelistCounter.update('Duelists: ' + cnt);
+    },
+
+    attack: function(data) {
+        if (!this.cmds[data.color]) return;
+        if (data.color != this.controlShip) this.critical(data);
+        this.ships[data.color].nextCmd = data.cmd;
+        this.cmds[data.color].execute(data.cmd);
     },
 
     critical: function(data) {
@@ -2179,22 +2179,11 @@ var Synchronizer = Class.create({
         }
     },
 
-    attack: function(data) {
-        if (!this.cmds[data.color]) return;
-        this.ships[data.color].nextCmd = data.cmd;
-        this.cmds[data.color].execute(data.cmd);
-    },
-
     pushAttackInfo: function(cmd) {
         if (!cmd) return;
-        this.socket.emit('attack', {color: this.controlShip, cmd: cmd});
-    },
-
-    pushCriticalInfo: function() {
-        if (!this.ships[this.controlShip]) {
-            return;
-        }
         var data = {
+            color: this.controlShip,
+            cmd: cmd,
             hp: this.ships[this.controlShip].getHitPoint(),
             left: this.ships[this.controlShip].getLeft(),
             isEnemy: this.ships[this.controlShip].isEnemy
@@ -2203,8 +2192,7 @@ var Synchronizer = Class.create({
             data.iField = this.ships[this.controlShip].getIFieldInfo();
             data.funnel = this.ships[this.controlShip].getFunnelInfo();
         }
-        data.color = this.controlShip;
-        this.socket.emit('critical', data);
+        this.socket.emit('attack', data);
     },
 
     setShipAndCommand: function(color, ship, cmd) {
@@ -2217,7 +2205,6 @@ var Synchronizer = Class.create({
     },
 
     stop: function() {
-        clearInterval(this.timerId);
         this.socket.disconnect();
         this.chatForm.elm.disable();
         this.chatForm.elm.stopObserving('submit');

@@ -9,7 +9,6 @@ DuelMessenger.prototype.observe = function() {
     this.socket.on('duty', this.onDuty.bind(this));
     this.socket.on('I have control', this.onIHaveControl.bind(this));
     this.socket.on('disconnect', this.onDisconnect.bind(this));
-    this.socket.on('critical', this.onCritical.bind(this));
     this.socket.on('attack', this.onAttack.bind(this));
     this.socket.on('chat', this.onChat.bind(this));
 };
@@ -52,16 +51,10 @@ DuelMessenger.prototype.onDisconnect = function() {
     this.pushDuelistCount();
 };
 
-DuelMessenger.prototype.onCritical = function(data) {
-    var duelist = this.ctrl.get(this.socket.id);
-    if (!duelist) return;
-    this.socket.broadcast.to(duelist.getRoom()).emit('critical', data);
-};
-
 DuelMessenger.prototype.onAttack = function(data) {
-    this.socket.emit('attack', data);
     var duelist = this.ctrl.get(this.socket.id);
     if (!duelist) return;
+    this.socket.emit('attack', data);
     this.socket.broadcast.to(duelist.getRoom()).emit('attack', data);
 };
 

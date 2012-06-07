@@ -15,7 +15,8 @@ var fs = require('fs')
         if (fileOrDir == path.basename(__filename)) {
             return;
         }
-        var relativePath = dir + (dir == './' ? '' : '/') + fileOrDir;
+        //var relativePath = dir + (dir == './' ? '' : '/') + fileOrDir;
+        var relativePath = dir + '/' + fileOrDir;
         if (fileOrDir == outputFileName) {
             fs.unlinkSync(relativePath);
             return;
@@ -26,7 +27,8 @@ var fs = require('fs')
         }
         filePaths.push(relativePath);
     });
-}('./'));
+//}('./'));
+}(__dirname));
 
 filePaths.sort(function(a, b) {
     if (a.indexOf('/base/') !== -1 && b.indexOf('/base/') === -1) return -1;
@@ -39,7 +41,8 @@ filePaths.sort(function(a, b) {
 filePaths.forEach(function(filePath) {
     code += fs.readFileSync(filePath, encoding);
     code += "\n/************************************/\n";
-    console.log(path.normalize(__dirname + '/' + filePath.replace('./', '')));
+    //console.log(path.normalize(__dirname + '/' + filePath.replace('./', '')));
+    console.log(path.normalize(filePath));
 });
 
 fs.writeFileSync(outputFileName, code, encoding);
