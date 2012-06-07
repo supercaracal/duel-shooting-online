@@ -91,19 +91,13 @@ var Synchronizer = Class.create({
     criticalDefault: function(data) {
         if (!this.ships[data.color]) return;
         this.ships[data.color].setHitPoint(data.hp);
-        var left = data.isEnemy === this.ships[data.color].isEnemy ?
-            data.left :
-            this.ships[data.color].clientWidth - data.left + (data.isEnemy ? 90 : -90);
-        this.ships[data.color].setLeft(left);
+        this.ships[data.color].setLeft(this.ships[data.color].clientWidth - data.left - 90);
     },
 
     criticalRed: function(data) {
         if (!this.ships.red) return;
         this.ships.red.setHitPoint(data.hp);
-        var left = data.isEnemy === this.ships.red.isEnemy ?
-            data.left :
-            this.ships.red.clientWidth - data.left + (data.isEnemy ? 90 : -90);
-        this.ships.red.setLeft(left);
+        this.ships.red.setLeft(this.ships.red.clientWidth - data.left - 90);
         if (data.iField.isActive) {
             this.ships.red.iField.setHeight(data.iField.height);
             this.ships.red.iField.invoke();
@@ -155,8 +149,7 @@ var Synchronizer = Class.create({
             color: this.controlShip,
             cmd: cmd,
             hp: this.ships[this.controlShip].getHitPoint(),
-            left: this.ships[this.controlShip].getLeft(),
-            isEnemy: this.ships[this.controlShip].isEnemy
+            left: this.ships[this.controlShip].getLeft()
         };
         if (this.controlShip == 'red') {
             data.iField = this.ships[this.controlShip].getIFieldInfo();
