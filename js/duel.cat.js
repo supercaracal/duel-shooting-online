@@ -2135,8 +2135,8 @@ var Synchronizer = Class.create({
             this.weapons.red.removeFunnelCircle(2);
         }
         if (data.funnel.firstLeft !== null
-                && data.funnel.secondLeft === null
-                && this.weapons.red.funnelCircles.size() === 2) {
+            && data.funnel.secondLeft === null
+            && this.weapons.red.funnelCircles.size() === 2) {
 
             this.weapons.red.removeFunnelCircle(1);
         }
@@ -2145,12 +2145,9 @@ var Synchronizer = Class.create({
             if (this.weapons.red.funnelCircles.size() === 0) {
                 this.weapons.red.addFunnelCircle();
             }
-            left = data.isEnemy === this.ships.red.isEnemy ?
-                data.funnel.firstLeft :
-                this.ships.red.clientWidth - data.funnel.firstLeft + (data.isEnemy ? 30 : -30);
+            left = this.ships.red.clientWidth - data.funnel.firstLeft - 30;
             if (left !== this.ships.red.funnels[0].initLeft) {
                 this.ships.red.funnels[0].initLeft = left;
-
             }
             this.ships.red.funnels[0].theta = data.funnel.firstTheta;
         }
@@ -2158,12 +2155,9 @@ var Synchronizer = Class.create({
             if (this.weapons.red.funnelCircles.size() === 1) {
                 this.weapons.red.addFunnelCircle();
             }
-            left = data.isEnemy === this.ships.red.isEnemy ?
-                data.funnel.secondLeft :
-                this.ships.red.clientWidth - data.funnel.secondLeft + (data.isEnemy ? 30 : -30);
+            left = this.ships.red.clientWidth - data.funnel.secondLeft - 30;
             if (left !== this.ships.red.funnels[1].initLeft) {
                 this.ships.red.funnels[1].initLeft = left;
-
             }
             this.ships.red.funnels[1].theta = data.funnel.secondTheta;
         }
@@ -2171,6 +2165,7 @@ var Synchronizer = Class.create({
 
     pushAttackInfo: function(cmd) {
         if (!cmd) return;
+        this.ships[this.controlShip].nextCmd = null;
         var data = {
             color: this.controlShip,
             cmd: cmd,
