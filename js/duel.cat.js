@@ -2117,13 +2117,23 @@ var Synchronizer = Class.create({
     criticalDefault: function(data) {
         if (!this.ships[data.color]) return;
         this.ships[data.color].setHitPoint(data.hp);
-        this.ships[data.color].setLeft(this.ships[data.color].clientWidth - data.left - 90);
+        if (this.ships[data.color].nextCmd !== 'stepRight'
+            && this.ships[data.color].nextCmd !== 'stepLeft') {
+
+            this.ships[data.color].setLeft(
+                this.ships[data.color].clientWidth - data.left - 90);
+        }
     },
 
     criticalRed: function(data) {
         if (!this.ships.red) return;
         this.ships.red.setHitPoint(data.hp);
-        this.ships.red.setLeft(this.ships.red.clientWidth - data.left - 90);
+        if (this.ships.red.nextCmd !== 'stepRight'
+            && this.ships.red.nextCmd !== 'stepLeft') {
+
+            this.ships.red.setLeft(
+                this.ships.red.clientWidth - data.left - 90);
+        }
         if (data.iField.isActive) {
             this.ships.red.iField.setHeight(data.iField.height);
             this.ships.red.iField.invoke();
@@ -2165,7 +2175,6 @@ var Synchronizer = Class.create({
 
     pushAttackInfo: function(cmd) {
         if (!cmd) return;
-        this.ships[this.controlShip].nextCmd = null;
         var data = {
             color: this.controlShip,
             cmd: cmd,
@@ -2173,8 +2182,8 @@ var Synchronizer = Class.create({
             left: this.ships[this.controlShip].getLeft()
         };
         if (this.controlShip == 'red') {
-            data.iField = this.ships[this.controlShip].getIFieldInfo();
-            data.funnel = this.ships[this.controlShip].getFunnelInfo();
+            data.iField = this.ships.red.getIFieldInfo();
+            data.funnel = this.ships.red.getFunnelInfo();
         }
         this.socket.emit('attack', data);
     },
