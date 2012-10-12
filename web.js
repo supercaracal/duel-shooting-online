@@ -1,14 +1,10 @@
-var app
-  , routing
-  , io
-  , msg;
+var express = require('express')
+  , routing = require('./app/routing')
+  , socketIo = require('socket.io')
+  , msg = require('./app/messenger');
 
-app = require('express').createServer();
+var app = express.createServer();
 app.listen(process.env.PORT || 8080);
 
-routing = require('./app/routing');
 new routing(app, __dirname);
-
-io = require('socket.io').listen(app);
-msg = require('./app/messenger');
-new msg(io);
+new msg(socketIo.listen(app));
