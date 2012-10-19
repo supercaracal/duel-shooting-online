@@ -1,10 +1,13 @@
 var express = require('express')
-  , routing = require('./app/routing')
+  , http = require('http')
   , socketIo = require('socket.io')
+  , routing = require('./app/routing')
   , msg = require('./app/messenger');
 
-var app = express.createServer();
-app.listen(process.env.PORT || 8080);
+var app = express();
+
+var server = http.createServer(app);
+server.listen(process.env.PORT || 8080);
 
 new routing(app, __dirname);
-new msg(socketIo.listen(app));
+new msg(socketIo.listen(server));
