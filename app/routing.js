@@ -5,10 +5,12 @@ function Routing(app, dir) {
 };
 
 Routing.prototype.home = function(req, res) {
+    res.header('Cache-Control', 'public, max-age=1800');
     res.sendfile(this.dir + '/index.html');
 };
 
 Routing.prototype.other = function(req, res) {
+    res.header('Cache-Control', 'public, max-age=1800');
     res.sendfile(this.dir + req.url);
 };
 

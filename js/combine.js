@@ -12,7 +12,7 @@ var fs = require('fs')
     }
     var lambda = arguments.callee;
     fs.readdirSync(dir).forEach(function(fileOrDir) {
-        if (fileOrDir == path.basename(__filename)) {
+        if (fileOrDir == path.basename(__filename) || fileOrDir == 'compress.js') {
             return;
         }
         var relativePath = dir + '/' + fileOrDir;
