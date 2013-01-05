@@ -20,7 +20,7 @@ var DuelShooting = Class.create({
         this.condition = new Condition();
         this.opening.show();
         this.condition.renderElement();
-        this.condition.update('Scouting for the enemy...', '#99FF99');
+        this.condition.update('Please wait for player matching.', '#99FF99');
         this.setupSoundEffect();
         this.sync = new Synchronizer('/', this.callback.bind(this), this.finish.bind(this));
     },

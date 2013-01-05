@@ -17,6 +17,15 @@ body {
     color: #777777;
 }
 
+#title p {
+    margin-top: 270px;
+    font-size: 12px;
+}
+
+#title p span {
+    font-weight: 800;
+}
+
 #manual {
     width: 279px;
     margin-left: 721px;
