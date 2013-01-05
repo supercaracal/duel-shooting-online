@@ -1,6 +1,6 @@
-"Duel Shooting Online on heroku":http://duelshooting-online.herokuapp.com/
-
 "Duel Shooting Online on dotcloud":http://duelshooting-pocapocaunty.dotcloud.com/
+
+"Duel Shooting Online on heroku":http://duelshooting-online.herokuapp.com/
 
 h4. White Demon
 
@@ -23,3 +23,19 @@ h4. Red Comet
 |>. Attack1 | Cursor Up | Upper part center |
 |>. Attack2 | F | Upper part left |
 |>. Barrier | I | Upper part right |
+
+h4. Dark Emperor
+
+|_. Design |_. Action |_. Keyboard |_. Mouse or Touch |
+|/12. !https://github.com/supercaracal/duelshooting_online/raw/master/img/dark-emperor.gif! |
+|>. Move Right | Cursor Right | Right area |
+|>. Move Left | Cursor Left | Left area |
+|>. Attack Main | Cursor Up | Middle area |
+|>. Attack Sub1 | A | unsupported |
+|>. Attack Sub2 | S | unsupported |
+|>. Attack Sub3 | D | unsupported |
+|>. Attack Sub4 | F | unsupported |
+|>. Attack Sub5 | Z | unsupported |
+|>. Attack Sub6 | X | unsupported |
+|>. Attack Sub7 | C | unsupported |
+|>. Attack Sub8 | V | unsupported |
