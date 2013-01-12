@@ -13,5 +13,6 @@ var ShipCreater = Class.create({
     createShip: Prototype.emptyFunction,
     createWeapon: Prototype.emptyFunction,
     createAction: Prototype.emptyFunction,
+    createAI: Prototype.emptyFunction,
     createCommand: Prototype.emptyFunction
 });

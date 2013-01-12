@@ -38,5 +38,9 @@ var Bullet = Class.create(Sprite, {
             boxShadow: '0px 0px 10px ' + color
         });
         return inner.wrap(outer);
+    },
+
+    instanceOfBullet: function() {
+        return true;
     }
 });

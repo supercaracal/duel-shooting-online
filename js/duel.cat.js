@@ -48,6 +48,84 @@ var Action = Class.create({
 });
 
 /************************************/
+var AI = Class.create({
+    ship: null,
+    enemy: null,
+    enemyWeapon: null,
+    height: null,
+    shipTop: null,
+    risksByArea: null,
+    nextCommand: null,
+    wait: null,
+    stayAreaIndex: null,
+    seekAreaIndex: null,
+    initialize: function(ship, enemy, enemyWeapon) {
+        this.ship = ship;
+        this.enemy = enemy;
+        this.enemyWeapon = enemyWeapon;
+        this.height = ship.getClientHeight();
+        this.shipTop = ship.getTop();
+        this.wait = 0;
+        this.stayAreaIndex = {};
+    },
+    getCommand: function() {
+        if (0 < this.wait) {
+            --this.wait;
+            this.nextCommand = null;
+        } else {
+            this.updateRisksByArea();
+            this.updateStayAreaIndex();
+            this.updateSeekAreaIndex();
+            this.considerTactics();
+        }
+        if (this.wait === 0) {
+            this.wait += Math.floor(Math.random() * 100) % this.WAIT_MAX;
+        }
+        return this.nextCommand;
+    },
+    updateRisksByArea: function() {
+        this.risksByArea = [0, 0, 0, 0, 0, 0, 0, 0];
+        this.enemyWeapon.elms.each((function(elm) {
+            if (!elm.instanceOfBullet || !elm.instanceOfBullet()) {
+                return;
+            }
+            var top = elm.getTop(),
+                left = elm.getLeft(),
+                risk = Math.floor(this.height - Math.abs(top - this.shipTop)),
+                areaIndex = Math.floor((left) / 90);
+            this.risksByArea[7 < areaIndex ? 7 : areaIndex] += risk;
+        }).bind(this));
+    },
+    updateStayAreaIndex: function() {
+        this.stayAreaIndex.ship = Math.floor((this.ship.getLeft() + 45) / 90),
+        this.stayAreaIndex.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
+    },
+    updateSeekAreaIndex: function() {
+        var seekInfo = {idx: null, minDiffEnemy: null, minRisk: null};
+        for (var i = 0, length = this.risksByArea.size(); i < length; ++i) {
+            var diffEnemy = Math.abs(i - this.stayAreaIndex.enemy);
+            if (seekInfo.minRisk === null || this.risksByArea[i] < seekInfo.minRisk
+                || (this.risksByArea[i] === seekInfo.minRisk && diffEnemy < seekInfo.minDiffEnemy)) {
+
+                seekInfo.idx = i;
+                seekInfo.minDiffEnemy = diffEnemy;
+                seekInfo.minRisk = this.risksByArea[i];
+            }
+        }
+        this.seekAreaIndex = seekInfo.idx;
+    },
+    considerTactics: function() {
+        if (this.seekAreaIndex < this.stayAreaIndex.ship) {
+            this.nextCommand = this.ship.isEnemy ? 'stepRight' : 'stepLeft';
+        } else if (this.stayAreaIndex.ship < this.seekAreaIndex) {
+            this.nextCommand = this.ship.isEnemy ? 'stepLeft' : 'stepRight';
+        } else {
+            this.nextCommand = 'attack';
+        }
+    }
+});
+
+/************************************/
 var Command = Class.create({
 
     ship: null,
@@ -61,6 +139,26 @@ var Command = Class.create({
     execute: function(command) {
         if (command && command in this) this[command]();
     }
+});
+
+/************************************/
+var ShipCreater = Class.create({
+
+    sounds: null,
+    isEnemy: null,
+    ship: null,
+    weapon: null,
+
+    initialize: function(sounds, isEnemy) {
+        this.sounds = sounds;
+        this.isEnemy = isEnemy;
+    },
+
+    createShip: Prototype.emptyFunction,
+    createWeapon: Prototype.emptyFunction,
+    createAction: Prototype.emptyFunction,
+    createAI: Prototype.emptyFunction,
+    createCommand: Prototype.emptyFunction
 });
 
 /************************************/
@@ -423,6 +521,81 @@ var ActionShipWhite = Class.create(Action, {
 });
 
 /************************************/
+var AIShipNavy = Class.create(AI, {
+    WAIT_MAX: 4,
+    considerTactics: function($super) {
+        $super();
+        if (this.nextCommand !== 'attack') {
+            return;
+        }
+        if ((2).isTiming()) {
+            this.nextCommand = 'attack' + ((Math.floor(Math.random() * 100) % 8) + 1);
+        }
+    }
+});
+
+/************************************/
+var AIShipRed = Class.create(AI, {
+    WAIT_MAX: 5,
+    hasLeftAttackFunnel: false,
+    hasRightAttackFunnel: false,
+    considerTactics: function($super) {
+        $super();
+        var iFieldInfo = this.ship.getIFieldInfo();
+        var funnelInfo = this.ship.getFunnelInfo();
+        var funnelCount = 0;
+        if (funnelInfo.firstLeft !== null) ++funnelCount;
+        if (funnelInfo.secondLeft !== null) ++funnelCount;
+        if (funnelCount < 2) {
+            if (!this.hasLeftAttackFunnel && this.stayAreaIndex.ship === 1) {
+                this.hasLeftAttackFunnel = true;
+                this.nextCommand = 'funnel';
+                return;
+            }
+            if (!this.hasRightAttackFunnel && this.stayAreaIndex.ship === 6) {
+                this.hasRightAttackFunnel = true;
+                this.nextCommand = 'funnel';
+                return;
+            }
+            return;
+        }
+        if (this.nextCommand !== 'attack') {
+            if (iFieldInfo.isActive && iFieldInfo.height < 20
+                && this.stayAreaIndex.ship !== 3 && this.stayAreaIndex.ship !== 4) {
+
+                this.nextCommand = 'avoid';
+            } else if (!iFieldInfo.isActive && (33).isTiming()) {
+                this.nextCommand = 'barrier';
+            }
+            return;
+        }
+        if (iFieldInfo.isActive && this.hasLeftAttackFunnel && this.hasRightAttackFunnel) {
+            this.nextCommand = 'funnel';
+            return;
+        }
+        if ((2).isTiming()) {
+            this.nextCommand = 'funnel';
+        }
+    }
+});
+
+/************************************/
+var AIShipWhite = Class.create(AI, {
+    WAIT_MAX: 3,
+    considerTactics: function($super) {
+        $super();
+        if (this.nextCommand !== 'attack') {
+            return;
+        }
+        if ((9).isTiming()) {
+            this.nextCommand = 'funnel';
+        } else if ((33).isTiming()) {
+            this.nextCommand = 'megaCannon';
+        }
+    }
+});
+
+/************************************/
 var Background = Class.create(Sprite, {
 
     createElement: function() {
@@ -488,6 +661,10 @@ var Bullet = Class.create(Sprite, {
             boxShadow: '0px 0px 10px ' + color
         });
         return inner.wrap(outer);
+    },
+
+    instanceOfBullet: function() {
+        return true;
     }
 });
 
@@ -936,6 +1113,141 @@ var DuelShooting = Class.create({
         this.timeKeeper.renderElement();
         this.ship.renderElement();
         this.enemy.renderElement();
+    }
+});
+
+/************************************/
+var DuelShootingDemo = Class.create({
+    opening: null,
+    colors: null,
+    sounds: null,
+    factories: null,
+    ships: null,
+    weapons: null,
+    actions: null,
+    ais: null,
+    cmds: null,
+    background: null,
+    timekeeper: null,
+    condition: null,
+    game: null,
+    initialize: function() {
+        this.opening = new Opening(new Title());
+        this.opening.show();
+        Number.prototype.isTiming =
+            (function(num) { return Math.floor(Math.random() * 100) % num === 0; }).methodize();
+        this.setupColor();
+        this.setupSound();
+        this.setupFactories();
+        this.setupShips();
+        this.setupWeapons();
+        this.setupActions();
+        this.setupAIs();
+        this.setupCommands();
+        this.background = new Background();
+        this.timekeeper = new TimeKeeper();
+        this.condition = new Condition();
+        this.game = new Game(this.routine.bind(this));
+        this.renderElements();
+        (function() {
+            this.opening.hide();
+            this.start();
+        }).bind(this).delay(3);
+    },
+    setupColor: function() {
+        this.colors = {
+            a: ['white', 'red', 'navy'][Math.floor(Math.random() * 100) % 3],
+            b: ['white', 'red', 'navy'][Math.floor(Math.random() * 100) % 3]
+        };
+        return;
+        this.colors.a = prompt('Your ship color [white|red|navy]', 'white');
+        this.colors.b = prompt('Enemy ship color [white|red|navy]', 'red');
+        if ((this.colors.a !== 'white' && this.colors.a !== 'red' && this.colors.a !== 'navy')
+            || (this.colors.b !== 'white' && this.colors.b !== 'red' && this.colors.b !== 'navy')) {
+
+            this.setupColor();
+        }
+    },
+    setupSound: function() {
+        var sound = new Sound();
+        this.sounds = {};
+        this.sounds.hit = sound.createAudio('/se/hit.mp3');
+        this.sounds.lose = sound.createAudio('/se/lose.mp3');
+        this.sounds.newtype = sound.createAudio('/se/newtype.mp3');
+        this.sounds.attack = sound.createAudio('/se/attack.mp3');
+        this.sounds.megaCannon = sound.createAudio('/se/mega.mp3');
+        this.sounds.funnelGo = sound.createAudio('/se/funnel1.mp3');
+        this.sounds.funnelAtk = sound.createAudio('/se/funnel2.mp3');
+        this.sounds.iField = sound.createAudio('/se/at_field.mp3');
+    },
+    setupFactories: function() {
+        this.factories = {};
+        this.factories.a = ShipFactory.getCreater(this.colors.a, false, this.sounds);
+        this.factories.b = ShipFactory.getCreater(this.colors.b, true, this.sounds)
+    },
+    setupShips: function() {
+        this.ships = {};
+        this.ships.a = this.factories.a.createShip();
+        this.ships.b = this.factories.b.createShip();
+    },
+    setupWeapons: function() {
+        this.weapons = {};
+        this.weapons.a = this.factories.a.createWeapon(this.ships.b);
+        this.weapons.b = this.factories.b.createWeapon(this.ships.a);
+    },
+    setupActions: function() {
+        this.actions = {};
+        this.actions.a = null;
+        this.actions.b = null;
+    },
+    setupAIs: function() {
+        this.ais = {};
+        this.ais.a = this.factories.a.createAI(this.ships.b, this.weapons.b);
+        this.ais.b = this.factories.b.createAI(this.ships.a, this.weapons.a);
+    },
+    setupCommands: function() {
+        this.cmds = {};
+        this.cmds.a = this.factories.a.createCommand();
+        this.cmds.b = this.factories.b.createCommand();
+    },
+    routine: function() {
+        this.ships.a.move();
+        this.ships.b.move();
+        this.weapons.a.move();
+        this.weapons.b.move();
+        if (!this.ships.b.getHitPoint()) {
+            this.condition.update('You win.', '#9999FF');
+            new ForkMeOnGitHub().renderElement();
+            this.stop();
+        }
+        if (!this.ships.a.getHitPoint()) {
+            this.condition.update('You lose.', '#FF9999');
+            new ForkMeOnGitHub().renderElement();
+            this.stop();
+        }
+        var nextActions = {
+            a: this.ais.a.getCommand(),
+            b: this.ais.b.getCommand()
+        };
+        this.ships.a.nextCmd = nextActions.a;
+        this.ships.b.nextCmd = nextActions.b;
+        this.cmds.a.execute(nextActions.a)
+        this.cmds.b.execute(nextActions.b)
+    },
+    renderElements: function() {
+        this.background.renderElement();
+        this.timekeeper.renderElement();
+        this.condition.renderElement();
+        this.ships.a.renderElement();
+        this.ships.b.renderElement();
+    },
+    start: function() {
+        this.game.start();
+        this.timekeeper.start();
+    },
+    stop: function() {
+        this.timekeeper.stop();
+        this.game.stop();
     }
 });
 
@@ -1750,25 +2062,6 @@ var ShipAfterimage = Class.create(Ship, {
 });
 
 /************************************/
-var ShipCreater = Class.create({
-
-    sounds: null,
-    isEnemy: null,
-    ship: null,
-    weapon: null,
-
-    initialize: function(sounds, isEnemy) {
-        this.sounds = sounds;
-        this.isEnemy = isEnemy;
-    },
-
-    createShip: Prototype.emptyFunction,
-    createWeapon: Prototype.emptyFunction,
-    createAction: Prototype.emptyFunction,
-    createCommand: Prototype.emptyFunction
-});
-
-/************************************/
 var ShipCreaterNavy = Class.create(ShipCreater, {
 
     createShip: function() {
@@ -1789,6 +2082,10 @@ var ShipCreaterNavy = Class.create(ShipCreater, {
 
     createAction: function() {
         return new ActionShipNavy();
+    },
+
+    createAI: function(enemy, enemyWeapon) {
+        return new AIShipNavy(this.ship, enemy, enemyWeapon);
     },
 
     createCommand: function() {
@@ -1826,6 +2123,10 @@ var ShipCreaterRed = Class.create(ShipCreater, {
         return new ActionShipRed();
     },
 
+    createAI: function(enemy, enemyWeapon) {
+        return new AIShipRed(this.ship, enemy, enemyWeapon);
+    },
+
     createCommand: function() {
         return new CommandShipRed(this.ship, this.weapon);
     }
@@ -1855,6 +2156,10 @@ var ShipCreaterWhite = Class.create(ShipCreater, {
 
     createAction: function() {
         return new ActionShipWhite();
+    },
+
+    createAI: function(enemy, enemyWeapon) {
+        return new AIShipWhite(this.ship, enemy, enemyWeapon);
     },
 
     createCommand: function() {

@@ -23,6 +23,10 @@ var ShipCreaterWhite = Class.create(ShipCreater, {
         return new ActionShipWhite();
     },
 
+    createAI: function(enemy, enemyWeapon) {
+        return new AIShipWhite(this.ship, enemy, enemyWeapon);
+    },
+
     createCommand: function() {
         return new CommandShipWhite(this.ship, this.weapon);
     }

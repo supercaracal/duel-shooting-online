@@ -20,6 +20,10 @@ var ShipCreaterNavy = Class.create(ShipCreater, {
         return new ActionShipNavy();
     },
 
+    createAI: function(enemy, enemyWeapon) {
+        return new AIShipNavy(this.ship, enemy, enemyWeapon);
+    },
+
     createCommand: function() {
         return new CommandShipNavy(this.ship, this.weapon);
     }
