@@ -11,6 +11,7 @@ var ShipCreaterWhite = Class.create(ShipCreater, {
 
     createWeapon: function(enemy) {
         this.weapon = new Weapon(this.ship, enemy);
+        this.weapon.addWeaponWaitStatusMegaCannon();
         if (this.isEnemy) return this.weapon;
         this.weapon.setSoundAttack(this.sounds.attack);
         this.weapon.setSoundMegaCannon(this.sounds.megaCannon);

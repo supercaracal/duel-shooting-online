@@ -35,6 +35,7 @@ var Weapon = Class.create({
     move: function() {
         if (0 < this.megaCannonWaitCount) {
             --this.megaCannonWaitCount;
+            if (!this.megaCannonWaitCount) this.ship.enableMegaCannonStatus();
         }
         if (0 < this.megaCannonHeightCount) {
             if (this.megaCannonHeightCount % 3 === 0) this.addBulletLinearFromMegaCannon();
@@ -46,6 +47,14 @@ var Weapon = Class.create({
             if (this.elms[i].isFunnelSliderAttack) {
                 this.addBulletLinearFromFunnel(this.elms[i].getLeft());
                 this.elms[i].isFunnelSliderAttack = false;
+            }
+            if (this.elms[i].isWeaponWaitStatusMegaCannon) {
+                this.elms[i].setWidth(this.megaCannonWaitCount, this.MEGA_CANNON_WAIT);
+            }
+            if (this.elms[i].isFunnelSlider) {
+                this.funnelSliderCount <= this.FUNNEL_SLIDER_MAX ?
+                    this.ship.enableFunnelStatus() :
+                    this.ship.disableFunnelStatus();
             }
             if (this.elms[i].isDelete) {
                 if (this.elms[i].isFunnelSlider) {
@@ -192,10 +201,14 @@ var Weapon = Class.create({
     },
 
     addIField: function(audio) {
-        var iField = new IField(this.ship);
+        var iField = new IField(this.ship),
+            wws = new WeaponWaitStatusIField(this.ship);
         iField.setSound(audio);
+        iField.setWaitStatus(wws);
         this.elms.push(iField);
+        this.elms.push(wws);
         iField.renderElement();
+        wws.renderElement();
     },
 
     addFunnelDefences: function() {
@@ -205,6 +218,12 @@ var Weapon = Class.create({
         this.elms.push(r);
         l.renderElement();
         r.renderElement();
+    },
+
+    addWeaponWaitStatusMegaCannon: function() {
+        var wws = new WeaponWaitStatusMegaCannon(this.ship);
+        this.elms.push(wws);
+        wws.renderElement();
     },
 
     removeFunnelCircle: function(num) {
@@ -223,6 +242,7 @@ var Weapon = Class.create({
         if (0 < this.megaCannonWaitCount) {
             return;
         }
+        this.ship.disableMegaCannonStatus();
         this.megaCannonWaitCount = this.MEGA_CANNON_WAIT;
         this.megaCannonHeightCount = this.MEGA_CANNON_HEIGHT;
         this.playSoundMegaCannon();

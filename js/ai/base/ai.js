@@ -7,7 +7,7 @@ var AI = Class.create({
     risksByArea: null,
     nextCommand: null,
     wait: null,
-    stayAreaIndex: null,
+    stayAreaIndexes: null,
     seekAreaIndex: null,
     initialize: function(ship, enemy, enemyWeapon) {
         this.ship = ship;
@@ -16,7 +16,7 @@ var AI = Class.create({
         this.height = ship.getClientHeight();
         this.shipTop = ship.getTop();
         this.wait = 0;
-        this.stayAreaIndex = {};
+        this.stayAreaIndexes = {};
     },
     getCommand: function() {
         if (0 < this.wait) {
@@ -24,7 +24,7 @@ var AI = Class.create({
             this.nextCommand = null;
         } else {
             this.updateRisksByArea();
-            this.updateStayAreaIndex();
+            this.updatestayAreaIndexes();
             this.updateSeekAreaIndex();
             this.considerTactics();
         }
@@ -46,14 +46,14 @@ var AI = Class.create({
             this.risksByArea[7 < areaIndex ? 7 : areaIndex] += risk;
         }).bind(this));
     },
-    updateStayAreaIndex: function() {
-        this.stayAreaIndex.ship = Math.floor((this.ship.getLeft() + 45) / 90),
-        this.stayAreaIndex.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
+    updatestayAreaIndexes: function() {
+        this.stayAreaIndexes.ship = Math.floor((this.ship.getLeft() + 45) / 90),
+        this.stayAreaIndexes.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
     },
     updateSeekAreaIndex: function() {
         var seekInfo = {idx: null, minDiffEnemy: null, minRisk: null};
         for (var i = 0, length = this.risksByArea.size(); i < length; ++i) {
-            var diffEnemy = Math.abs(i - this.stayAreaIndex.enemy);
+            var diffEnemy = Math.abs(i - this.stayAreaIndexes.enemy);
             if (seekInfo.minRisk === null || this.risksByArea[i] < seekInfo.minRisk
                 || (this.risksByArea[i] === seekInfo.minRisk && diffEnemy < seekInfo.minDiffEnemy)) {
 
@@ -65,9 +65,9 @@ var AI = Class.create({
         this.seekAreaIndex = seekInfo.idx;
     },
     considerTactics: function() {
-        if (this.seekAreaIndex < this.stayAreaIndex.ship) {
+        if (this.seekAreaIndex < this.stayAreaIndexes.ship) {
             this.nextCommand = this.ship.isEnemy ? 'stepRight' : 'stepLeft';
-        } else if (this.stayAreaIndex.ship < this.seekAreaIndex) {
+        } else if (this.stayAreaIndexes.ship < this.seekAreaIndex) {
             this.nextCommand = this.ship.isEnemy ? 'stepLeft' : 'stepRight';
         } else {
             this.nextCommand = 'attack';

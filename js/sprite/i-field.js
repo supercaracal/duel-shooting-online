@@ -5,10 +5,9 @@ var IField = Class.create(Sprite, {
     isActive: null,
     carrier: null,
     isEnemy: null,
-
     waitCount: null,
-
     sound: null,
+    waitStatus: null,
 
     initialize: function($super, carrier) {
         this.isActive = false;
@@ -53,6 +52,10 @@ var IField = Class.create(Sprite, {
 
     setSound: function(audio) {
         this.sound = audio;
+    },
+
+    setWaitStatus: function(waitStatus) {
+        this.waitStatus = waitStatus;
     },
 
     playSound: function() {
@@ -107,6 +110,7 @@ var IField = Class.create(Sprite, {
         if (0 < this.waitCount) {
             --this.waitCount;
         }
+        this.waitStatus.setWidth(this.waitCount, this.WAIT);
     },
 
     changeColor: function () {

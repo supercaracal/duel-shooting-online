@@ -57,7 +57,7 @@ var AI = Class.create({
     risksByArea: null,
     nextCommand: null,
     wait: null,
-    stayAreaIndex: null,
+    stayAreaIndexes: null,
     seekAreaIndex: null,
     initialize: function(ship, enemy, enemyWeapon) {
         this.ship = ship;
@@ -66,7 +66,7 @@ var AI = Class.create({
         this.height = ship.getClientHeight();
         this.shipTop = ship.getTop();
         this.wait = 0;
-        this.stayAreaIndex = {};
+        this.stayAreaIndexes = {};
     },
     getCommand: function() {
         if (0 < this.wait) {
@@ -74,7 +74,7 @@ var AI = Class.create({
             this.nextCommand = null;
         } else {
             this.updateRisksByArea();
-            this.updateStayAreaIndex();
+            this.updatestayAreaIndexes();
             this.updateSeekAreaIndex();
             this.considerTactics();
         }
@@ -96,14 +96,14 @@ var AI = Class.create({
             this.risksByArea[7 < areaIndex ? 7 : areaIndex] += risk;
         }).bind(this));
     },
-    updateStayAreaIndex: function() {
-        this.stayAreaIndex.ship = Math.floor((this.ship.getLeft() + 45) / 90),
-        this.stayAreaIndex.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
+    updatestayAreaIndexes: function() {
+        this.stayAreaIndexes.ship = Math.floor((this.ship.getLeft() + 45) / 90),
+        this.stayAreaIndexes.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
     },
     updateSeekAreaIndex: function() {
         var seekInfo = {idx: null, minDiffEnemy: null, minRisk: null};
         for (var i = 0, length = this.risksByArea.size(); i < length; ++i) {
-            var diffEnemy = Math.abs(i - this.stayAreaIndex.enemy);
+            var diffEnemy = Math.abs(i - this.stayAreaIndexes.enemy);
             if (seekInfo.minRisk === null || this.risksByArea[i] < seekInfo.minRisk
                 || (this.risksByArea[i] === seekInfo.minRisk && diffEnemy < seekInfo.minDiffEnemy)) {
 
@@ -115,9 +115,9 @@ var AI = Class.create({
         this.seekAreaIndex = seekInfo.idx;
     },
     considerTactics: function() {
-        if (this.seekAreaIndex < this.stayAreaIndex.ship) {
+        if (this.seekAreaIndex < this.stayAreaIndexes.ship) {
             this.nextCommand = this.ship.isEnemy ? 'stepRight' : 'stepLeft';
-        } else if (this.stayAreaIndex.ship < this.seekAreaIndex) {
+        } else if (this.stayAreaIndexes.ship < this.seekAreaIndex) {
             this.nextCommand = this.ship.isEnemy ? 'stepLeft' : 'stepRight';
         } else {
             this.nextCommand = 'attack';
@@ -522,51 +522,82 @@ var ActionShipWhite = Class.create(Action, {
 
 /************************************/
 var AIShipNavy = Class.create(AI, {
-    WAIT_MAX: 4,
+    WAIT_MAX: 3,
     considerTactics: function($super) {
         $super();
-        if (this.nextCommand !== 'attack') {
+        if (this.nextCommand !== 'attack' || (2).isTiming()) {
             return;
         }
-        if ((2).isTiming()) {
-            this.nextCommand = 'attack' + ((Math.floor(Math.random() * 100) % 8) + 1);
+        var idxs;
+        switch (this.stayAreaIndexes.enemy) {
+            case 0:
+                idxs = this.ship.isEnemy ? [5, 4, 3] : [2, 3, 4];
+                break;
+            case 1:
+                idxs = this.ship.isEnemy ? [4, 3, 2] : [3, 4, 5];
+                break;
+            case 2:
+                idxs = this.ship.isEnemy ? [7, 3, 2] : [0, 4, 5];
+                break;
+            case 3:
+                idxs = this.ship.isEnemy ? [6, 2, 1] : [1, 5, 6];
+                break;
+            case 4:
+                idxs = this.ship.isEnemy ? [6, 5, 1] : [1, 2, 6];
+                break;
+            case 5:
+                idxs = this.ship.isEnemy ? [5, 4, 0] : [3, 4, 7];
+                break;
+            case 6:
+                idxs = this.ship.isEnemy ? [5, 4, 3] : [2, 3, 4];
+                break;
+            case 7:
+                idxs = this.ship.isEnemy ? [4, 3, 2] : [3, 4, 5];
+                break;
+            default:
+                break;
         }
+        var atk = 'attack' + (idxs[Math.floor(Math.random() * 100) % 3] + 1);
+        this.nextCommand = atk;
     }
 });
 
 /************************************/
 var AIShipRed = Class.create(AI, {
-    WAIT_MAX: 5,
+    WAIT_MAX: 4,
     hasLeftAttackFunnel: false,
     hasRightAttackFunnel: false,
     considerTactics: function($super) {
         $super();
-        var iFieldInfo = this.ship.getIFieldInfo();
-        var funnelInfo = this.ship.getFunnelInfo();
-        var funnelCount = 0;
+        if (this.nextCommand !== 'attack') {
+            return;
+        }
+        var iFieldInfo = this.ship.getIFieldInfo(),
+            funnelInfo = this.ship.getFunnelInfo(),
+            funnelCount = 0;
         if (funnelInfo.firstLeft !== null) ++funnelCount;
         if (funnelInfo.secondLeft !== null) ++funnelCount;
         if (funnelCount < 2) {
-            if (!this.hasLeftAttackFunnel && this.stayAreaIndex.ship === 1) {
+            if (!this.hasLeftAttackFunnel && this.stayAreaIndexes.ship === 1) {
                 this.hasLeftAttackFunnel = true;
                 this.nextCommand = 'funnel';
                 return;
             }
-            if (!this.hasRightAttackFunnel && this.stayAreaIndex.ship === 6) {
+            if (!this.hasRightAttackFunnel && this.stayAreaIndexes.ship === 6) {
                 this.hasRightAttackFunnel = true;
                 this.nextCommand = 'funnel';
                 return;
             }
             return;
         }
-        if (this.nextCommand !== 'attack') {
-            if (iFieldInfo.isActive && iFieldInfo.height < 20
-                && this.stayAreaIndex.ship !== 3 && this.stayAreaIndex.ship !== 4) {
+        if (this.ship.isIFieldEnable()) {
+            this.nextCommand = 'barrier';
+            return;
+        }
+        if (iFieldInfo.isActive && iFieldInfo.height < 20
+            && this.stayAreaIndexes.ship !== 3 && this.stayAreaIndexes.ship !== 4) {
 
-                this.nextCommand = 'avoid';
-            } else if (!iFieldInfo.isActive && (33).isTiming()) {
-                this.nextCommand = 'barrier';
-            }
+            this.nextCommand = 'avoid';
             return;
         }
         if (iFieldInfo.isActive && this.hasLeftAttackFunnel && this.hasRightAttackFunnel) {
@@ -587,10 +618,16 @@ var AIShipWhite = Class.create(AI, {
         if (this.nextCommand !== 'attack') {
             return;
         }
-        if ((9).isTiming()) {
-            this.nextCommand = 'funnel';
-        } else if ((33).isTiming()) {
+        if (this.ship.isMegaCannonEnabled
+            && Math.abs(this.stayAreaIndexes.enemy - this.stayAreaIndexes.ship) < 3) {
+
             this.nextCommand = 'megaCannon';
+        } else if (this.ship.isNotFunnelEmpty
+            && this.stayAreaIndexes.ship !== this.stayAreaIndexes.enemy) {
+
+            this.nextCommand = 'funnel';
+        } else if ((97).isTiming() && (13).isTiming()) {
+            this.nextCommand = 'wait';
         }
     }
 });
@@ -1564,10 +1601,9 @@ var IField = Class.create(Sprite, {
     isActive: null,
     carrier: null,
     isEnemy: null,
-
     waitCount: null,
-
     sound: null,
+    waitStatus: null,
 
     initialize: function($super, carrier) {
         this.isActive = false;
@@ -1612,6 +1648,10 @@ var IField = Class.create(Sprite, {
 
     setSound: function(audio) {
         this.sound = audio;
+    },
+
+    setWaitStatus: function(waitStatus) {
+        this.waitStatus = waitStatus;
     },
 
     playSound: function() {
@@ -1666,6 +1706,7 @@ var IField = Class.create(Sprite, {
         if (0 < this.waitCount) {
             --this.waitCount;
         }
+        this.waitStatus.setWidth(this.waitCount, this.WAIT);
     },
 
     changeColor: function () {
@@ -2146,6 +2187,7 @@ var ShipCreaterWhite = Class.create(ShipCreater, {
 
     createWeapon: function(enemy) {
         this.weapon = new Weapon(this.ship, enemy);
+        this.weapon.addWeaponWaitStatusMegaCannon();
         if (this.isEnemy) return this.weapon;
         this.weapon.setSoundAttack(this.sounds.attack);
         this.weapon.setSoundMegaCannon(this.sounds.megaCannon);
@@ -2249,6 +2291,10 @@ var ShipRed = Class.create(Ship, {
         this.funnels.push(funnel);
     },
 
+    isIFieldEnable: function() {
+        return (!this.iField.isActive && !this.iField.waitCount);
+    },
+
     barrier: function() {
         this.iField.barrier();
     },
@@ -2269,8 +2315,27 @@ var ShipRed = Class.create(Ship, {
 /************************************/
 var ShipWhite = Class.create(Ship, {
 
+    isMegaCannonEnabled: true,
+    isNotFunnelEmpty: true,
+
     getColor: function() {
         return '#FFFFFF';
+    },
+
+    enableMegaCannonStatus: function() {
+        this.isMegaCannonEnabled = true;
+    },
+
+    disableMegaCannonStatus: function() {
+        this.isMegaCannonEnabled = false;
+    },
+
+    enableFunnelStatus: function() {
+        this.isNotFunnelEmpty = true;
+    },
+
+    disableFunnelStatus: function() {
+        this.isNotFunnelEmpty = false;
     }
 });
 
@@ -2623,6 +2688,7 @@ var Weapon = Class.create({
     move: function() {
         if (0 < this.megaCannonWaitCount) {
             --this.megaCannonWaitCount;
+            if (!this.megaCannonWaitCount) this.ship.enableMegaCannonStatus();
         }
         if (0 < this.megaCannonHeightCount) {
             if (this.megaCannonHeightCount % 3 === 0) this.addBulletLinearFromMegaCannon();
@@ -2634,6 +2700,14 @@ var Weapon = Class.create({
             if (this.elms[i].isFunnelSliderAttack) {
                 this.addBulletLinearFromFunnel(this.elms[i].getLeft());
                 this.elms[i].isFunnelSliderAttack = false;
+            }
+            if (this.elms[i].isWeaponWaitStatusMegaCannon) {
+                this.elms[i].setWidth(this.megaCannonWaitCount, this.MEGA_CANNON_WAIT);
+            }
+            if (this.elms[i].isFunnelSlider) {
+                this.funnelSliderCount <= this.FUNNEL_SLIDER_MAX ?
+                    this.ship.enableFunnelStatus() :
+                    this.ship.disableFunnelStatus();
             }
             if (this.elms[i].isDelete) {
                 if (this.elms[i].isFunnelSlider) {
@@ -2780,10 +2854,14 @@ var Weapon = Class.create({
     },
 
     addIField: function(audio) {
-        var iField = new IField(this.ship);
+        var iField = new IField(this.ship),
+            wws = new WeaponWaitStatusIField(this.ship);
         iField.setSound(audio);
+        iField.setWaitStatus(wws);
         this.elms.push(iField);
+        this.elms.push(wws);
         iField.renderElement();
+        wws.renderElement();
     },
 
     addFunnelDefences: function() {
@@ -2793,6 +2871,12 @@ var Weapon = Class.create({
         this.elms.push(r);
         l.renderElement();
         r.renderElement();
+    },
+
+    addWeaponWaitStatusMegaCannon: function() {
+        var wws = new WeaponWaitStatusMegaCannon(this.ship);
+        this.elms.push(wws);
+        wws.renderElement();
     },
 
     removeFunnelCircle: function(num) {
@@ -2811,10 +2895,60 @@ var Weapon = Class.create({
         if (0 < this.megaCannonWaitCount) {
             return;
         }
+        this.ship.disableMegaCannonStatus();
         this.megaCannonWaitCount = this.MEGA_CANNON_WAIT;
         this.megaCannonHeightCount = this.MEGA_CANNON_HEIGHT;
         this.playSoundMegaCannon();
     }
+});
+
+/************************************/
+var WeaponWaitStatus = Class.create(Sprite, {
+    ship: null,
+    isWeaponWaitStatus: true,
+    initialize: function($super, ship) {
+        this.ship = ship;
+        $super();
+    },
+    createElement: function() {
+        var color = this.getColor();
+        return new Element('div').setStyle({
+            width: '0px',
+            height: '6px',
+            backgroundColor: color,
+            zIndex: this.Z_INDEX_BASE + 11,
+            position: 'fixed',
+            boxShadow: '0px 0px 1px ' + color,
+            borderRadius: '1px'
+        });
+    },
+    getColor: function() {
+        return '#FF0099';
+    },
+    getInitTop: function() {
+        return this.ship.getTop() + (this.ship.isEnemy ? 42 : 12);
+    },
+    getInitLeft: function() {
+        return this.ship.getLeft() + 35;
+    },
+    setWidth: function(current, max) {
+        this.elm.setStyle({width: Math.floor(20 * current / max) + 'px'});
+    },
+    move: function() {
+        this.setLeft(this.ship.getLeft() + 35);
+    }
+});
+
+/************************************/
+var WeaponWaitStatusIField = Class.create(WeaponWaitStatus, {
+    getColor: function() {
+        return '#99FF00';
+    }
+});
+
+/************************************/
+var WeaponWaitStatusMegaCannon = Class.create(WeaponWaitStatus, {
+    isWeaponWaitStatusMegaCannon: true
 });
 
 /************************************/

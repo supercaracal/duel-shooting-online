@@ -41,6 +41,10 @@ var ShipRed = Class.create(Ship, {
         this.funnels.push(funnel);
     },
 
+    isIFieldEnable: function() {
+        return (!this.iField.isActive && !this.iField.waitCount);
+    },
+
     barrier: function() {
         this.iField.barrier();
     },

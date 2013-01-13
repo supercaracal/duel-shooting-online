@@ -5,10 +5,16 @@ var AIShipWhite = Class.create(AI, {
         if (this.nextCommand !== 'attack') {
             return;
         }
-        if ((9).isTiming()) {
-            this.nextCommand = 'funnel';
-        } else if ((33).isTiming()) {
+        if (this.ship.isMegaCannonEnabled
+            && Math.abs(this.stayAreaIndexes.enemy - this.stayAreaIndexes.ship) < 3) {
+
             this.nextCommand = 'megaCannon';
+        } else if (this.ship.isNotFunnelEmpty
+            && this.stayAreaIndexes.ship !== this.stayAreaIndexes.enemy) {
+
+            this.nextCommand = 'funnel';
+        } else if ((97).isTiming() && (13).isTiming()) {
+            this.nextCommand = 'wait';
         }
     }
 });

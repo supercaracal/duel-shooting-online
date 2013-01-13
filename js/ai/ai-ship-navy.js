@@ -1,12 +1,40 @@
 var AIShipNavy = Class.create(AI, {
-    WAIT_MAX: 4,
+    WAIT_MAX: 3,
     considerTactics: function($super) {
         $super();
-        if (this.nextCommand !== 'attack') {
+        if (this.nextCommand !== 'attack' || (2).isTiming()) {
             return;
         }
-        if ((2).isTiming()) {
-            this.nextCommand = 'attack' + ((Math.floor(Math.random() * 100) % 8) + 1);
+        var idxs;
+        switch (this.stayAreaIndexes.enemy) {
+            case 0:
+                idxs = this.ship.isEnemy ? [5, 4, 3] : [2, 3, 4];
+                break;
+            case 1:
+                idxs = this.ship.isEnemy ? [4, 3, 2] : [3, 4, 5];
+                break;
+            case 2:
+                idxs = this.ship.isEnemy ? [7, 3, 2] : [0, 4, 5];
+                break;
+            case 3:
+                idxs = this.ship.isEnemy ? [6, 2, 1] : [1, 5, 6];
+                break;
+            case 4:
+                idxs = this.ship.isEnemy ? [6, 5, 1] : [1, 2, 6];
+                break;
+            case 5:
+                idxs = this.ship.isEnemy ? [5, 4, 0] : [3, 4, 7];
+                break;
+            case 6:
+                idxs = this.ship.isEnemy ? [5, 4, 3] : [2, 3, 4];
+                break;
+            case 7:
+                idxs = this.ship.isEnemy ? [4, 3, 2] : [3, 4, 5];
+                break;
+            default:
+                break;
         }
+        var atk = 'attack' + (idxs[Math.floor(Math.random() * 100) % 3] + 1);
+        this.nextCommand = atk;
     }
 });
