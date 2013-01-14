@@ -2,7 +2,12 @@ var ShipRed = Class.create(Ship, {
     
     soundNewtype: null,
     iField: null,
-    funnels: [],
+    funnels: null,
+
+    initialize: function($super, isEnemy) {
+        $super(isEnemy);
+        this.funnels = [];
+    },
 
     getColor: function() {
         return '#FF5555';
@@ -50,7 +55,7 @@ var ShipRed = Class.create(Ship, {
     },
 
     avoid: function() {
-        var sign = this.getLeft() < this.clientWidth / 2 ? 1 : -1;
+        var sign = (this.getLeft() + 45) < this.clientWidth / 2 ? 1 : -1;
         var top = this.getTop();
         var left = this.getLeft();
         this.setLeft(left + 90 * sign);

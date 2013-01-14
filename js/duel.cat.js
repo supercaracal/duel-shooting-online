@@ -55,7 +55,6 @@ var AI = Class.create({
     height: null,
     shipTop: null,
     risksByArea: null,
-    nextCommand: null,
     wait: null,
     stayAreaIndexes: null,
     seekAreaIndex: null,
@@ -71,17 +70,17 @@ var AI = Class.create({
     getCommand: function() {
         if (0 < this.wait) {
             --this.wait;
-            this.nextCommand = null;
-        } else {
-            this.updateRisksByArea();
-            this.updatestayAreaIndexes();
-            this.updateSeekAreaIndex();
-            this.considerTactics();
+            return null;
         }
-        if (this.wait === 0) {
-            this.wait += Math.floor(Math.random() * 100) % this.WAIT_MAX;
-        }
-        return this.nextCommand;
+        this.wait += Math.floor(Math.random() * 100) % this.WAIT_MAX;
+        this.updateStayAreaIndexes();
+        this.updateRisksByArea();
+        this.updateSeekAreaIndex();
+        return this.getNextCommand(this.getRecommendedCommand());
+    },
+    updateStayAreaIndexes: function() {
+        this.stayAreaIndexes.ship = Math.floor((this.ship.getLeft() + 45) / 90),
+        this.stayAreaIndexes.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
     },
     updateRisksByArea: function() {
         this.risksByArea = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -92,13 +91,9 @@ var AI = Class.create({
             var top = elm.getTop(),
                 left = elm.getLeft(),
                 risk = Math.floor(this.height - Math.abs(top - this.shipTop)),
-                areaIndex = Math.floor((left) / 90);
+                areaIndex = Math.floor((left + 15) / 90);
             this.risksByArea[7 < areaIndex ? 7 : areaIndex] += risk;
         }).bind(this));
-    },
-    updatestayAreaIndexes: function() {
-        this.stayAreaIndexes.ship = Math.floor((this.ship.getLeft() + 45) / 90),
-        this.stayAreaIndexes.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
     },
     updateSeekAreaIndex: function() {
         var seekInfo = {idx: null, minDiffEnemy: null, minRisk: null};
@@ -114,14 +109,21 @@ var AI = Class.create({
         }
         this.seekAreaIndex = seekInfo.idx;
     },
-    considerTactics: function() {
-        if (this.seekAreaIndex < this.stayAreaIndexes.ship) {
-            this.nextCommand = this.ship.isEnemy ? 'stepRight' : 'stepLeft';
-        } else if (this.stayAreaIndexes.ship < this.seekAreaIndex) {
-            this.nextCommand = this.ship.isEnemy ? 'stepLeft' : 'stepRight';
-        } else {
-            this.nextCommand = 'attack';
+    getRecommendedCommand: function() {
+        var shipLeftAreaIndex = Math.floor(this.ship.getLeft() / 90),
+            shipRightAreaIndex = Math.floor((this.ship.getLeft() + 89) / 90);
+
+        if (this.seekAreaIndex < this.stayAreaIndexes.ship
+            || this.seekAreaIndex < shipLeftAreaIndex || this.seekAreaIndex < shipRightAreaIndex) {
+
+            return this.ship.isEnemy ? 'stepRight' : 'stepLeft';
         }
+        if (this.stayAreaIndexes.ship < this.seekAreaIndex
+            || shipLeftAreaIndex < this.seekAreaIndex || shipRightAreaIndex < this.seekAreaIndex) {
+
+            return this.ship.isEnemy ? 'stepLeft' : 'stepRight';
+        }
+        return 'attack';
     }
 });
 
@@ -523,10 +525,9 @@ var ActionShipWhite = Class.create(Action, {
 /************************************/
 var AIShipNavy = Class.create(AI, {
     WAIT_MAX: 3,
-    considerTactics: function($super) {
-        $super();
-        if (this.nextCommand !== 'attack' || (2).isTiming()) {
-            return;
+    getNextCommand: function(recommendedCommand) {
+        if (recommendedCommand !== 'attack' || (2).isTiming()) {
+            return recommendedCommand;
         }
         var idxs;
         switch (this.stayAreaIndexes.enemy) {
@@ -557,78 +558,78 @@ var AIShipNavy = Class.create(AI, {
             default:
                 break;
         }
-        var atk = 'attack' + (idxs[Math.floor(Math.random() * 100) % 3] + 1);
-        this.nextCommand = atk;
+        return 'attack' + (idxs[Math.floor(Math.random() * 100) % 3] + 1);
     }
 });
 
 /************************************/
 var AIShipRed = Class.create(AI, {
-    WAIT_MAX: 4,
-    hasLeftAttackFunnel: false,
-    hasRightAttackFunnel: false,
-    considerTactics: function($super) {
-        $super();
-        if (this.nextCommand !== 'attack') {
-            return;
+    WAIT_MAX: 7,
+    funnelCount: 0,
+    getNextCommand: function(recommendedCommand) {
+        this.updateFunnelCount();
+        if (this.funnelCount < 2) {
+            if (this.isShipFixedOnArea()) {
+                return 'funnel';
+            }
+            return 'stepLeft';
         }
-        var iFieldInfo = this.ship.getIFieldInfo(),
-            funnelInfo = this.ship.getFunnelInfo(),
-            funnelCount = 0;
-        if (funnelInfo.firstLeft !== null) ++funnelCount;
-        if (funnelInfo.secondLeft !== null) ++funnelCount;
-        if (funnelCount < 2) {
-            if (!this.hasLeftAttackFunnel && this.stayAreaIndexes.ship === 1) {
-                this.hasLeftAttackFunnel = true;
-                this.nextCommand = 'funnel';
-                return;
-            }
-            if (!this.hasRightAttackFunnel && this.stayAreaIndexes.ship === 6) {
-                this.hasRightAttackFunnel = true;
-                this.nextCommand = 'funnel';
-                return;
-            }
-            return;
+        if (recommendedCommand !== 'attack') {
+            return this.isAvoidTiming(recommendedCommand) ? 'avoid' : recommendedCommand;
         }
         if (this.ship.isIFieldEnable()) {
-            this.nextCommand = 'barrier';
-            return;
+            return 'barrier';
         }
-        if (iFieldInfo.isActive && iFieldInfo.height < 20
-            && this.stayAreaIndexes.ship !== 3 && this.stayAreaIndexes.ship !== 4) {
-
-            this.nextCommand = 'avoid';
-            return;
+        var iFieldInfo = this.ship.getIFieldInfo();
+        if (iFieldInfo.isActive || (13).isTiming()) {
+            return 'funnel';
         }
-        if (iFieldInfo.isActive && this.hasLeftAttackFunnel && this.hasRightAttackFunnel) {
-            this.nextCommand = 'funnel';
-            return;
+        return recommendedCommand;
+    },
+    updateFunnelCount: function() {
+        var funnelInfo = this.ship.getFunnelInfo();
+        if (funnelInfo.firstLeft !== null && funnelInfo.secondLeft !== null) {
+            this.funnelCount = 2;
+        } else if (funnelInfo.firstLeft !== null && funnelInfo.secondLeft === null) {
+            this.funnelCount = 1;
+        } else {
+            this.funnelCount = 0;
         }
-        if ((2).isTiming()) {
-            this.nextCommand = 'funnel';
-        }
+    },
+    isShipFixedOnArea: function() {
+        return ((this.funnelCount === 0 && this.stayAreaIndexes.ship === (this.ship.isEnemy ? 1 : 6))
+            || (this.funnelCount === 1 && this.stayAreaIndexes.ship === (this.ship.isEnemy ? 6 : 1)));
+    },
+    isAvoidTiming: function(recommendedCommand) {
+        return ((49).isTiming() &&
+            ((!this.ship.isEnemy && recommendedCommand === 'stepLeft' && 3 < this.stayAreaIndexes.ship)
+            || (!this.ship.isEnemy && recommendedCommand === 'stepRight' && this.stayAreaIndexes.ship < 4)
+            || (this.ship.isEnemy && recommendedCommand === 'stepLeft' && this.stayAreaIndexes.ship < 4)
+            || (this.ship.isEnemy && recommendedCommand === 'stepRight' && 3 < this.stayAreaIndexes.ship)));
     }
 });
 
 /************************************/
 var AIShipWhite = Class.create(AI, {
     WAIT_MAX: 3,
-    considerTactics: function($super) {
-        $super();
-        if (this.nextCommand !== 'attack') {
-            return;
+    getNextCommand: function(recommendedCommand) {
+        if (recommendedCommand !== 'attack') {
+            return recommendedCommand;
         }
         if (this.ship.isMegaCannonEnabled
             && Math.abs(this.stayAreaIndexes.enemy - this.stayAreaIndexes.ship) < 3) {
 
-            this.nextCommand = 'megaCannon';
-        } else if (this.ship.isNotFunnelEmpty
+            return 'megaCannon';
+        }
+        if (this.ship.isNotFunnelEmpty
             && this.stayAreaIndexes.ship !== this.stayAreaIndexes.enemy) {
 
-            this.nextCommand = 'funnel';
-        } else if ((97).isTiming() && (13).isTiming()) {
-            this.nextCommand = 'wait';
+            return 'funnel';
         }
+        if ((49).isTiming() && (13).isTiming()) {
+            return 'wait';
+        }
+        return recommendedCommand;
     }
 });
 
@@ -1400,7 +1401,6 @@ var FunnelCircle = Class.create(Funnel, {
         this.theta = this.isEnemy ? 0 : 180;
         this.speed = 3;
         this.isCloclwise = this.isEnemy;
-        carrier.addFunnel(this);
     },
 
     getInitTop: function() {
@@ -2252,7 +2252,12 @@ var ShipRed = Class.create(Ship, {
     
     soundNewtype: null,
     iField: null,
-    funnels: [],
+    funnels: null,
+
+    initialize: function($super, isEnemy) {
+        $super(isEnemy);
+        this.funnels = [];
+    },
 
     getColor: function() {
         return '#FF5555';
@@ -2300,7 +2305,7 @@ var ShipRed = Class.create(Ship, {
     },
 
     avoid: function() {
-        var sign = this.getLeft() < this.clientWidth / 2 ? 1 : -1;
+        var sign = (this.getLeft() + 45) < this.clientWidth / 2 ? 1 : -1;
         var top = this.getTop();
         var left = this.getLeft();
         this.setLeft(left + 90 * sign);
@@ -2848,6 +2853,7 @@ var Weapon = Class.create({
             return;
         }
         var funnel = new FunnelCircle(this.ship);
+        this.ship.addFunnel(funnel);
         this.funnelCircles.push(funnel);
         funnel.renderElement();
         this.playSoundFunnelGo();

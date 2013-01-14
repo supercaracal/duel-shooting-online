@@ -1,46 +1,45 @@
 var AIShipRed = Class.create(AI, {
-    WAIT_MAX: 4,
-    hasLeftAttackFunnel: false,
-    hasRightAttackFunnel: false,
-    considerTactics: function($super) {
-        $super();
-        if (this.nextCommand !== 'attack') {
-            return;
+    WAIT_MAX: 7,
+    funnelCount: 0,
+    getNextCommand: function(recommendedCommand) {
+        this.updateFunnelCount();
+        if (this.funnelCount < 2) {
+            if (this.isShipFixedOnArea()) {
+                return 'funnel';
+            }
+            return 'stepLeft';
         }
-        var iFieldInfo = this.ship.getIFieldInfo(),
-            funnelInfo = this.ship.getFunnelInfo(),
-            funnelCount = 0;
-        if (funnelInfo.firstLeft !== null) ++funnelCount;
-        if (funnelInfo.secondLeft !== null) ++funnelCount;
-        if (funnelCount < 2) {
-            if (!this.hasLeftAttackFunnel && this.stayAreaIndexes.ship === 1) {
-                this.hasLeftAttackFunnel = true;
-                this.nextCommand = 'funnel';
-                return;
-            }
-            if (!this.hasRightAttackFunnel && this.stayAreaIndexes.ship === 6) {
-                this.hasRightAttackFunnel = true;
-                this.nextCommand = 'funnel';
-                return;
-            }
-            return;
+        if (recommendedCommand !== 'attack') {
+            return this.isAvoidTiming(recommendedCommand) ? 'avoid' : recommendedCommand;
         }
         if (this.ship.isIFieldEnable()) {
-            this.nextCommand = 'barrier';
-            return;
+            return 'barrier';
         }
-        if (iFieldInfo.isActive && iFieldInfo.height < 20
-            && this.stayAreaIndexes.ship !== 3 && this.stayAreaIndexes.ship !== 4) {
-
-            this.nextCommand = 'avoid';
-            return;
+        var iFieldInfo = this.ship.getIFieldInfo();
+        if (iFieldInfo.isActive || (13).isTiming()) {
+            return 'funnel';
         }
-        if (iFieldInfo.isActive && this.hasLeftAttackFunnel && this.hasRightAttackFunnel) {
-            this.nextCommand = 'funnel';
-            return;
+        return recommendedCommand;
+    },
+    updateFunnelCount: function() {
+        var funnelInfo = this.ship.getFunnelInfo();
+        if (funnelInfo.firstLeft !== null && funnelInfo.secondLeft !== null) {
+            this.funnelCount = 2;
+        } else if (funnelInfo.firstLeft !== null && funnelInfo.secondLeft === null) {
+            this.funnelCount = 1;
+        } else {
+            this.funnelCount = 0;
         }
-        if ((2).isTiming()) {
-            this.nextCommand = 'funnel';
-        }
+    },
+    isShipFixedOnArea: function() {
+        return ((this.funnelCount === 0 && this.stayAreaIndexes.ship === (this.ship.isEnemy ? 1 : 6))
+            || (this.funnelCount === 1 && this.stayAreaIndexes.ship === (this.ship.isEnemy ? 6 : 1)));
+    },
+    isAvoidTiming: function(recommendedCommand) {
+        return ((49).isTiming() &&
+            ((!this.ship.isEnemy && recommendedCommand === 'stepLeft' && 3 < this.stayAreaIndexes.ship)
+            || (!this.ship.isEnemy && recommendedCommand === 'stepRight' && this.stayAreaIndexes.ship < 4)
+            || (this.ship.isEnemy && recommendedCommand === 'stepLeft' && this.stayAreaIndexes.ship < 4)
+            || (this.ship.isEnemy && recommendedCommand === 'stepRight' && 3 < this.stayAreaIndexes.ship)));
     }
 });

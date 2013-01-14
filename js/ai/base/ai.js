@@ -5,7 +5,6 @@ var AI = Class.create({
     height: null,
     shipTop: null,
     risksByArea: null,
-    nextCommand: null,
     wait: null,
     stayAreaIndexes: null,
     seekAreaIndex: null,
@@ -21,17 +20,17 @@ var AI = Class.create({
     getCommand: function() {
         if (0 < this.wait) {
             --this.wait;
-            this.nextCommand = null;
-        } else {
-            this.updateRisksByArea();
-            this.updatestayAreaIndexes();
-            this.updateSeekAreaIndex();
-            this.considerTactics();
+            return null;
         }
-        if (this.wait === 0) {
-            this.wait += Math.floor(Math.random() * 100) % this.WAIT_MAX;
-        }
-        return this.nextCommand;
+        this.wait += Math.floor(Math.random() * 100) % this.WAIT_MAX;
+        this.updateStayAreaIndexes();
+        this.updateRisksByArea();
+        this.updateSeekAreaIndex();
+        return this.getNextCommand(this.getRecommendedCommand());
+    },
+    updateStayAreaIndexes: function() {
+        this.stayAreaIndexes.ship = Math.floor((this.ship.getLeft() + 45) / 90),
+        this.stayAreaIndexes.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
     },
     updateRisksByArea: function() {
         this.risksByArea = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -42,13 +41,9 @@ var AI = Class.create({
             var top = elm.getTop(),
                 left = elm.getLeft(),
                 risk = Math.floor(this.height - Math.abs(top - this.shipTop)),
-                areaIndex = Math.floor((left) / 90);
+                areaIndex = Math.floor((left + 15) / 90);
             this.risksByArea[7 < areaIndex ? 7 : areaIndex] += risk;
         }).bind(this));
-    },
-    updatestayAreaIndexes: function() {
-        this.stayAreaIndexes.ship = Math.floor((this.ship.getLeft() + 45) / 90),
-        this.stayAreaIndexes.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
     },
     updateSeekAreaIndex: function() {
         var seekInfo = {idx: null, minDiffEnemy: null, minRisk: null};
@@ -64,13 +59,20 @@ var AI = Class.create({
         }
         this.seekAreaIndex = seekInfo.idx;
     },
-    considerTactics: function() {
-        if (this.seekAreaIndex < this.stayAreaIndexes.ship) {
-            this.nextCommand = this.ship.isEnemy ? 'stepRight' : 'stepLeft';
-        } else if (this.stayAreaIndexes.ship < this.seekAreaIndex) {
-            this.nextCommand = this.ship.isEnemy ? 'stepLeft' : 'stepRight';
-        } else {
-            this.nextCommand = 'attack';
+    getRecommendedCommand: function() {
+        var shipLeftAreaIndex = Math.floor(this.ship.getLeft() / 90),
+            shipRightAreaIndex = Math.floor((this.ship.getLeft() + 89) / 90);
+
+        if (this.seekAreaIndex < this.stayAreaIndexes.ship
+            || this.seekAreaIndex < shipLeftAreaIndex || this.seekAreaIndex < shipRightAreaIndex) {
+
+            return this.ship.isEnemy ? 'stepRight' : 'stepLeft';
         }
+        if (this.stayAreaIndexes.ship < this.seekAreaIndex
+            || shipLeftAreaIndex < this.seekAreaIndex || shipRightAreaIndex < this.seekAreaIndex) {
+
+            return this.ship.isEnemy ? 'stepLeft' : 'stepRight';
+        }
+        return 'attack';
     }
 });

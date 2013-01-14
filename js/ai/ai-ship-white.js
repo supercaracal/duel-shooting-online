@@ -1,20 +1,22 @@
 var AIShipWhite = Class.create(AI, {
     WAIT_MAX: 3,
-    considerTactics: function($super) {
-        $super();
-        if (this.nextCommand !== 'attack') {
-            return;
+    getNextCommand: function(recommendedCommand) {
+        if (recommendedCommand !== 'attack') {
+            return recommendedCommand;
         }
         if (this.ship.isMegaCannonEnabled
             && Math.abs(this.stayAreaIndexes.enemy - this.stayAreaIndexes.ship) < 3) {
 
-            this.nextCommand = 'megaCannon';
-        } else if (this.ship.isNotFunnelEmpty
+            return 'megaCannon';
+        }
+        if (this.ship.isNotFunnelEmpty
             && this.stayAreaIndexes.ship !== this.stayAreaIndexes.enemy) {
 
-            this.nextCommand = 'funnel';
-        } else if ((97).isTiming() && (13).isTiming()) {
-            this.nextCommand = 'wait';
+            return 'funnel';
         }
+        if ((49).isTiming() && (13).isTiming()) {
+            return 'wait';
+        }
+        return recommendedCommand;
     }
 });

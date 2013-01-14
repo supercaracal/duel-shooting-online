@@ -195,6 +195,7 @@ var Weapon = Class.create({
             return;
         }
         var funnel = new FunnelCircle(this.ship);
+        this.ship.addFunnel(funnel);
         this.funnelCircles.push(funnel);
         funnel.renderElement();
         this.playSoundFunnelGo();

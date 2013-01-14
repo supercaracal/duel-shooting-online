@@ -1,9 +1,8 @@
 var AIShipNavy = Class.create(AI, {
     WAIT_MAX: 3,
-    considerTactics: function($super) {
-        $super();
-        if (this.nextCommand !== 'attack' || (2).isTiming()) {
-            return;
+    getNextCommand: function(recommendedCommand) {
+        if (recommendedCommand !== 'attack' || (2).isTiming()) {
+            return recommendedCommand;
         }
         var idxs;
         switch (this.stayAreaIndexes.enemy) {
@@ -34,7 +33,6 @@ var AIShipNavy = Class.create(AI, {
             default:
                 break;
         }
-        var atk = 'attack' + (idxs[Math.floor(Math.random() * 100) % 3] + 1);
-        this.nextCommand = atk;
+        return 'attack' + (idxs[Math.floor(Math.random() * 100) % 3] + 1);
     }
 });
