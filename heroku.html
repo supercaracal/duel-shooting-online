@@ -2,25 +2,24 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="title" content="Duel Shooting Online" />
-        <meta name="keywords" content="javascript,prototype.js,node.js,express,socket.io,xhr-polling,comet,websocket,css3,html5,game,duel,shooting,multiplayer,one to one,fighting" />
-        <meta name="description" content="Duel Shooting. This is a multiplayer one to one fighting game. Please wait for player matching." />
-        <title>Duel Shooting Online</title>
+        <meta name="title" content="Duel Shooting Offline" />
+        <title>Duel Shooting Offline</title>
+        <meta name="keywords" content="javascript,prototype.js,css3,html5,game,offline,duel,shooting,one to one,fighting" />
+        <meta name="description" content="Duel Shooting. This is a one to one fighting game. Versus non player character." />
         <meta property="og:type" content="game" />
-        <meta property="og:title" content="Duel Shooting Online" />
-        <meta property="og:url" content="http://duelshooting-pocapocaunty.dotcloud.com/" />
-        <meta property="og:image" content="http://duelshooting-pocapocaunty.dotcloud.com/img/ogp-img.gif" />
-        <meta property="og:description" content="Duel Shooting. This is a multiplayer one to one fighting game. Please wait for player matching." />
+        <meta property="og:title" content="Duel Shooting Offline" />
+        <meta property="og:url" content="http://duelshooting-online.herokuapp.com/" />
+        <meta property="og:image" content="http://duelshooting-online.herokuapp.com/img/ogp-img.gif" />
+        <meta property="og:description" content="Duel Shooting. This is a one to one fighting game. Versus non player character." />
         <link rel="shortcut icon" href="/favicon.ico">
         <link rel="stylesheet" type="text/css" media="all" href="/css/style.css" />
         <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.gif" />
-        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="/prototype.min.js"></script>
         <script type="text/javascript" src="/duel.min.js"></script>
         <script type="text/javascript">
-            Event.observe(window, 'load', function() { new DuelShootingOnline(); });
+            Event.observe(window, 'load', function() { new DuelShootingOffline(); });
             var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-1455197-6']);
+            _gaq.push(['_setAccount', 'UA-1455197-5']);
             _gaq.push(['_trackPageview']);
             (function() {
                 var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
@@ -31,8 +30,8 @@
     </head>
     <body>
         <div id="title">
-            <h1>Duel Shooting</h1>
-            <p>This is a multiplayer one to one fighting game. Please wait for player <span>*duelists*</span> matching.</p>
+            <h1>Duel Shooting Demo</h1>
+            <p>This is a multiplayer one to one fighting game.</p>
         </div>
         <div id="manual">
             <h2>White Demon</h2>

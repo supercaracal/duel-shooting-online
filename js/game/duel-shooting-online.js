@@ -1,4 +1,4 @@
-var DuelShooting = Class.create({
+var DuelShootingOnline = Class.create({
 
     sounds: null,
     weapons: null,
