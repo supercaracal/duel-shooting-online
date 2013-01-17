@@ -45,7 +45,7 @@ var DuelShootingOffline = Class.create(DuelShootingDemo, {
         this.cmds.b.execute(nextActions.b)
     },
     stop: function() {
-        this.action.stop();
+        this.actions.a.stop();
         this.timekeeper.stop();
         this.game.stop();
     }

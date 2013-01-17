@@ -1,6 +1,6 @@
-"Duel Shooting Online on dotcloud":http://duelshooting-pocapocaunty.dotcloud.com/
-
-"Duel Shooting Online on heroku":http://duelshooting-online.herokuapp.com/
+* "Duel Shooting Online":http://duelshooting-pocapocaunty.dotcloud.com/
+* "Duel Shooting Offline":http://duelshooting-online.herokuapp.com/
+* "Duel Shooting Demo":https://developer.mozilla.org/ja/demos/detail/duel-shooting/launch
 
 h4. White Demon
 
