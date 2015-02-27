@@ -11,7 +11,7 @@ Routing.prototype.home = function(req, res) {
 
 Routing.prototype.other = function(req, res) {
     res.header('Cache-Control', 'public, max-age=1800');
-    res.sendfile(this.dir + req.url);
+    res.sendFile(this.dir + req.url);
 };
 
 module.exports = Routing;
