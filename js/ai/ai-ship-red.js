@@ -32,14 +32,14 @@ var AIShipRed = Class.create(AI, {
         }
     },
     isShipFixedOnArea: function() {
-        return ((this.funnelCount === 0 && this.stayAreaIndexes.ship === (this.ship.isEnemy ? 1 : 6))
-            || (this.funnelCount === 1 && this.stayAreaIndexes.ship === (this.ship.isEnemy ? 6 : 1)));
+        return ((this.funnelCount === 0 && this.stayAreaIndexes.ship === (this.ship.isEnemy ? 1 : 6)) ||
+            (this.funnelCount === 1 && this.stayAreaIndexes.ship === (this.ship.isEnemy ? 6 : 1)));
     },
     isAvoidTiming: function(recommendedCommand) {
         return ((49).isTiming() &&
-            ((!this.ship.isEnemy && recommendedCommand === 'stepLeft' && 3 < this.stayAreaIndexes.ship)
-            || (!this.ship.isEnemy && recommendedCommand === 'stepRight' && this.stayAreaIndexes.ship < 4)
-            || (this.ship.isEnemy && recommendedCommand === 'stepLeft' && this.stayAreaIndexes.ship < 4)
-            || (this.ship.isEnemy && recommendedCommand === 'stepRight' && 3 < this.stayAreaIndexes.ship)));
+            ((!this.ship.isEnemy && recommendedCommand === 'stepLeft' && 3 < this.stayAreaIndexes.ship) ||
+             (!this.ship.isEnemy && recommendedCommand === 'stepRight' && this.stayAreaIndexes.ship < 4) ||
+             (this.ship.isEnemy && recommendedCommand === 'stepLeft' && this.stayAreaIndexes.ship < 4) ||
+             (this.ship.isEnemy && recommendedCommand === 'stepRight' && 3 < this.stayAreaIndexes.ship)));
     }
 });

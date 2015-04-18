@@ -41,13 +41,13 @@ var DuelShootingDemo = Class.create({
             b: ['white', 'red', 'navy'][Math.floor(Math.random() * 100) % 3]
         };
         return;
-        this.colors.a = prompt('Your ship color [white|red|navy]', 'white');
-        this.colors.b = prompt('Enemy ship color [white|red|navy]', 'red');
-        if ((this.colors.a !== 'white' && this.colors.a !== 'red' && this.colors.a !== 'navy')
-            || (this.colors.b !== 'white' && this.colors.b !== 'red' && this.colors.b !== 'navy')) {
-
-            this.setupColor();
-        }
+//        this.colors.a = prompt('Your ship color [white|red|navy]', 'white');
+//        this.colors.b = prompt('Enemy ship color [white|red|navy]', 'red');
+//        if ((this.colors.a !== 'white' && this.colors.a !== 'red' && this.colors.a !== 'navy') ||
+//            (this.colors.b !== 'white' && this.colors.b !== 'red' && this.colors.b !== 'navy')) {
+//
+//            this.setupColor();
+//        }
     },
     setupSound: function() {
         var sound = new Sound();
@@ -56,7 +56,7 @@ var DuelShootingDemo = Class.create({
     setupFactories: function() {
         this.factories = {};
         this.factories.a = ShipFactory.getCreater(this.colors.a, false, this.sounds);
-        this.factories.b = ShipFactory.getCreater(this.colors.b, true, this.sounds)
+        this.factories.b = ShipFactory.getCreater(this.colors.b, true, this.sounds);
     },
     setupShips: function() {
         this.ships = {};
@@ -104,8 +104,8 @@ var DuelShootingDemo = Class.create({
         };
         this.ships.a.nextCmd = nextActions.a;
         this.ships.b.nextCmd = nextActions.b;
-        this.cmds.a.execute(nextActions.a)
-        this.cmds.b.execute(nextActions.b)
+        this.cmds.a.execute(nextActions.a);
+        this.cmds.b.execute(nextActions.b);
     },
     renderElements: function() {
         this.background.renderElement();

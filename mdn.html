@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="title" content="Duel Shooting Demo" />
-        <title>Duel Shooting Demo</title>
-        <meta name="keywords" content="javascript,prototype.js,css3,html5,game,offline,duel,shooting,one to one,fighting,demo" />
-        <meta name="description" content="Duel Shooting. This is a one to one fighting game. NPC vs NPC demo." />
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-        <script type="text/javascript">google.load('prototype', '1.7')</script>
-        <script type="text/javascript">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="title" content="Duel Shooting Demo" />
+    <title>Duel Shooting Demo</title>
+    <meta name="keywords" content="javascript,prototype.js,css3,html5,game,offline,duel,shooting,one to one,fighting,demo" />
+    <meta name="description" content="Duel Shooting. This is a one to one fighting game. NPC vs NPC demo." />
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">google.load('prototype', '1.7')</script>
+    <script type="text/javascript">
 var Action=Class.create({hasTouchEvent:null,nextCommand:null,sprite:null,initialize:function(){this.hasTouchEvent=this.checkTouchEvent();this.sprite=new Sprite;this.setEventListener()},checkTouchEvent:function(){return"function"==typeof(new Element("div",{ontouchstart:"return;"})).ontouchstart},setEventListener:function(){this.hasTouchEvent?$(document).observe("touchstart",this.handlerSmart.bindAsEventListener(this)):($(document).observe("keydown",this.handler.bindAsEventListener(this)),$(document).observe("mousedown",
 this.handlerMouse.bindAsEventListener(this)))},stop:function(){this.hasTouchEvent?$(document).stopObserving("touchstart"):($(document).stopObserving("keydown"),$(document).stopObserving("mousedown"))},getCommand:function(){var a=this.nextCommand;this.nextCommand=null;return a},handlerMouse:function(a){this.convertToAction(a.pageX,a.pageY)&&a.stop()},handlerSmart:function(a){this.convertToAction(a.touches[0].pageX,a.touches[0].pageY)&&a.stop()}}),AI=Class.create({ship:null,enemy:null,enemyWeapon:null,
 height:null,shipTop:null,risksByArea:null,wait:null,stayAreaIndexes:null,seekAreaIndex:null,initialize:function(a,b,c){this.ship=a;this.enemy=b;this.enemyWeapon=c;this.height=a.getClientHeight();this.shipTop=a.getTop();this.wait=0;this.stayAreaIndexes={}},getCommand:function(){if(0<this.wait)return--this.wait,null;this.wait+=Math.floor(100*Math.random())%this.WAIT_MAX;this.updateStayAreaIndexes();this.updateRisksByArea();this.updateSeekAreaIndex();return this.getNextCommand(this.getRecommendedCommand())},
@@ -107,20 +107,20 @@ addFunnelDefences:function(){var a=new FunnelDefenceLeft(this.ship,this.ship.get
 this.ship.funnels.shift())},fireMegaCannon:function(){0<this.megaCannonWaitCount||(this.ship.disableMegaCannonStatus(),this.megaCannonWaitCount=this.MEGA_CANNON_WAIT,this.megaCannonHeightCount=this.MEGA_CANNON_HEIGHT,this.playSoundMegaCannon())}}),WeaponWaitStatus=Class.create(Sprite,{ship:null,isWeaponWaitStatus:!0,initialize:function($super,b){this.ship=b;$super()},createElement:function(){var a=this.getColor();return(new Element("div")).setStyle({width:"0px",height:"6px",backgroundColor:a,zIndex:this.Z_INDEX_BASE+
 11,position:"fixed",boxShadow:"0px 0px 1px "+a,borderRadius:"1px"})},getColor:function(){return"#FF0099"},getInitTop:function(){return this.ship.getTop()+(this.ship.isEnemy?42:12)},getInitLeft:function(){return this.ship.getLeft()+35},setWidth:function(a,b){this.elm.setStyle({width:Math.floor(20*a/b)+"px"})},move:function(){this.setLeft(this.ship.getLeft()+35)}}),WeaponWaitStatusIField=Class.create(WeaponWaitStatus,{getColor:function(){return"#99FF00"}}),WeaponWaitStatusMegaCannon=Class.create(WeaponWaitStatus,
 {isWeaponWaitStatusMegaCannon:!0});
-            Event.observe(window, 'load', function() { new DuelShootingDemo(); });
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-1455197-7']);
-            _gaq.push(['_trackPageview']);
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-        </script>
-    </head>
-    <body>
-        <div style="width: 720px; margin: 0px; padding: 0px; float: left; text-align: center;">
-            <h1 style="margin-top: 220px; font-size: 20px; color: #777777;">Duel Shooting Demo</h1>
-        </div>
-    </body>
+      Event.observe(window, 'load', function() { new DuelShootingDemo(); });
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-1455197-7']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </head>
+  <body>
+    <div style="width: 720px; margin: 0px; padding: 0px; float: left; text-align: center;">
+      <h1 style="margin-top: 220px; font-size: 20px; color: #777777;">Duel Shooting Demo</h1>
+    </div>
+  </body>
 </html>

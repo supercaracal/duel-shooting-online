@@ -90,8 +90,8 @@ var Sprite = Class.create({
     },
 
     setPos: function (pxs) {
-        if (pxs['top'] !== undefined) this.setTop(pxs.top);
-        if (pxs['left'] !== undefined) this.setLeft(pxs.left);
+        if (pxs.top !== undefined) this.setTop(pxs.top);
+        if (pxs.left !== undefined) this.setLeft(pxs.left);
     },
 
     setTransformRotate: function (theta) {

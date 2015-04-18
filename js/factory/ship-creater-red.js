@@ -12,9 +12,11 @@ var ShipCreaterRed = Class.create(ShipCreater, {
 
     createWeapon: function(enemy) {
         this.weapon = new Weapon(this.ship, enemy);
-        this.isEnemy ?
-            this.weapon.addIField() :
+        if (this.isEnemy) {
+            this.weapon.addIField();
+        } else {
             this.weapon.addIField(this.sounds.iField);
+        }
         this.weapon.addFunnelDefences();
         if (this.isEnemy) return this.weapon;
         this.weapon.setSoundAttack(this.sounds.attack);

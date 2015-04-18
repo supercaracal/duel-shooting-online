@@ -41,8 +41,8 @@ var DuelShootingOffline = Class.create(DuelShootingDemo, {
         };
         this.ships.a.nextCmd = nextActions.a;
         this.ships.b.nextCmd = nextActions.b;
-        this.cmds.a.execute(nextActions.a)
-        this.cmds.b.execute(nextActions.b)
+        this.cmds.a.execute(nextActions.a);
+        this.cmds.b.execute(nextActions.b);
     },
     stop: function() {
         this.actions.a.stop();

@@ -52,9 +52,11 @@ var Weapon = Class.create({
                 this.elms[i].setWidth(this.megaCannonWaitCount, this.MEGA_CANNON_WAIT);
             }
             if (this.elms[i].isFunnelSlider) {
-                this.funnelSliderCount <= this.FUNNEL_SLIDER_MAX ?
-                    this.ship.enableFunnelStatus() :
+                if (this.funnelSliderCount <= this.FUNNEL_SLIDER_MAX) {
+                    this.ship.enableFunnelStatus();
+                } else {
                     this.ship.disableFunnelStatus();
+                }
             }
             if (this.elms[i].isDelete) {
                 if (this.elms[i].isFunnelSlider) {

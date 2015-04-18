@@ -29,7 +29,7 @@ var AI = Class.create({
         return this.getNextCommand(this.getRecommendedCommand());
     },
     updateStayAreaIndexes: function() {
-        this.stayAreaIndexes.ship = Math.floor((this.ship.getLeft() + 45) / 90),
+        this.stayAreaIndexes.ship = Math.floor((this.ship.getLeft() + 45) / 90);
         this.stayAreaIndexes.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
     },
     updateRisksByArea: function() {
@@ -49,8 +49,8 @@ var AI = Class.create({
         var seekInfo = {idx: null, minDiffEnemy: null, minRisk: null};
         for (var i = 0, length = this.risksByArea.size(); i < length; ++i) {
             var diffEnemy = Math.abs(i - this.stayAreaIndexes.enemy);
-            if (seekInfo.minRisk === null || this.risksByArea[i] < seekInfo.minRisk
-                || (this.risksByArea[i] === seekInfo.minRisk && diffEnemy < seekInfo.minDiffEnemy)) {
+            if (seekInfo.minRisk === null || this.risksByArea[i] < seekInfo.minRisk ||
+                (this.risksByArea[i] === seekInfo.minRisk && diffEnemy < seekInfo.minDiffEnemy)) {
 
                 seekInfo.idx = i;
                 seekInfo.minDiffEnemy = diffEnemy;
@@ -63,13 +63,15 @@ var AI = Class.create({
         var shipLeftAreaIndex = Math.floor(this.ship.getLeft() / 90),
             shipRightAreaIndex = Math.floor((this.ship.getLeft() + 89) / 90);
 
-        if (this.seekAreaIndex < this.stayAreaIndexes.ship
-            || this.seekAreaIndex < shipLeftAreaIndex || this.seekAreaIndex < shipRightAreaIndex) {
+        if (this.seekAreaIndex < this.stayAreaIndexes.ship ||
+            this.seekAreaIndex < shipLeftAreaIndex ||
+            this.seekAreaIndex < shipRightAreaIndex) {
 
             return this.ship.isEnemy ? 'stepRight' : 'stepLeft';
         }
-        if (this.stayAreaIndexes.ship < this.seekAreaIndex
-            || shipLeftAreaIndex < this.seekAreaIndex || shipRightAreaIndex < this.seekAreaIndex) {
+        if (this.stayAreaIndexes.ship < this.seekAreaIndex ||
+            shipLeftAreaIndex < this.seekAreaIndex ||
+            shipRightAreaIndex < this.seekAreaIndex) {
 
             return this.ship.isEnemy ? 'stepLeft' : 'stepRight';
         }

@@ -8,10 +8,10 @@ var Sound = Class.create({
     },
 
     checkAudio: function() {
-        return typeof Audio == 'function'
-            && Audio.name == 'HTMLAudioElement'
-            && typeof Audio.prototype.canPlayType == 'function'
-            && new Audio().canPlayType('audio/mpeg') == 'maybe';
+        return typeof Audio == 'function' &&
+          Audio.name == 'HTMLAudioElement' &&
+          typeof Audio.prototype.canPlayType == 'function' &&
+          new Audio().canPlayType('audio/mpeg') == 'maybe';
     },
 
     addAudioMethods: function() {

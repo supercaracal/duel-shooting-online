@@ -26,7 +26,11 @@ var FunnelSlider = Class.create(Funnel, {
     },
 
     move: function() {
-        this.isComeback ? this.moveComeback() : this.moveChase();
+        if (this.isComeback) {
+            this.moveComeback();
+        } else {
+            this.moveChase();
+        }
     },
 
     moveComeback: function() {

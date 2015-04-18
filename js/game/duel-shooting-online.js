@@ -67,7 +67,7 @@ var DuelShootingOnline = Class.create({
 
     setShipRedWeaponForSync: function(data) {
         var prop;
-        if (data.ship == 'red') prop = 'ship'
+        if (data.ship == 'red') prop = 'ship';
         if (data.enemy == 'red') prop = 'enemy';
         if (!prop) return;
         this.sync.setShipRedWeapon(this.weapons[prop]);

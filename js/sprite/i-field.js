@@ -75,10 +75,10 @@ var IField = Class.create(Sprite, {
     isHit: function(bullet, range, enemyLeft) {
         var top = bullet.getTop();
         var left = bullet.getLeft();
-        if (this.isActive
-                && (bullet.isFall ? top + range > this.clientHeight - 110 : top + range < 80)
-                && enemyLeft - 25 < left
-                && left < enemyLeft + 95) {
+        if (this.isActive &&
+            (bullet.isFall ? top + range > this.clientHeight - 110 : top + range < 80) &&
+            enemyLeft - 25 < left &&
+            left < enemyLeft + 95) {
 
             this.hit();
             return true;
@@ -114,10 +114,10 @@ var IField = Class.create(Sprite, {
     },
 
     changeColor: function () {
-        var color = '#'
-            + Math.floor(Math.random() * 100).toColorPart()
-            + Math.floor(Math.random() * 100).toColorPart()
-            + Math.floor(Math.random() * 100).toColorPart();
+        var color = '#' +
+          Math.floor(Math.random() * 100).toColorPart() +
+          Math.floor(Math.random() * 100).toColorPart() +
+          Math.floor(Math.random() * 100).toColorPart();
         this.elm.setStyle({backgroundColor: color});
     }
 });

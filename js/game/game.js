@@ -15,7 +15,11 @@ var Game = Class.create({
     },
 
     pause: function() {
-        this.timerId === null ? this.start() : this.stop();
+        if (this.timerId === null) {
+            this.start();
+        } else {
+            this.stop();
+        }
     },
 
     stop: function() {

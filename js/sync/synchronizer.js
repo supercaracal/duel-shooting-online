@@ -19,7 +19,7 @@ var Synchronizer = Class.create({
         this.chatForm = new ChatForm();
         this.chatForm.renderElement();
 
-        this.socket = io.connect(uri);
+        this.socket = io.connect(uri, {secure: true});
         this.setupChatEvent();
         this.listenShipControl();
         this.listenDuelReady(callback);
@@ -91,8 +91,8 @@ var Synchronizer = Class.create({
     criticalDefault: function(data) {
         if (!this.ships[data.color]) return;
         this.ships[data.color].setHitPoint(data.hp);
-        if (this.ships[data.color].nextCmd !== 'stepRight'
-            && this.ships[data.color].nextCmd !== 'stepLeft') {
+        if (this.ships[data.color].nextCmd !== 'stepRight' &&
+            this.ships[data.color].nextCmd !== 'stepLeft') {
 
             this.ships[data.color].setLeft(
                 this.ships[data.color].clientWidth - data.left - 90);
@@ -102,8 +102,8 @@ var Synchronizer = Class.create({
     criticalRed: function(data) {
         if (!this.ships.red) return;
         this.ships.red.setHitPoint(data.hp);
-        if (this.ships.red.nextCmd !== 'stepRight'
-            && this.ships.red.nextCmd !== 'stepLeft') {
+        if (this.ships.red.nextCmd !== 'stepRight' &&
+            this.ships.red.nextCmd !== 'stepLeft') {
 
             this.ships.red.setLeft(
                 this.ships.red.clientWidth - data.left - 90);
@@ -118,9 +118,9 @@ var Synchronizer = Class.create({
         if (data.funnel.firstLeft === null && data.funnel.secondLeft === null) {
             this.weapons.red.removeFunnelCircle(2);
         }
-        if (data.funnel.firstLeft !== null
-            && data.funnel.secondLeft === null
-            && this.weapons.red.funnelCircles.size() === 2) {
+        if (data.funnel.firstLeft !== null &&
+            data.funnel.secondLeft === null &&
+            this.weapons.red.funnelCircles.size() === 2) {
 
             this.weapons.red.removeFunnelCircle(1);
         }

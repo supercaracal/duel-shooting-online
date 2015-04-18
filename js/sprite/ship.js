@@ -128,25 +128,25 @@ var Ship = Class.create(Sprite, {
             return true;
         }
 
-        if ((enemyLeft - 25 < left)
-                && (left <= enemyLeft + 5)
-                && (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
+        if ((enemyLeft - 25 < left) &&
+            (left <= enemyLeft + 5) &&
+            (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
 
             this.hit();
             return true;
         }
 
-        if ((enemyLeft + 5 < left)
-                && (left < enemyLeft + 60)
-                && (bullet.isFall ? top + range > this.clientHeight - 90 : top + range < 60)) {
+        if ((enemyLeft + 5 < left) &&
+            (left < enemyLeft + 60) &&
+            (bullet.isFall ? top + range > this.clientHeight - 90 : top + range < 60)) {
 
             this.hit();
             return true;
         }
 
-        if ((enemyLeft + 60 <= left)
-                && (left < enemyLeft + 90)
-                && (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
+        if ((enemyLeft + 60 <= left) &&
+            (left < enemyLeft + 90) &&
+            (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
 
             this.hit();
             return true;
@@ -191,9 +191,9 @@ var Ship = Class.create(Sprite, {
     },
 
     move: function() {
-        if (this.nextCmd !== null
-                && this.nextCmd !== 'stepRight'
-                && this.nextCmd !== 'stepLeft') {
+        if (this.nextCmd !== null &&
+            this.nextCmd !== 'stepRight' &&
+            this.nextCmd !== 'stepLeft') {
 
             this.way = null;
         }

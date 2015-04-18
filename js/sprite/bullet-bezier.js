@@ -36,8 +36,7 @@ var BulletBezier = Class.create(Bullet, {
         }
         var left = this.pos.ship.left + this.leftRange * this.count;
         this.setPos({
-            top: this.pos.ship.top
-                + this.topRange * this.count * this.count / this.ATTAINABLE_COUNT,
+            top: this.pos.ship.top + this.topRange * this.count * this.count / this.ATTAINABLE_COUNT,
             left: left + (this.pos.enemy.left - left) * this.count / this.ATTAINABLE_COUNT
         });
     }

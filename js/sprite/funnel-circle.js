@@ -26,15 +26,8 @@ var FunnelCircle = Class.create(Funnel, {
     },
 
     move: function() {
-
-        var y = this.initLeft
-            + Math.sin(Math.PI / 180 * this.theta) * this.r;
-
-        var x = this.initTop
-            + (this.isEnemy ? 0 : -140)
-            + this.r
-            - Math.cos(Math.PI / 180 * this.theta) * this.r;
-
+        var y = this.initLeft + Math.sin(Math.PI / 180 * this.theta) * this.r;
+        var x = this.initTop + (this.isEnemy ? 0 : -140) + this.r - Math.cos(Math.PI / 180 * this.theta) * this.r;
         this.setPos({top: x, left: y});
         this.theta += this.isClockwise ? this.speed : -this.speed;
         if (this.theta < 0 || 360 < this.theta ) {

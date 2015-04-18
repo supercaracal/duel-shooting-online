@@ -1,188 +1,188 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="title" content="Duel Shooting Online" />
-        <meta name="keywords" content="javascript,prototype.js,node.js,express,socket.io,xhr-polling,comet,websocket,css3,html5,game,duel,shooting,multiplayer,one to one,fighting" />
-        <meta name="description" content="Duel Shooting. This is a multiplayer one to one fighting game. Please wait for player matching." />
-        <title>Duel Shooting Online</title>
-        <meta property="og:type" content="game" />
-        <meta property="og:title" content="Duel Shooting Online" />
-        <meta property="og:url" content="http://duelshooting-pocapocaunty.dotcloud.com/" />
-        <meta property="og:image" content="http://duelshooting-pocapocaunty.dotcloud.com/img/ogp-img.gif" />
-        <meta property="og:description" content="Duel Shooting. This is a multiplayer one to one fighting game. Please wait for player matching." />
-        <link rel="shortcut icon" href="/favicon.ico">
-        <link rel="stylesheet" type="text/css" media="all" href="/css/style.css" />
-        <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.gif" />
-        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="/prototype.min.js"></script>
-        <script type="text/javascript" src="/duel.min.js"></script>
-        <script type="text/javascript">
-            Event.observe(window, 'load', function() { new DuelShootingOnline(); });
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-1455197-6']);
-            _gaq.push(['_trackPageview']);
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-        </script>
-    </head>
-    <body>
-        <div id="title">
-            <h1>Duel Shooting</h1>
-            <p>This is a multiplayer one to one fighting game. Please wait for player <span>*duelists*</span> matching.</p>
-        </div>
-        <div id="manual">
-            <h2>White Demon</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Action</th>
-                        <th>Keyboard</th>
-                        <th>Mouse or Touch</th>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="right">Move Right</td>
-                        <td class="center">→</td>
-                        <td>Lower part right</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Move Left</td>
-                        <td class="center">←</td>
-                        <td>Lower part left</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Wait</td>
-                        <td class="center">↓</td>
-                        <td>Lower part center</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack1</td>
-                        <td class="center">↑</td>
-                        <td>Upper part center</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack2</td>
-                        <td class="center">F</td>
-                        <td>Upper part left</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack3</td>
-                        <td class="center">M</td>
-                        <td>Upper part right</td>
-                    </tr>
-                </tbody>
-            </table>
-            <h2>Red Comet</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Action</th>
-                        <th>Keyboard</th>
-                        <th>Mouse or Touch</th>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="right">Move Right</td>
-                        <td class="center">→</td>
-                        <td>Lower part right</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Move Left</td>
-                        <td class="center">←</td>
-                        <td>Lower part left</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Avoid</td>
-                        <td class="center">N</td>
-                        <td>Lower part center</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack1</td>
-                        <td class="center">↑</td>
-                        <td>Upper part center</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack2</td>
-                        <td class="center">F</td>
-                        <td>Upper part left</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Barrier</td>
-                        <td class="center">I</td>
-                        <td>Upper part right</td>
-                    </tr>
-                </tbody>
-            </table>
-            <h2>Dark Emperor</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Action</th>
-                        <th>Keyboard</th>
-                        <th>Mouse or Touch</th>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="right">Move Right</td>
-                        <td class="center">→</td>
-                        <td>Right Area</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Move Left</td>
-                        <td class="center">←</td>
-                        <td>Left Area</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack Main</td>
-                        <td class="center">↑</td>
-                        <td>Middle Area</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack Sub1</td>
-                        <td class="center">A</td>
-                        <td>unsupported</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack Sub2</td>
-                        <td class="center">S</td>
-                        <td>unsupported</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack Sub3</td>
-                        <td class="center">D</td>
-                        <td>unsupported</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack Sub4</td>
-                        <td class="center">F</td>
-                        <td>unsupported</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack Sub5</td>
-                        <td class="center">Z</td>
-                        <td>unsupported</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack Sub6</td>
-                        <td class="center">X</td>
-                        <td>unsupported</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack Sub7</td>
-                        <td class="center">C</td>
-                        <td>unsupported</td>
-                    </tr>
-                    <tr>
-                        <td class="right">Attack Sub8</td>
-                        <td class="center">V</td>
-                        <td>unsupported</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </body>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="title" content="Duel Shooting Online" />
+    <meta name="keywords" content="javascript,prototype.js,node.js,express,socket.io,xhr-polling,comet,websocket,css3,html5,game,duel,shooting,multiplayer,one to one,fighting" />
+    <meta name="description" content="Duel Shooting. This is a multiplayer one to one fighting game. Please wait for player matching." />
+    <title>Duel Shooting Online</title>
+    <meta property="og:type" content="game" />
+    <meta property="og:title" content="Duel Shooting Online" />
+    <meta property="og:url" content="http://duelshooting-pocapocaunty.dotcloud.com/" />
+    <meta property="og:image" content="http://duelshooting-pocapocaunty.dotcloud.com/img/ogp-img.gif" />
+    <meta property="og:description" content="Duel Shooting. This is a multiplayer one to one fighting game. Please wait for player matching." />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="/css/style.css" />
+    <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.gif" />
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/dist/prototype.min.js"></script>
+    <script type="text/javascript" src="/dist/duel-shooting.min.js"></script>
+    <script type="text/javascript">
+      Event.observe(window, 'load', function() { new DuelShootingOnline(); });
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-1455197-6']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="title">
+      <h1>Duel Shooting</h1>
+      <p>This is a multiplayer one to one fighting game. Please wait for player <span>*duelists*</span> matching.</p>
+    </div>
+    <div id="manual">
+      <h2>White Demon</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Keyboard</th>
+            <th>Mouse or Touch</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="right">Move Right</td>
+            <td class="center">→</td>
+            <td>Lower part right</td>
+          </tr>
+          <tr>
+            <td class="right">Move Left</td>
+            <td class="center">←</td>
+            <td>Lower part left</td>
+          </tr>
+          <tr>
+            <td class="right">Wait</td>
+            <td class="center">↓</td>
+            <td>Lower part center</td>
+          </tr>
+          <tr>
+            <td class="right">Attack1</td>
+            <td class="center">↑</td>
+            <td>Upper part center</td>
+          </tr>
+          <tr>
+            <td class="right">Attack2</td>
+            <td class="center">F</td>
+            <td>Upper part left</td>
+          </tr>
+          <tr>
+            <td class="right">Attack3</td>
+            <td class="center">M</td>
+            <td>Upper part right</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Red Comet</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Keyboard</th>
+            <th>Mouse or Touch</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="right">Move Right</td>
+            <td class="center">→</td>
+            <td>Lower part right</td>
+          </tr>
+          <tr>
+            <td class="right">Move Left</td>
+            <td class="center">←</td>
+            <td>Lower part left</td>
+          </tr>
+          <tr>
+            <td class="right">Avoid</td>
+            <td class="center">N</td>
+            <td>Lower part center</td>
+          </tr>
+          <tr>
+            <td class="right">Attack1</td>
+            <td class="center">↑</td>
+            <td>Upper part center</td>
+          </tr>
+          <tr>
+            <td class="right">Attack2</td>
+            <td class="center">F</td>
+            <td>Upper part left</td>
+          </tr>
+          <tr>
+            <td class="right">Barrier</td>
+            <td class="center">I</td>
+            <td>Upper part right</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Dark Emperor</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Keyboard</th>
+            <th>Mouse or Touch</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="right">Move Right</td>
+            <td class="center">→</td>
+            <td>Right Area</td>
+          </tr>
+          <tr>
+            <td class="right">Move Left</td>
+            <td class="center">←</td>
+            <td>Left Area</td>
+          </tr>
+          <tr>
+            <td class="right">Attack Main</td>
+            <td class="center">↑</td>
+            <td>Middle Area</td>
+          </tr>
+          <tr>
+            <td class="right">Attack Sub1</td>
+            <td class="center">A</td>
+            <td>unsupported</td>
+          </tr>
+          <tr>
+            <td class="right">Attack Sub2</td>
+            <td class="center">S</td>
+            <td>unsupported</td>
+          </tr>
+          <tr>
+            <td class="right">Attack Sub3</td>
+            <td class="center">D</td>
+            <td>unsupported</td>
+          </tr>
+          <tr>
+            <td class="right">Attack Sub4</td>
+            <td class="center">F</td>
+            <td>unsupported</td>
+          </tr>
+          <tr>
+            <td class="right">Attack Sub5</td>
+            <td class="center">Z</td>
+            <td>unsupported</td>
+          </tr>
+          <tr>
+            <td class="right">Attack Sub6</td>
+            <td class="center">X</td>
+            <td>unsupported</td>
+          </tr>
+          <tr>
+            <td class="right">Attack Sub7</td>
+            <td class="center">C</td>
+            <td>unsupported</td>
+          </tr>
+          <tr>
+            <td class="right">Attack Sub8</td>
+            <td class="center">V</td>
+            <td>unsupported</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
 </html>
