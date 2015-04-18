@@ -2472,7 +2472,7 @@ ShipFactory.getCreater = function(color, isEnemy, sounds) {
     this.chatForm = new ChatForm();
     this.chatForm.renderElement();
 
-    this.socket = io.connect(uri, {secure: true});
+    this.socket = io.connect(uri);
     this.setupChatEvent();
     this.listenShipControl();
     this.listenDuelReady(callback);
