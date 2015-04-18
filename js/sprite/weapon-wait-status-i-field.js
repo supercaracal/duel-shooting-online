@@ -1,5 +1,5 @@
 var WeaponWaitStatusIField = Class.create(WeaponWaitStatus, {
-    getColor: function() {
-        return '#99FF00';
-    }
+  getColor: function() {
+    return '#99FF00';
+  }
 });

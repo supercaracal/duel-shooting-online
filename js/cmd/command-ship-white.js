@@ -1,24 +1,24 @@
 var CommandShipWhite = Class.create(Command, {
 
-    stepRight: function() {
-        this.ship.stepRight();
-    },
+  stepRight: function() {
+    this.ship.stepRight();
+  },
 
-    stepLeft: function() {
-        this.ship.stepLeft();
-    },
+  stepLeft: function() {
+    this.ship.stepLeft();
+  },
 
-    wait: Prototype.emptyFunction,
+  wait: Prototype.emptyFunction,
 
-    attack: function() {
-        this.weapon.addBulletLinear();
-    },
+  attack: function() {
+    this.weapon.addBulletLinear();
+  },
 
-    funnel: function() {
-        this.weapon.addFunnelSlider();
-    },
+  funnel: function() {
+    this.weapon.addFunnelSlider();
+  },
 
-    megaCannon: function() {
-        this.weapon.fireMegaCannon();
-    }
+  megaCannon: function() {
+    this.weapon.fireMegaCannon();
+  }
 });

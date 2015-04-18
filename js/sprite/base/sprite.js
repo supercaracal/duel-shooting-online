@@ -1,114 +1,114 @@
 var Sprite = Class.create({
 
-    Z_INDEX_BASE: 3000,
+  Z_INDEX_BASE: 3000,
 
-    clientHeight: null,
-    clientWidth: null,
+  clientHeight: null,
+  clientWidth: null,
 
-    elm: null,
+  elm: null,
 
-    initTop: null,
-    initLeft: null,
-    initTransformRotate: null,
+  initTop: null,
+  initLeft: null,
+  initTransformRotate: null,
 
-    currentTop: null,
-    currentLeft: null,
-    currentTransformRotate: null,
+  currentTop: null,
+  currentLeft: null,
+  currentTransformRotate: null,
 
-    initialize: function() {
-        this.clientHeight = this.getClientHeight();
-        this.clientWidth = this.getClientWidth();
-        this.elm = this.createElement();
-        this.initTop = this.getInitTop();
-        this.initLeft = this.getInitLeft();
-        this.initTransformRotate = this.getInitTransformRotate();
-        this.setupPosition();
-    },
+  initialize: function() {
+    this.clientHeight = this.getClientHeight();
+    this.clientWidth = this.getClientWidth();
+    this.elm = this.createElement();
+    this.initTop = this.getInitTop();
+    this.initLeft = this.getInitLeft();
+    this.initTransformRotate = this.getInitTransformRotate();
+    this.setupPosition();
+  },
 
-    createElement: function() {
-        return new Element('div');
-    },
+  createElement: function() {
+    return new Element('div');
+  },
 
-    getInitTop: function() {
-        return 0;
-    },
+  getInitTop: function() {
+    return 0;
+  },
 
-    getInitLeft: function() {
-        return 0;
-    },
+  getInitLeft: function() {
+    return 0;
+  },
 
-    getInitTransformRotate: function() {
-        return 0;
-    },
+  getInitTransformRotate: function() {
+    return 0;
+  },
 
-    setupPosition: function() {
-        this.setPos({top: this.initTop, left: this.initLeft});
-    },
+  setupPosition: function() {
+    this.setPos({top: this.initTop, left: this.initLeft});
+  },
 
-    resetPosition: function() {
-        this.clientHeight = this.getClientHeight();
-        this.clientWidth = this.getClientWidth();
-        this.setupPosition();
-    },
+  resetPosition: function() {
+    this.clientHeight = this.getClientHeight();
+    this.clientWidth = this.getClientWidth();
+    this.setupPosition();
+  },
 
-    getClientHeight: function() {
-        return 480;
-    },
+  getClientHeight: function() {
+    return 480;
+  },
 
-    getClientWidth: function() {
-        return 720;
-    },
+  getClientWidth: function() {
+    return 720;
+  },
 
-    renderElement: function() {
-        $(document.body).insert(this.elm);
-    },
+  renderElement: function() {
+    $(document.body).insert(this.elm);
+  },
 
-    getTop: function () {
-        return this.currentTop;
-    },
+  getTop: function () {
+    return this.currentTop;
+  },
 
-    getLeft: function () {
-        return this.currentLeft;
-    },
+  getLeft: function () {
+    return this.currentLeft;
+  },
 
-    getPos: function () {
-        return {top: this.currentTop, left: this.currentLeft};
-    },
+  getPos: function () {
+    return {top: this.currentTop, left: this.currentLeft};
+  },
 
-    getTransformRotate: function () {
-        return this.currentTransformRotate;
-    },
+  getTransformRotate: function () {
+    return this.currentTransformRotate;
+  },
 
-    setTop: function (px) {
-        this.elm.setStyle({top: px + 'px'});
-        this.currentTop = px;
-    },
+  setTop: function (px) {
+    this.elm.setStyle({top: px + 'px'});
+    this.currentTop = px;
+  },
 
-    setLeft: function (px) {
-        this.elm.setStyle({left: px + 'px'});
-        this.currentLeft = px;
-    },
+  setLeft: function (px) {
+    this.elm.setStyle({left: px + 'px'});
+    this.currentLeft = px;
+  },
 
-    setPos: function (pxs) {
-        if (pxs.top !== undefined) this.setTop(pxs.top);
-        if (pxs.left !== undefined) this.setLeft(pxs.left);
-    },
+  setPos: function (pxs) {
+    if (pxs.top !== undefined) this.setTop(pxs.top);
+    if (pxs.left !== undefined) this.setLeft(pxs.left);
+  },
 
-    setTransformRotate: function (theta) {
-        this.elm.setStyle({
-            webkitTransform: 'rotate(' + theta + 'deg)',
-            MozTransform: 'rotate(' + theta + 'deg)',
-            msTransform: 'rotate(' + theta + 'deg)',
-            transform: 'rotate(' + theta + 'deg)'
-        });
-        this.currentTransformRotate = theta;
-    },
+  setTransformRotate: function (theta) {
+    this.elm.setStyle({
+      webkitTransform: 'rotate(' + theta + 'deg)',
+      MozTransform: 'rotate(' + theta + 'deg)',
+      msTransform: 'rotate(' + theta + 'deg)',
+      transform: 'rotate(' + theta + 'deg)'
+    });
+    this.currentTransformRotate = theta;
+  },
 
-    setOpacity: function(v) {
-        this.elm.setOpacity(v);
-    },
+  setOpacity: function(v) {
+    this.elm.setOpacity(v);
+  },
 
-    remove: function() {
-        this.elm.remove();
-    }
+  remove: function() {
+    this.elm.remove();
+  }
 });
