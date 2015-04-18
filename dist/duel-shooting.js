@@ -1517,10 +1517,11 @@ ShipFactory.getCreater = function(color, isEnemy, sounds) {
   },
 
   checkAudio: function() {
-    return typeof Audio == 'function' &&
+    var canPlayMpeg = typeof Audio == 'function' &&
       Audio.name == 'HTMLAudioElement' &&
       typeof Audio.prototype.canPlayType == 'function' &&
-      new Audio().canPlayType('audio/mpeg') == 'maybe';
+      new Audio().canPlayType('audio/mpeg');
+    return canPlayMpeg == 'probably' || canPlayMpeg == 'maybe';
   },
 
   addAudioMethods: function() {
