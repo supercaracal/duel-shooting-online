@@ -6,7 +6,7 @@ module.exports = function(grunt) {
         separator: ';'
       },
       dist: {
-        src: ['js/**/*.js'],
+        src: ['js/**/base/*.js', 'js/**/abstract/*.js', 'js/**/*.js'],
         dest: 'dist/<%= pkg.name %>.js'
       }
     },
@@ -30,5 +30,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('default', ['concat', 'uglify']);
+  grunt.registerTask('minify', ['concat', 'uglify']);
 };
