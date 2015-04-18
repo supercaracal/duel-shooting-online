@@ -6,7 +6,7 @@ function Routing(app, dir) {
 
 Routing.prototype.home = function(req, res) {
   res.header('Cache-Control', 'public, max-age=1800');
-  res.sendFile(this.dir + '/dotcloud.html');
+  res.sendFile(this.dir + '/html/dotcloud.html');
 };
 
 Routing.prototype.other = function(req, res) {
