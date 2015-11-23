@@ -4,14 +4,14 @@
 
 Prototype.js の勉強用に作成した 1対1 のシューティングゲーム。今となっては Prototype.js が絶滅危惧種となってしまって悲しい。
 
-* [Duel Shooting Online](http://duelshooting-online.herokuapp.com/) ... 糞AI同士が闘う単調なデモ
+* [Duel Shooting Demo](https://developer.mozilla.org/ja/demos/detail/duel-shooting/launch) ... 糞AI同士が闘う単調なデモ
 * [Duel Shooting Offline](http://duel-shooting.herokuapp.com/) ... 糞AIと闘うオフラインモード
-* [Duel Shooting Demo](https://developer.mozilla.org/ja/demos/detail/duel-shooting/launch) ... 誰かと闘うラグが激しいオンラインモード
+* [Duel Shooting Online](http://duelshooting-online.herokuapp.com/) ... 誰かと闘うラグが激しいオンラインモード
 
 ## ゲーム仕様
 
 * オンラインモードは2人以上アクセスが来ないと永遠に待ち状態。
-* 機体はランダムに決まって選べない。
+* 機体はランダムに決まって自分では選べない。
 * 糞AIは真ん中からキー押しっぱなしで連射するとすぐに倒せてしまう。
 
 ## 初期構築
@@ -26,6 +26,14 @@ $ npm install
 
 ```
 $ node web.js
+```
+
+## 継続開発
+
+以下で Frontend の Javascript Files が自動で結合圧縮されます。
+
+```
+$ grunt watch
 ```
 
 ## 機体一覧
