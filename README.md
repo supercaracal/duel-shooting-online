@@ -4,7 +4,7 @@
 
 Prototype.js の勉強用に作成した 1対1 のシューティングゲーム。今となっては Prototype.js が絶滅危惧種となってしまって悲しい。
 
-* [Duel Shooting Demo](https://developer.mozilla.org/ja/demos/detail/duel-shooting/launch) ... 糞AI同士が闘う単調なデモ
+* [Duel Shooting Demo](http://codepen.io/supercaracal/pen/QyNZEL) ... 糞AI同士が闘う単調なデモ
 * [Duel Shooting Offline](http://duel-shooting.herokuapp.com/) ... 糞AIと闘うオフラインモード
 * [Duel Shooting Online](http://duelshooting-online.herokuapp.com/) ... 誰かと闘うラグが激しいオンラインモード
 
