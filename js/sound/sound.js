@@ -21,7 +21,6 @@ var Sound = Class.create({
     }
     Element.addMethods('audio', {
       stop: function (audio) {
-        audio.pause();
         try {
           audio.currentTime = 0;
         } catch(e) {
@@ -29,13 +28,12 @@ var Sound = Class.create({
         }
       },
       replay: function (audio) {
-        audio.pause();
         try {
           audio.currentTime = 0;
+          audio.play();
         } catch(e) {
           if (console) console.log(e);
         }
-        audio.play();
       }
     });
   },
