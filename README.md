@@ -1,23 +1,13 @@
 # Duel Shooting Online
 
-## これは何？
+## What's this?
 
-Prototype.js の勉強用に作成した 1対1 のシューティングゲーム。今となっては Prototype.js が絶滅危惧種となってしまって悲しい。
+This is a shooting game. You can play on your browser.
 
-* [Duel Shooting Demo](http://codepen.io/supercaracal/pen/QyNZEL) ... 糞AI同士が闘う単調なデモ
-* [Duel Shooting Offline](http://duel-shooting.herokuapp.com/) ... 糞AIと闘うオフラインモード
-* [Duel Shooting Online](http://duelshooting-online.herokuapp.com/) ... 誰かと闘うラグが激しいオンラインモード
-
-## ゲーム仕様
-
-* オンラインモードは2人以上アクセスが来ないと永遠に待ち状態。
-* 機体はランダムに決まって自分では選べない。
-* 糞AIは真ん中からキー押しっぱなしで連射するとすぐに倒せてしまう。
-
-## 初期構築
+## Development
 
 ```
-$ git clone git@github.com:supercaracal/duelshooting_online.git
+$ git clone https://github.com/supercaracal/duel-shooting-online.git
 ```
 
 ```
@@ -28,15 +18,11 @@ $ npm install
 $ node web.js
 ```
 
-## 継続開発
-
-以下で Frontend の Javascript Files が自動で結合圧縮されます。
-
 ```
 $ grunt watch
 ```
 
-## 機体一覧
+## Ships
 
 ### White Demon
 
