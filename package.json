@@ -13,7 +13,7 @@
     "express": "4.14.0",
     "socket.io": "1.5.1"
   },
-  "repository": "https://github.com/supercaracal/duel-shooting-online",
+  "repository": "https://github.com/supercaracal/duel-shooting-online.git",
   "author": "Taishi Kasuga",
   "license": "UNLICENSED",
   "devDependencies": {
