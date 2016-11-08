@@ -7,7 +7,7 @@
   },
   "engines": {
     "node": "7.0.0",
-    "npm": "4.0.2"
+    "npm": "3.10.8"
   },
   "dependencies": {
     "express": "4.14.0",
