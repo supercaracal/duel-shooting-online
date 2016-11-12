@@ -108,14 +108,6 @@ this.ship.funnels.shift())},fireMegaCannon:function(){0<this.megaCannonWaitCount
 11,position:"fixed",boxShadow:"0px 0px 1px "+a,borderRadius:"1px"})},getColor:function(){return"#FF0099"},getInitTop:function(){return this.ship.getTop()+(this.ship.isEnemy?42:12)},getInitLeft:function(){return this.ship.getLeft()+35},setWidth:function(a,b){this.elm.setStyle({width:Math.floor(20*a/b)+"px"})},move:function(){this.setLeft(this.ship.getLeft()+35)}}),WeaponWaitStatusIField=Class.create(WeaponWaitStatus,{getColor:function(){return"#99FF00"}}),WeaponWaitStatusMegaCannon=Class.create(WeaponWaitStatus,
 {isWeaponWaitStatusMegaCannon:!0});
       Event.observe(window, 'load', function() { new DuelShootingDemo(); });
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-1455197-7']);
-      _gaq.push(['_trackPageview']);
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
     </script>
   </head>
   <body>
