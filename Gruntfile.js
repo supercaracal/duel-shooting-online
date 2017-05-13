@@ -27,12 +27,22 @@ module.exports = function(grunt) {
     watch: {
       files: ['Gruntfile.js', 'js/**/*.js'],
       tasks: ['concat', 'uglify']
+    },
+    copy: {
+      main: {
+        files: [
+          { expand: true, flatten: true, src: ['favicon.ico', 'apple-touch-icon-precomposed.gif'], dest: 'docs/' },
+          { expand: true, flatten: true, cwd: 'dist', src: ['prototype.min.js', 'duel-shooting.min.js', 'source.map'], dest: 'docs/' },
+          { expand: true, flatten: true, cwd: 'img', src: ['ogp-img.gif'], dest: 'docs/' },
+        ]
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   grunt.registerTask('minify', ['concat', 'uglify']);
 };
