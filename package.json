@@ -2,14 +2,14 @@
   "name": "duel-shooting-online",
   "version": "0.0.2",
   "scripts": {
-    "start": "PLAY_MODE=online node backend/web.js",
+    "start": "node backend/web.js",
     "online": "PLAY_MODE=online node backend/web.js",
     "offline": "PLAY_MODE=offline node backend/web.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
-    "node": "7.0.0",
-    "npm": "4.6.1"
+    "node": "7.7.4",
+    "npm": "4.1.2"
   },
   "dependencies": {
     "express": "4.15.2",
