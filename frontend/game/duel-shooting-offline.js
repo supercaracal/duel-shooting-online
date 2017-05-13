@@ -2,14 +2,14 @@ var DuelShootingOffline = Class.create(DuelShootingDemo, {
   setupSound: function() {
     var sound = new Sound();
     this.sounds = {};
-    this.sounds.hit = sound.createAudio('/se/hit.mp3');
-    this.sounds.lose = sound.createAudio('/se/lose.mp3');
-    this.sounds.newtype = sound.createAudio('/se/newtype.mp3');
-    this.sounds.attack = sound.createAudio('/se/attack.mp3');
-    this.sounds.megaCannon = sound.createAudio('/se/mega.mp3');
-    this.sounds.funnelGo = sound.createAudio('/se/funnel1.mp3');
-    this.sounds.funnelAtk = sound.createAudio('/se/funnel2.mp3');
-    this.sounds.iField = sound.createAudio('/se/at_field.mp3');
+    this.sounds.hit = sound.createAudio('/assets/audio/hit.mp3');
+    this.sounds.lose = sound.createAudio('/assets/audio/lose.mp3');
+    this.sounds.newtype = sound.createAudio('/assets/audio/newtype.mp3');
+    this.sounds.attack = sound.createAudio('/assets/audio/attack.mp3');
+    this.sounds.megaCannon = sound.createAudio('/assets/audio/mega.mp3');
+    this.sounds.funnelGo = sound.createAudio('/assets/audio/funnel1.mp3');
+    this.sounds.funnelAtk = sound.createAudio('/assets/audio/funnel2.mp3');
+    this.sounds.iField = sound.createAudio('/assets/audio/at_field.mp3');
   },
   setupActions: function() {
     this.actions = {};

@@ -57,3 +57,17 @@ body {
 #manual .center {
     text-align: center;
 }
+
+.demo-box {
+  width: 720px;
+  margin: 0px;
+  padding: 0px;
+  float: left;
+  text-align: center;
+}
+
+.demo-title {
+  margin-top: 220px;
+  font-size: 20px;
+  color: #777777;
+}

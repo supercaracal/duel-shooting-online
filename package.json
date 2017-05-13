@@ -2,19 +2,18 @@
   "name": "duel-shooting-online",
   "version": "0.0.2",
   "scripts": {
-    "start": "PLAY_MODE=online node web.js",
-    "demo": "PLAY_MODE=demo node web.js",
-    "offline": "PLAY_MODE=offline node web.js",
-    "online": "PLAY_MODE=online node web.js",
+    "start": "PLAY_MODE=online node backend/web.js",
+    "online": "PLAY_MODE=online node backend/web.js",
+    "offline": "PLAY_MODE=offline node backend/web.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
     "node": "7.0.0",
-    "npm": "3.10.8"
+    "npm": "4.6.1"
   },
   "dependencies": {
-    "express": "4.14.0",
-    "socket.io": "1.5.1"
+    "express": "4.15.2",
+    "socket.io": "2.0.1"
   },
   "repository": "https://github.com/supercaracal/duel-shooting-online.git",
   "author": "Taishi Kasuga",
@@ -22,7 +21,7 @@
   "devDependencies": {
     "grunt": "1.0.1",
     "grunt-contrib-concat": "1.0.1",
-    "grunt-contrib-uglify": "2.0.0",
+    "grunt-contrib-uglify": "3.0.0",
     "grunt-contrib-watch": "1.0.0",
     "grunt-contrib-copy": "1.0.0"
   }

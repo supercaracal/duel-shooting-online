@@ -40,7 +40,7 @@ $ grunt watch
 
 ### White Demon
 
-![White Demon](https://github.com/supercaracal/duelshooting_online/raw/master/img/white-demon.gif)
+![White Demon](https://github.com/supercaracal/duelshooting_online/raw/master/assets/images/white-demon.gif)
 
 | Action     | Keyboard     | Mouse or Touch    |
 |------------|--------------|-------------------|
@@ -53,7 +53,7 @@ $ grunt watch
 
 ### Red Comet
 
-![Red Comet](https://github.com/supercaracal/duelshooting_online/raw/master/img/red-comet.gif)
+![Red Comet](https://github.com/supercaracal/duelshooting_online/raw/master/assets/images/red-comet.gif)
 
 | Action     | Keyboard     | Mouse or Touch    |
 |------------|--------------|-------------------|
@@ -66,7 +66,7 @@ $ grunt watch
 
 ### Dark Emperor
 
-![Dark Emperor](https://github.com/supercaracal/duelshooting_online/raw/master/img/dark-emperor.gif)
+![Dark Emperor](https://github.com/supercaracal/duelshooting_online/raw/master/assets/images/dark-emperor.gif)
 
 | Action      | Keyboard     | Mouse or Touch    |
 |-------------|--------------|-------------------|

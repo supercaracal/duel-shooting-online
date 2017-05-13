@@ -2,36 +2,25 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="title" content="Duel Shooting Online" />
-    <meta name="keywords" content="javascript,prototype.js,node.js,express,socket.io,xhr-polling,comet,websocket,css3,html5,game,duel,shooting,multiplayer,one to one,fighting" />
-    <meta name="description" content="Duel Shooting. This is a multiplayer one to one fighting game. Please wait for player matching." />
-    <title>Duel Shooting Online</title>
+    <meta name="title" content="Duel Shooting Offline" />
+    <title>Duel Shooting Offline</title>
+    <meta name="keywords" content="javascript,prototype.js,css3,html5,game,offline,duel,shooting,one to one,fighting" />
+    <meta name="description" content="Duel Shooting. This is a one to one fighting game. Versus non player character." />
     <meta property="og:type" content="game" />
-    <meta property="og:title" content="Duel Shooting Online" />
-    <meta property="og:url" content="http://duel-shooting-online.azurewebsites.net/" />
-    <meta property="og:image" content="http://duel-shooting-online.azurewebsites.net/img/ogp-img.gif" />
-    <meta property="og:description" content="Duel Shooting. This is a multiplayer one to one fighting game. Please wait for player matching." />
-    <link rel="shortcut icon" href="/favicon.ico">
-    <link rel="stylesheet" type="text/css" media="all" href="/css/style.css" />
-    <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.gif" />
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="/dist/prototype.min.js"></script>
-    <script type="text/javascript" src="/dist/duel-shooting.min.js"></script>
-    <script type="text/javascript">
-      Event.observe(window, 'load', function() { new DuelShootingOnline(); });
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-1455197-13', 'auto');
-      ga('send', 'pageview');
-    </script>
+    <meta property="og:title" content="Duel Shooting Offline" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="/assets/images/ogp-img.gif" />
+    <meta property="og:description" content="Duel Shooting. This is a one to one fighting game. Versus non player character." />
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" media="all" href="/assets/stylesheets/style.css" />
+    <link rel="apple-touch-icon-precomposed" href="/assets/images/apple-touch-icon-precomposed.gif" />
+    <script type="text/javascript" src="/assets/javascripts/duel-shooting-online.min.js"></script>
+    <script type="text/javascript">Event.observe(window, 'load', function() { new DuelShootingOffline(); });</script>
   </head>
   <body>
     <div id="title">
-      <h1>Duel Shooting</h1>
-      <p>This is a multiplayer one to one fighting game. Please wait for player <span>*duelists*</span> matching.</p>
+      <h1>Duel Shooting Offline</h1>
+      <p>This is a multiplayer one to one fighting game.</p>
     </div>
     <div id="manual">
       <h2>White Demon</h2>
