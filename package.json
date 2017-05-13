@@ -2,7 +2,10 @@
   "name": "duel-shooting-online",
   "version": "0.0.2",
   "scripts": {
-    "start": "node web.js",
+    "start": "PLAY_MODE=online node web.js",
+    "demo": "PLAY_MODE=demo node web.js",
+    "offline": "PLAY_MODE=offline node web.js",
+    "online": "PLAY_MODE=online node web.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {

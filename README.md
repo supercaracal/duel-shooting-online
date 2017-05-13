@@ -4,6 +4,12 @@
 
 This is a shooting game. You can play on your browser.
 
+## Playground
+
+* [Demo Mode](http://supercaracal.github.io/duel-shooting-online/)
+* [Online Mode](http://duel-shooting-online.azurewebsites.net/)
+* Offline Mode
+
 ## Development
 
 ```
@@ -15,10 +21,18 @@ $ npm install
 ```
 
 ```
-$ node web.js
+$ npm start
+# Default play mode is online.
+# Get access to http://localhost:8080 via 1st browser
+# Get access to http://localhost:8080 via 2nd browser
+
+# You can play as another mode.
+$ npm run-script offline
+$ npm run-script demo
 ```
 
 ```
+# Minified JavaScript and CSS files.
 $ grunt watch
 ```
 
