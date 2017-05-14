@@ -28,6 +28,7 @@ var AI = Class.create({
     this.updateSeekAreaIndex();
     return this.getNextCommand(this.getRecommendedCommand());
   },
+  resetCommand: Prototype.emptyFunction,
   updateStayAreaIndexes: function() {
     this.stayAreaIndexes.ship = Math.floor((this.ship.getLeft() + 45) / 90);
     this.stayAreaIndexes.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
@@ -76,5 +77,6 @@ var AI = Class.create({
       return this.ship.isEnemy ? 'stepLeft' : 'stepRight';
     }
     return 'attack';
-  }
+  },
+  stop: Prototype.emptyFunction
 });

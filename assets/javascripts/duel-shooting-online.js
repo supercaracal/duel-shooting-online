@@ -7549,9 +7549,11 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
   },
 
   getCommand: function() {
-    var command = this.nextCommand;
+    return this.nextCommand;
+  },
+
+  resetCommand: function() {
     this.nextCommand = null;
-    return command;
   },
 
   handlerTouch: function(e) {
@@ -7592,6 +7594,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     this.updateSeekAreaIndex();
     return this.getNextCommand(this.getRecommendedCommand());
   },
+  resetCommand: Prototype.emptyFunction,
   updateStayAreaIndexes: function() {
     this.stayAreaIndexes.ship = Math.floor((this.ship.getLeft() + 45) / 90);
     this.stayAreaIndexes.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
@@ -7640,7 +7643,8 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
       return this.ship.isEnemy ? 'stepLeft' : 'stepRight';
     }
     return 'attack';
-  }
+  },
+  stop: Prototype.emptyFunction
 });
 ;var Command = Class.create({
 
@@ -7656,23 +7660,175 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     if (command && command in this) this[command]();
   }
 });
-;var ShipCreater = Class.create({
+;var ShipBuilder = Class.create({
 
   sounds: null,
   isEnemy: null,
-  ship: null,
-  weapon: null,
 
   initialize: function(sounds, isEnemy) {
     this.sounds = sounds;
     this.isEnemy = isEnemy;
   },
 
-  createShip: Prototype.emptyFunction,
-  createWeapon: Prototype.emptyFunction,
-  createAction: Prototype.emptyFunction,
-  createAI: Prototype.emptyFunction,
-  createCommand: Prototype.emptyFunction
+  buildShip: Prototype.emptyFunction,
+  buildWeapon: Prototype.emptyFunction,
+  buildAction: Prototype.emptyFunction,
+  buildAI: Prototype.emptyFunction,
+  buildCommand: Prototype.emptyFunction
+});
+;var DuelShooting = Class.create({
+  opening: null,
+
+  background: null,
+  condition: null,
+  forkMe: null,
+  sounds: null,
+  timeKeeper: null,
+
+  game: null,
+
+  ships: null,
+  actions: null,
+  cmds: null,
+  weapons: null,
+
+  initialize: function(audioPath) {
+    this.opening = this.buildOpening();
+    this.opening.show();
+
+    this.addMonkeyPatch();
+
+    this.background = this.buildBackground();
+    this.condition = this.buildCondition();
+    this.forkMe = this.buildForkMeOnGitHub();
+    this.sounds = this.buildSounds(audioPath);
+    this.timeKeeper = this.buildTimeKeeper();
+
+    this.ships = {};
+    this.weapons = {};
+    this.actions = {};
+    this.ais = {};
+    this.cmds = {};
+  },
+
+  addMonkeyPatch: function() {
+    Number.prototype.isTiming =
+      (function(num) { return Math.floor(Math.random() * 100) % num === 0; }).methodize();
+  },
+
+  buildBackground: function() {
+    return new Background();
+  },
+
+  buildCondition: function() {
+    return new Condition();
+  },
+
+  buildForkMeOnGitHub: function() {
+    return new ForkMeOnGitHub();
+  },
+
+  buildOpening: function() {
+    return new Opening(new Title());
+  },
+
+  buildSounds: function(audioPath) {
+    var sound = new Sound();
+    return {
+      hit: sound.createAudio(audioPath + '/hit.mp3'),
+      lose: sound.createAudio(audioPath + '/lose.mp3'),
+      newtype: sound.createAudio(audioPath + '/newtype.mp3'),
+      attack: sound.createAudio(audioPath + '/attack.mp3'),
+      megaCannon: sound.createAudio(audioPath + '/mega.mp3'),
+      funnelGo: sound.createAudio(audioPath + '/funnel1.mp3'),
+      funnelAtk: sound.createAudio(audioPath + '/funnel2.mp3'),
+      iField: sound.createAudio(audioPath + '/at_field.mp3'),
+    };
+  },
+
+  buildTimeKeeper: function() {
+    return new TimeKeeper();
+  },
+
+  getShipColors: function() {
+    var s = this.getRandomColor();
+    var e = this.getRandomColor();
+    for (; s === e; e = this.getRandomColor()) {}
+    return { ship: s, enemy: e };
+  },
+
+  getRandomColor: function() {
+    return ['white', 'red', 'navy'][Math.floor(Math.random() * 100) % 3];
+  },
+
+  getShipBuilder: function(color, sounds) {
+    return ShipFactory.getBuilderAsShip(color, sounds);
+  },
+
+  getEnemyBuilder: function(color, sounds) {
+    return ShipFactory.getBuilderAsEnemy(color, sounds);
+  },
+
+  beforeRoutine: Prototype.emptyFunction,
+
+  routine: function() {
+    this.beforeRoutine();
+    this.ships.ship.move();
+    this.ships.enemy.move();
+    this.weapons.ship.move();
+    this.weapons.enemy.move();
+    if (this.ships.enemy.getHitPoint() === 0) {
+      this.onEnemyDown();
+    }
+    if (this.ships.ship.getHitPoint() === 0) {
+      this.onShipDown();
+    }
+    this.afterRoutine();
+  },
+
+  onEnemyDown: function() {
+    this.stop(true);
+  },
+
+  onShipDown: function() {
+    this.stop(false);
+  },
+
+  afterRoutine: Prototype.emptyFunction,
+
+  beforeStart: Prototype.emptyFunction,
+
+  start: function() {
+    this.beforeStart();
+    this.game.start();
+    this.timeKeeper.start();
+    this.afterStart();
+  },
+
+  afterStart: Prototype.emptyFunction,
+
+  beforeStop: Prototype.emptyFunction,
+
+  stop: function(isWin) {
+    this.beforeStop();
+    if (isWin) {
+      this.forkMe.renderElement();
+      this.condition.update('You win.', '#9999FF');
+    } else {
+      this.condition.update('You lose.', '#FF9999');
+    }
+    if (this.actions.ship) {
+      this.actions.ship.stop();
+    }
+    if (this.actions.enemy) {
+      this.actions.enemy.stop();
+    }
+    this.timeKeeper.stop();
+    this.game.stop();
+    this.afterStop();
+  },
+
+  afterStop: Prototype.emptyFunction
 });
 ;var Sprite = Class.create({
 
@@ -8585,413 +8741,276 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     this.weapon.fireMegaCannon();
   }
 });
-;var ShipCreaterNavy = Class.create(ShipCreater, {
+;var ShipBuilderNavy = Class.create(ShipBuilder, {
 
-  createShip: function() {
-    this.ship = new ShipNavy(this.isEnemy);
+  buildShip: function() {
+    var ship = new ShipNavy(this.isEnemy);
     if (!this.isEnemy) {
-      this.ship.setSoundHit(this.sounds.hit);
-      this.ship.setSoundLose(this.sounds.lose);
+      ship.setSoundHit(this.sounds.hit);
+      ship.setSoundLose(this.sounds.lose);
     }
-    return this.ship;
+    return ship;
   },
 
-  createWeapon: function(enemy) {
-    this.weapon = new Weapon(this.ship, enemy);
-    if (this.isEnemy) return this.weapon;
-    this.weapon.setSoundAttack(this.sounds.attack);
-    return this.weapon;
+  buildWeapon: function(ship, enemy) {
+    var weapon = new Weapon(ship, enemy);
+    if (this.isEnemy) return weapon;
+    weapon.setSoundAttack(this.sounds.attack);
+    return weapon;
   },
 
-  createAction: function() {
+  buildAction: function() {
     return new ActionShipNavy();
   },
 
-  createAI: function(enemy, enemyWeapon) {
-    return new AIShipNavy(this.ship, enemy, enemyWeapon);
+  buildAI: function(ship, enemy, enemyWeapon) {
+    return new AIShipNavy(ship, enemy, enemyWeapon);
   },
 
-  createCommand: function() {
-    return new CommandShipNavy(this.ship, this.weapon);
+  buildCommand: function(ship, weapon) {
+    return new CommandShipNavy(ship, weapon);
   }
 });
-;var ShipCreaterRed = Class.create(ShipCreater, {
+;var ShipBuilderRed = Class.create(ShipBuilder, {
 
-  createShip: function() {
-    this.ship = new ShipRed(this.isEnemy);
+  buildShip: function() {
+    var ship = new ShipRed(this.isEnemy);
     if (!this.isEnemy) {
-      this.ship.setSoundHit(this.sounds.hit);
-      this.ship.setSoundLose(this.sounds.lose);
-      this.ship.setSoundNewtype(this.sounds.newtype);
+      ship.setSoundHit(this.sounds.hit);
+      ship.setSoundLose(this.sounds.lose);
+      ship.setSoundNewtype(this.sounds.newtype);
     }
-    return this.ship;
+    return ship;
   },
 
-  createWeapon: function(enemy) {
-    this.weapon = new Weapon(this.ship, enemy);
+  buildWeapon: function(ship, enemy) {
+    var weapon = new Weapon(ship, enemy);
     if (this.isEnemy) {
-      this.weapon.addIField();
+      weapon.addIField();
     } else {
-      this.weapon.addIField(this.sounds.iField);
+      weapon.addIField(this.sounds.iField);
     }
-    this.weapon.addFunnelDefences();
-    if (this.isEnemy) return this.weapon;
-    this.weapon.setSoundAttack(this.sounds.attack);
-    this.weapon.setSoundFunnelGo(this.sounds.funnelGo);
-    this.weapon.setSoundFunnelAttack(this.sounds.funnelAtk);
-    return this.weapon;
+    weapon.addFunnelDefences();
+    if (this.isEnemy) return weapon;
+    weapon.setSoundAttack(this.sounds.attack);
+    weapon.setSoundFunnelGo(this.sounds.funnelGo);
+    weapon.setSoundFunnelAttack(this.sounds.funnelAtk);
+    return weapon;
   },
 
-  createAction: function() {
+  buildAction: function() {
     return new ActionShipRed();
   },
 
-  createAI: function(enemy, enemyWeapon) {
-    return new AIShipRed(this.ship, enemy, enemyWeapon);
+  buildAI: function(ship, enemy, enemyWeapon) {
+    return new AIShipRed(ship, enemy, enemyWeapon);
   },
 
-  createCommand: function() {
-    return new CommandShipRed(this.ship, this.weapon);
+  buildCommand: function(ship, weapon) {
+    return new CommandShipRed(ship, weapon);
   }
 });
-;var ShipCreaterWhite = Class.create(ShipCreater, {
+;var ShipBuilderWhite = Class.create(ShipBuilder, {
 
-  createShip: function() {
-    this.ship = new ShipWhite(this.isEnemy);
+  buildShip: function() {
+    var ship = new ShipWhite(this.isEnemy);
     if (!this.isEnemy) {
-      this.ship.setSoundHit(this.sounds.hit);
-      this.ship.setSoundLose(this.sounds.lose);
+      ship.setSoundHit(this.sounds.hit);
+      ship.setSoundLose(this.sounds.lose);
     }
-    return this.ship;
+    return ship;
   },
 
-  createWeapon: function(enemy) {
-    this.weapon = new Weapon(this.ship, enemy);
-    this.weapon.addWeaponWaitStatusMegaCannon();
-    if (this.isEnemy) return this.weapon;
-    this.weapon.setSoundAttack(this.sounds.attack);
-    this.weapon.setSoundMegaCannon(this.sounds.megaCannon);
-    this.weapon.setSoundFunnelGo(this.sounds.funnelGo);
-    this.weapon.setSoundFunnelAttack(this.sounds.funnelAtk);
-    return this.weapon;
+  buildWeapon: function(ship, enemy) {
+    var weapon = new Weapon(ship, enemy);
+    weapon.addWeaponWaitStatusMegaCannon();
+    if (this.isEnemy) return weapon;
+    weapon.setSoundAttack(this.sounds.attack);
+    weapon.setSoundMegaCannon(this.sounds.megaCannon);
+    weapon.setSoundFunnelGo(this.sounds.funnelGo);
+    weapon.setSoundFunnelAttack(this.sounds.funnelAtk);
+    return weapon;
   },
 
-  createAction: function() {
+  buildAction: function() {
     return new ActionShipWhite();
   },
 
-  createAI: function(enemy, enemyWeapon) {
-    return new AIShipWhite(this.ship, enemy, enemyWeapon);
+  buildAI: function(ship, enemy, enemyWeapon) {
+    return new AIShipWhite(ship, enemy, enemyWeapon);
   },
 
-  createCommand: function() {
-    return new CommandShipWhite(this.ship, this.weapon);
+  buildCommand: function(ship, weapon) {
+    return new CommandShipWhite(ship, weapon);
   }
 });
 ;var ShipFactory = {};
 
-ShipFactory.getCreater = function(color, isEnemy, sounds) {
-  return new window['ShipCreater' + color.capitalize()](sounds, isEnemy);
+ShipFactory.getBuilderAsShip = function(color, sounds) {
+  var isEnemy = false;
+  return new window['ShipBuilder' + color.capitalize()](sounds, isEnemy);
 };
-;var DuelShootingDemo = Class.create({
-  opening: null,
-  colors: null,
-  sounds: null,
-  factories: null,
-  ships: null,
-  weapons: null,
-  actions: null,
-  ais: null,
-  cmds: null,
-  background: null,
-  timekeeper: null,
-  condition: null,
-  game: null,
-  initialize: function() {
-    this.opening = new Opening(new Title());
-    this.opening.show();
-    Number.prototype.isTiming =
-      (function(num) { return Math.floor(Math.random() * 100) % num === 0; }).methodize();
-    this.setupColor();
-    this.setupSound();
-    this.setupFactories();
-    this.setupShips();
-    this.setupWeapons();
-    this.setupActions();
-    this.setupAIs();
-    this.setupCommands();
-    this.background = new Background();
-    this.timekeeper = new TimeKeeper();
-    this.condition = new Condition();
-    this.game = new Game(this.routine.bind(this));
-    this.renderElements();
-    (function() {
-      this.opening.hide();
-      this.start();
-    }).bind(this).delay(3);
-  },
-  setupColor: function() {
-    this.colors = {
-      a: ['white', 'red', 'navy'][Math.floor(Math.random() * 100) % 3],
-      b: ['white', 'red', 'navy'][Math.floor(Math.random() * 100) % 3]
-    };
-    return;
-//    this.colors.a = prompt('Your ship color [white|red|navy]', 'white');
-//    this.colors.b = prompt('Enemy ship color [white|red|navy]', 'red');
-//    if ((this.colors.a !== 'white' && this.colors.a !== 'red' && this.colors.a !== 'navy') ||
-//      (this.colors.b !== 'white' && this.colors.b !== 'red' && this.colors.b !== 'navy')) {
-//
-//      this.setupColor();
-//    }
-  },
-  setupSound: function() {
-    var sound = new Sound();
-    this.sounds = {};
-  },
-  setupFactories: function() {
-    this.factories = {};
-    this.factories.a = ShipFactory.getCreater(this.colors.a, false, this.sounds);
-    this.factories.b = ShipFactory.getCreater(this.colors.b, true, this.sounds);
-  },
-  setupShips: function() {
-    this.ships = {};
-    this.ships.a = this.factories.a.createShip();
-    this.ships.b = this.factories.b.createShip();
-  },
-  setupWeapons: function() {
-    this.weapons = {};
-    this.weapons.a = this.factories.a.createWeapon(this.ships.b);
-    this.weapons.b = this.factories.b.createWeapon(this.ships.a);
-  },
-  setupActions: function() {
-    this.actions = {};
-    this.actions.a = null;
-    this.actions.b = null;
-  },
-  setupAIs: function() {
-    this.ais = {};
-    this.ais.a = this.factories.a.createAI(this.ships.b, this.weapons.b);
-    this.ais.b = this.factories.b.createAI(this.ships.a, this.weapons.a);
-  },
-  setupCommands: function() {
-    this.cmds = {};
-    this.cmds.a = this.factories.a.createCommand();
-    this.cmds.b = this.factories.b.createCommand();
-  },
-  routine: function() {
-    this.ships.a.move();
-    this.ships.b.move();
-    this.weapons.a.move();
-    this.weapons.b.move();
-    if (!this.ships.b.getHitPoint()) {
-      this.condition.update('You win.', '#9999FF');
-      new ForkMeOnGitHub().renderElement();
-      this.stop();
-    }
-    if (!this.ships.a.getHitPoint()) {
-      this.condition.update('You lose.', '#FF9999');
-      new ForkMeOnGitHub().renderElement();
-      this.stop();
-    }
-    var nextActions = {
-      a: this.ais.a.getCommand(),
-      b: this.ais.b.getCommand()
-    };
-    this.ships.a.nextCmd = nextActions.a;
-    this.ships.b.nextCmd = nextActions.b;
-    this.cmds.a.execute(nextActions.a);
-    this.cmds.b.execute(nextActions.b);
-  },
-  renderElements: function() {
-    this.background.renderElement();
-    this.timekeeper.renderElement();
-    this.condition.renderElement();
-    this.ships.a.renderElement();
-    this.ships.b.renderElement();
-  },
-  start: function() {
-    this.game.start();
-    this.timekeeper.start();
-  },
-  stop: function() {
-    this.timekeeper.stop();
-    this.game.stop();
-  }
-});
-;var DuelShootingOffline = Class.create(DuelShootingDemo, {
-  setupSound: function() {
-    var sound = new Sound();
-    this.sounds = {};
-    this.sounds.hit = sound.createAudio('/assets/audio/hit.mp3');
-    this.sounds.lose = sound.createAudio('/assets/audio/lose.mp3');
-    this.sounds.newtype = sound.createAudio('/assets/audio/newtype.mp3');
-    this.sounds.attack = sound.createAudio('/assets/audio/attack.mp3');
-    this.sounds.megaCannon = sound.createAudio('/assets/audio/mega.mp3');
-    this.sounds.funnelGo = sound.createAudio('/assets/audio/funnel1.mp3');
-    this.sounds.funnelAtk = sound.createAudio('/assets/audio/funnel2.mp3');
-    this.sounds.iField = sound.createAudio('/assets/audio/at_field.mp3');
-  },
-  setupActions: function() {
-    this.actions = {};
-    this.actions.a = this.factories.a.createAction();
-    this.actions.b = null;
-  },
-  setupAIs: function() {
-    this.ais = {};
-    this.ais.a = null;
-    this.ais.b = this.factories.b.createAI(this.ships.a, this.weapons.a);
-  },
-  routine: function() {
-    this.ships.a.move();
-    this.ships.b.move();
-    this.weapons.a.move();
-    this.weapons.b.move();
-    if (!this.ships.b.getHitPoint()) {
-      this.condition.update('You win.', '#9999FF');
-      new ForkMeOnGitHub().renderElement();
-      this.stop();
-    }
-    if (!this.ships.a.getHitPoint()) {
-      this.condition.update('You lose.', '#FF9999');
-      this.stop();
-    }
-    var nextActions = {
-      a: this.actions.a.getCommand(),
-      b: this.ais.b.getCommand()
-    };
-    this.ships.a.nextCmd = nextActions.a;
-    this.ships.b.nextCmd = nextActions.b;
-    this.cmds.a.execute(nextActions.a);
-    this.cmds.b.execute(nextActions.b);
-  },
-  stop: function() {
-    this.actions.a.stop();
-    this.timekeeper.stop();
-    this.game.stop();
-  }
-});
-;var DuelShootingOnline = Class.create({
 
-  sounds: null,
-  weapons: null,
-  cmds: null,
-  opening: null,
-  condition: null,
+ShipFactory.getBuilderAsEnemy = function(color, sounds) {
+  var isEnemy = true;
+  return new window['ShipBuilder' + color.capitalize()](sounds, isEnemy);
+};
+;var DuelShootingDemo = Class.create(DuelShooting, {
+  initialize: function($super, audioPath) {
+    $super(audioPath);
+    this.setupMainObjects();
+    this.game = new Game(this.routine.bind(this));
+    this.renderInitialElements();
+    this.start.bind(this).delay(3);
+  },
+
+  setupMainObjects: function() {
+    var colors = this.getShipColors();
+    var shipBuilder = this.getShipBuilder(colors.ship, this.sounds);
+    var enemyBuilder = this.getEnemyBuilder(colors.enemy, this.sounds);
+    this.ships.ship = shipBuilder.buildShip();
+    this.ships.enemy = enemyBuilder.buildShip();
+    this.weapons.ship = shipBuilder.buildWeapon(this.ships.ship, this.ships.enemy);
+    this.weapons.enemy = enemyBuilder.buildWeapon(this.ships.enemy, this.ships.ship);
+    this.cmds.ship = shipBuilder.buildCommand(this.ships.ship, this.weapons.ship);
+    this.cmds.enemy = enemyBuilder.buildCommand(this.ships.enemy, this.weapons.enemy);
+    this.actions.ship = shipBuilder.buildAI(this.ships.ship, this.ships.enemy, this.weapons.enemy);
+    this.actions.enemy = enemyBuilder.buildAI(this.ships.enemy, this.ships.ship, this.weapons.ship);
+  },
+
+  renderInitialElements: function() {
+    this.background.renderElement();
+    this.condition.renderElement();
+    this.timeKeeper.renderElement();
+    this.ships.ship.renderElement();
+    this.ships.enemy.renderElement();
+  },
+
+  beforeStart: function() {
+    this.opening.hide();
+  },
+
+  afterRoutine: function() {
+    this.ships.ship.nextCmd = this.actions.ship.getCommand();
+    this.ships.enemy.nextCmd = this.actions.enemy.getCommand();
+    this.cmds.ship.execute(this.actions.ship.getCommand());
+    this.cmds.enemy.execute(this.actions.enemy.getCommand());
+  }
+});
+;var DuelShootingOffline = Class.create(DuelShooting, {
+  initialize: function($super, audioPath) {
+    $super(audioPath);
+    this.setupMainObjects();
+    this.game = new Game(this.routine.bind(this));
+    this.renderInitialElements();
+    this.start.bind(this).delay(3);
+  },
+
+  setupMainObjects: function() {
+    var colors = this.getShipColors();
+    var shipBuilder = this.getShipBuilder(colors.ship, this.sounds);
+    var enemyBuilder = this.getEnemyBuilder(colors.enemy, this.sounds);
+    this.ships.ship = shipBuilder.buildShip();
+    this.ships.enemy = enemyBuilder.buildShip();
+    this.weapons.ship = shipBuilder.buildWeapon(this.ships.ship, this.ships.enemy);
+    this.weapons.enemy = enemyBuilder.buildWeapon(this.ships.enemy, this.ships.ship);
+    this.cmds.ship = shipBuilder.buildCommand(this.ships.ship, this.weapons.ship);
+    this.cmds.enemy = enemyBuilder.buildCommand(this.ships.enemy, this.weapons.enemy);
+    this.actions.ship = shipBuilder.buildAction();
+    this.actions.enemy = enemyBuilder.buildAI(this.ships.enemy, this.ships.ship, this.weapons.ship);
+  },
+
+  renderInitialElements: function() {
+    this.background.renderElement();
+    this.condition.renderElement();
+    this.timeKeeper.renderElement();
+    this.ships.ship.renderElement();
+    this.ships.enemy.renderElement();
+  },
+
+  beforeStart: function() {
+    this.opening.hide();
+  },
+
+  afterRoutine: function() {
+    var shipCmd = this.actions.ship.getCommand();
+    var enemyCmd = this.actions.enemy.getCommand();
+    this.ships.ship.nextCmd = shipCmd;
+    this.ships.enemy.nextCmd = enemyCmd;
+    this.cmds.ship.execute(shipCmd);
+    this.cmds.enemy.execute(enemyCmd);
+    this.actions.ship.resetCommand();
+    this.actions.enemy.resetCommand();
+  }
+});
+;var DuelShootingOnline = Class.create(DuelShooting, {
   sync: null,
 
-  timeKeeper: null,
-  ship: null,
-  enemy: null,
-  action: null,
-  game: null,
-
-  initialize: function() {
-    this.weapons = {};
-    this.cmds = {};
-    this.opening = new Opening(new Title());
-    this.condition = new Condition();
-    this.opening.show();
+  initialize: function($super, audioPath) {
+    $super(audioPath);
     this.condition.renderElement();
     this.condition.update('Please wait for player matching.', '#99FF99');
-    this.setupSoundEffect();
-    this.sync = new Synchronizer('/', this.callback.bind(this), this.finish.bind(this));
+    this.sync = new Synchronizer('/', this.start.bind(this), this.stop.bind(this));
   },
 
-  callback: function(data) {
+  setupMainObjects: function(data) {
+    var shipBuilder = this.getShipBuilder(data.ship, this.sounds);
+    var enemyBuilder = this.getEnemyBuilder(data.enemy, this.sounds);
+    this.ships.ship = shipBuilder.buildShip();
+    this.ships.enemy = enemyBuilder.buildShip();
+    this.weapons.ship = shipBuilder.buildWeapon(this.ships.ship, this.ships.enemy);
+    this.weapons.enemy = enemyBuilder.buildWeapon(this.ships.enemy, this.ships.ship);
+    this.cmds.ship = shipBuilder.buildCommand(this.ships.ship, this.weapons.ship);
+    this.cmds.enemy = enemyBuilder.buildCommand(this.ships.enemy, this.weapons.enemy);
+    this.actions.ship = shipBuilder.buildAction();
+  },
 
-    var creater = {};
-    creater.ship = ShipFactory.getCreater(data.ship, false, this.sounds);
-    creater.enemy = ShipFactory.getCreater(data.enemy, true, this.sounds);
+  renderInitialElements: function() {
+    this.background.renderElement();
+    this.timeKeeper.renderElement();
+    this.ships.ship.renderElement();
+    this.ships.enemy.renderElement();
+  },
 
-    this.ship = creater.ship.createShip();
-    this.enemy = creater.enemy.createShip();
-    this.weapons.ship = creater.ship.createWeapon(this.enemy);
-    this.weapons.enemy = creater.enemy.createWeapon(this.ship);
-    this.action = creater.ship.createAction();
-    this.cmds.ship = creater.ship.createCommand();
-    this.cmds.enemy = creater.enemy.createCommand();
-    this.sync.setShipAndCommand(data.ship, this.ship, this.cmds.ship);
-    this.sync.setShipAndCommand(data.enemy, this.enemy, this.cmds.enemy);
+  beforeRoutine: function() {
+    this.sync.chat.move();
+  },
+
+  onEnemyDown: Prototype.emptyFunction,
+
+  afterRoutine: function() {
+    var shipCmd = this.actions.ship.getCommand();
+    this.actions.ship.resetCommand();
+    this.sync.pushAttackInfo(shipCmd);
+  },
+
+  beforeStart: function(data) {
+    this.setupMainObjects(data);
+    this.sync.setShipAndCommand(data.ship, this.ships.ship, this.cmds.ship);
+    this.sync.setShipAndCommand(data.enemy, this.ships.enemy, this.cmds.enemy);
     this.sync.listenShipCommand();
-    this.setShipRedWeaponForSync(data);
+    if (data.ship === 'red' || data.enemy === 'red') {
+      var type = data.ship === 'red' ? 'ship' : 'enemy';
+      this.sync.setShipRedWeapon(this.weapons[type]);
+    }
+    this.game = new Game(this.routine.bind(this));
+    this.renderInitialElements();
+  },
 
-    this.setupTimeKeeper();
-    this.setupGame();
-    this.renderElements();
+  start: function(data) {
+    this.beforeStart(data);
     this.game.start();
     this.timeKeeper.start();
+    this.afterStart();
+  },
+
+  afterStart: function() {
     this.condition.updateAndDelayHide('Engaged!', '#FF9999');
     this.opening.hide();
   },
 
-  setupSoundEffect: function() {
-    var sound = new Sound();
-    this.sounds = {};
-    this.sounds.hit = sound.createAudio('/assets/audio/hit.mp3');
-    this.sounds.lose = sound.createAudio('/assets/audio/lose.mp3');
-    this.sounds.newtype = sound.createAudio('/assets/audio/newtype.mp3');
-    this.sounds.attack = sound.createAudio('/assets/audio/attack.mp3');
-    this.sounds.megaCannon = sound.createAudio('/assets/audio/mega.mp3');
-    this.sounds.funnelGo = sound.createAudio('/assets/audio/funnel1.mp3');
-    this.sounds.funnelAtk = sound.createAudio('/assets/audio/funnel2.mp3');
-    this.sounds.iField = sound.createAudio('/assets/audio/at_field.mp3');
-  },
-
-  setShipRedWeaponForSync: function(data) {
-    var prop;
-    if (data.ship == 'red') prop = 'ship';
-    if (data.enemy == 'red') prop = 'enemy';
-    if (!prop) return;
-    this.sync.setShipRedWeapon(this.weapons[prop]);
-  },
-
-  setupTimeKeeper: function() {
-    this.timeKeeper = new TimeKeeper();
-  },
-
-  setupGame: function() {
-    this.game = new Game(this.routine.bind(this));
-  },
-
-  routine: function() {
-    this.sync.chat.move();
-    this.ship.move();
-    this.enemy.move();
-    this.weapons.ship.move();
-    this.weapons.enemy.move();
-    if (!this.action) {
-      return;
-    }
-    if (this.ship.getHitPoint() === 0) {
-      this.finish(false);
-      return;
-    }
-    this.pushCommand(this.action.getCommand());
-  },
-
-  finish: function(isWin) {
-    this.action.stop();
-    this.timeKeeper.stop();
-    this.game.stop();
+  afterStop: function(isWin) {
     this.sync.stop();
-    this.condition.update(
-      isWin ? 'You win.' : 'You lose.',
-      isWin ? '#9999FF' : '#FF9999'
-    );
-    if (isWin) {
-      new ForkMeOnGitHub().renderElement();
-    }
-  },
-
-  pushCommand: function(cmd) {
-    this.sync.pushAttackInfo(cmd);
-  },
-
-  renderElements: function() {
-    new Background().renderElement();
-    this.timeKeeper.renderElement();
-    this.ship.renderElement();
-    this.enemy.renderElement();
   }
 });
 ;var Game = Class.create({

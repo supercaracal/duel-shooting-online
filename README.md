@@ -28,6 +28,7 @@ $ npm start
 
 # You can play as another mode.
 $ npm run-script offline
+$ npm run-script demo
 ```
 
 ```

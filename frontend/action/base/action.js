@@ -39,9 +39,11 @@ var Action = Class.create({
   },
 
   getCommand: function() {
-    var command = this.nextCommand;
+    return this.nextCommand;
+  },
+
+  resetCommand: function() {
     this.nextCommand = null;
-    return command;
   },
 
   handlerTouch: function(e) {

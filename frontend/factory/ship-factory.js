@@ -1,5 +1,11 @@
 var ShipFactory = {};
 
-ShipFactory.getCreater = function(color, isEnemy, sounds) {
-  return new window['ShipCreater' + color.capitalize()](sounds, isEnemy);
+ShipFactory.getBuilderAsShip = function(color, sounds) {
+  var isEnemy = false;
+  return new window['ShipBuilder' + color.capitalize()](sounds, isEnemy);
+};
+
+ShipFactory.getBuilderAsEnemy = function(color, sounds) {
+  var isEnemy = true;
+  return new window['ShipBuilder' + color.capitalize()](sounds, isEnemy);
 };

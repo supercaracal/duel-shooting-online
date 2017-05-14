@@ -24,11 +24,7 @@ module.exports = function(grunt) {
     },
     copy: {
       main: {
-        files: [
-          { expand: true, flatten: true, cwd: 'assets/images', src: ['favicon.ico', 'ogp-img.gif', 'apple-touch-icon-precomposed.gif'], dest: 'docs/' },
-          { expand: true, flatten: true, cwd: 'assets/javascripts', src: ['duel-shooting-online.min.js', 'duel-shooting-online.js', 'source.map'], dest: 'docs/' },
-          { expand: true, flatten: true, cwd: 'assets/stylesheets', src: ['style.css'], dest: 'docs/' }
-        ]
+        files: [{ expand: true, flatten: true, cwd: 'assets', src: ['**/*.*'], dest: 'docs/' }]
       }
     },
     watch: {
