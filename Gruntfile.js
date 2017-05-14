@@ -30,6 +30,9 @@ module.exports = function(grunt) {
     watch: {
       files: ['Gruntfile.js', 'frontend/**/*.js'],
       tasks: ['concat', 'uglify', 'copy']
+    },
+    eslint: {
+      target: ['backend/*', 'frontend/!(vendor)/*', '*.js']
     }
   });
 
@@ -37,6 +40,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-eslint');
 
   grunt.registerTask('minify', ['concat', 'uglify', 'copy']);
+  grunt.registerTask('lint', ['eslint']);
 };
