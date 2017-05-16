@@ -1,29 +1,35 @@
-var Game = Class.create({
+(function f(global) {
+  'use strict';
 
-  INTERVAL_WAIT_MSEC: 16,
+  var g = global;
 
-  timerId: null,
-  routine: null,
+  g.Game = global.Class.create({
 
-  initialize: function(routine) {
-    this.routine = routine;
-  },
+    INTERVAL_WAIT_MSEC: 16,
 
-  start: function() {
-    if (this.timerId !== null) return;
-    this.timerId = setInterval(this.routine, this.INTERVAL_WAIT_MSEC);
-  },
+    timerId: null,
+    routine: null,
 
-  pause: function() {
-    if (this.timerId === null) {
-      this.start();
-    } else {
-      this.stop();
+    initialize: function initialize(routine) {
+      this.routine = routine;
+    },
+
+    start: function start() {
+      if (this.timerId !== null) return;
+      this.timerId = setInterval(this.routine, this.INTERVAL_WAIT_MSEC);
+    },
+
+    pause: function pause() {
+      if (this.timerId === null) {
+        this.start();
+      } else {
+        this.stop();
+      }
+    },
+
+    stop: function stop() {
+      clearInterval(this.timerId);
+      this.timerId = null;
     }
-  },
-
-  stop: function() {
-    clearInterval(this.timerId);
-    this.timerId = null;
-  }
-});
+  });
+}(window));
