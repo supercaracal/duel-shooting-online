@@ -1,13 +1,16 @@
-var express = require('express'),
-    http = require('http'),
-    socketIo = require('socket.io'),
-    routing = require('./routing'),
-    msg = require('./messenger');
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+const Routing = require('./routing');
+const Msg = require('./messenger');
 
-var app = express();
-var server = http.createServer(app).listen(process.env.PORT || 8080);
-var io = socketIo.listen(server);
-var rootDir = __dirname.replace('backend', '');
+const app = express();
+const server = http.createServer(app).listen(process.env.PORT || 8080);
+const io = socketIo.listen(server);
+const rootDir = __dirname.replace('backend', '');
 
-new routing(app, rootDir, process.env.PLAY_MODE || 'online');
-new msg(io);
+const routing = new Routing(app, rootDir, process.env.PLAY_MODE || 'online');
+routing.configure();
+
+const messenger = new Msg(io);
+messenger.start();

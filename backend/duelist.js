@@ -7,35 +7,35 @@ Duelist.prototype.color = null;
 Duelist.prototype.foe = null;
 Duelist.prototype.room = null;
 
-Duelist.prototype.setColor = function (color) {
+Duelist.prototype.setColor = function setColor(color) {
   this.color = color;
 };
 
-Duelist.prototype.setFoe = function(id) {
+Duelist.prototype.setFoe = function setFoe(id) {
   this.foe = id;
 };
 
-Duelist.prototype.setRoom = function(name) {
+Duelist.prototype.setRoom = function setRoom(name) {
   this.room = name;
 };
 
-Duelist.prototype.getId = function() {
+Duelist.prototype.getId = function getId() {
   return this.id;
 };
 
-Duelist.prototype.getTimestamp = function() {
+Duelist.prototype.getTimestamp = function getTimestamp() {
   return this.timestamp;
 };
 
-Duelist.prototype.getColor = function() {
+Duelist.prototype.getColor = function getColor() {
   return this.color;
 };
 
-Duelist.prototype.getFoe = function() {
+Duelist.prototype.getFoe = function getFoe() {
   return this.foe;
 };
 
-Duelist.prototype.getRoom = function() {
+Duelist.prototype.getRoom = function getRoom() {
   return this.room;
 };
 

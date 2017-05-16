@@ -1,14 +1,20 @@
+const Ctrl = require('./duel-matching-controller');
+const DuelMsg = require('./duel-messenger');
+
 function Messenger(io) {
-  this.duelMsg = require('./duel-messenger');
-  var ctrl = require('./duel-matching-controller');
-  this.duelCtrl = new ctrl();
-  io.sockets.on('connection', this.handler.bind(this));
+  this.duelCtrl = new Ctrl();
+  this.io = io;
 }
 
-Messenger.prototype.handler = function(socket) {
-  var timestamp = new Date().getTime();
+Messenger.prototype.start = function start() {
+  this.io.sockets.on('connection', this.handler.bind(this));
+};
+
+Messenger.prototype.handler = function handler(socket) {
+  const timestamp = new Date().getTime();
+  const dm = new DuelMsg(socket, this.duelCtrl);
   this.duelCtrl.add(socket.id, timestamp);
-  new this.duelMsg(socket, this.duelCtrl);
+  dm.start();
 };
 
 module.exports = Messenger;
