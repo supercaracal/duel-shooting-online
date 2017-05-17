@@ -7880,476 +7880,506 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     afterStop: global.Prototype.emptyFunction
   });
 }(window));
-;var Sprite = Class.create({
+;(function f(global) {
+  'use strict';
 
-  Z_INDEX_BASE: 3000,
+  var g = global;
 
-  clientHeight: null,
-  clientWidth: null,
+  g.Sprite = global.Class.create({
 
-  elm: null,
+    Z_INDEX_BASE: 3000,
 
-  initTop: null,
-  initLeft: null,
-  initTransformRotate: null,
+    clientHeight: null,
+    clientWidth: null,
 
-  currentTop: null,
-  currentLeft: null,
-  currentTransformRotate: null,
+    elm: null,
 
-  initialize: function() {
-    this.clientHeight = this.getClientHeight();
-    this.clientWidth = this.getClientWidth();
-    this.elm = this.createElement();
-    this.initTop = this.getInitTop();
-    this.initLeft = this.getInitLeft();
-    this.initTransformRotate = this.getInitTransformRotate();
-    this.setupPosition();
-  },
+    initTop: null,
+    initLeft: null,
+    initTransformRotate: null,
 
-  createElement: function() {
-    return new Element('div');
-  },
+    currentTop: null,
+    currentLeft: null,
+    currentTransformRotate: null,
 
-  getInitTop: function() {
-    return 0;
-  },
+    initialize: function initialize() {
+      this.clientHeight = this.getClientHeight();
+      this.clientWidth = this.getClientWidth();
+      this.elm = this.createElement();
+      this.initTop = this.getInitTop();
+      this.initLeft = this.getInitLeft();
+      this.initTransformRotate = this.getInitTransformRotate();
+      this.setupPosition();
+    },
 
-  getInitLeft: function() {
-    return 0;
-  },
+    createElement: function createElement() {
+      return new Element('div');
+    },
 
-  getInitTransformRotate: function() {
-    return 0;
-  },
+    getInitTop: function getInitTop() {
+      return 0;
+    },
 
-  setupPosition: function() {
-    this.setPos({top: this.initTop, left: this.initLeft});
-  },
+    getInitLeft: function getInitLeft() {
+      return 0;
+    },
 
-  resetPosition: function() {
-    this.clientHeight = this.getClientHeight();
-    this.clientWidth = this.getClientWidth();
-    this.setupPosition();
-  },
+    getInitTransformRotate: function getInitTransformRotate() {
+      return 0;
+    },
 
-  getClientHeight: function() {
-    return 480;
-  },
+    setupPosition: function setupPosition() {
+      this.setPos({ top: this.initTop, left: this.initLeft });
+    },
 
-  getClientWidth: function() {
-    return 720;
-  },
+    resetPosition: function resetPosition() {
+      this.clientHeight = this.getClientHeight();
+      this.clientWidth = this.getClientWidth();
+      this.setupPosition();
+    },
 
-  renderElement: function() {
-    $(document.body).insert(this.elm);
-  },
+    getClientHeight: function getClientHeight() {
+      return 480;
+    },
 
-  getTop: function () {
-    return this.currentTop;
-  },
+    getClientWidth: function getClientWidth() {
+      return 720;
+    },
 
-  getLeft: function () {
-    return this.currentLeft;
-  },
+    renderElement: function renderElement() {
+      global.$(document.body).insert(this.elm);
+    },
 
-  getPos: function () {
-    return {top: this.currentTop, left: this.currentLeft};
-  },
+    getTop: function getTop() {
+      return this.currentTop;
+    },
 
-  getTransformRotate: function () {
-    return this.currentTransformRotate;
-  },
+    getLeft: function getLeft() {
+      return this.currentLeft;
+    },
 
-  setTop: function (px) {
-    this.elm.setStyle({top: px + 'px'});
-    this.currentTop = px;
-  },
+    getPos: function getPos() {
+      return { top: this.currentTop, left: this.currentLeft };
+    },
 
-  setLeft: function (px) {
-    this.elm.setStyle({left: px + 'px'});
-    this.currentLeft = px;
-  },
+    getTransformRotate: function getTransformRotate() {
+      return this.currentTransformRotate;
+    },
 
-  setPos: function (pxs) {
-    if (pxs.top !== undefined) this.setTop(pxs.top);
-    if (pxs.left !== undefined) this.setLeft(pxs.left);
-  },
+    setTop: function setTop(px) {
+      this.elm.setStyle({ top: px + 'px' });
+      this.currentTop = px;
+    },
 
-  setTransformRotate: function (theta) {
-    this.elm.setStyle({
-      webkitTransform: 'rotate(' + theta + 'deg)',
-      MozTransform: 'rotate(' + theta + 'deg)',
-      msTransform: 'rotate(' + theta + 'deg)',
-      transform: 'rotate(' + theta + 'deg)'
-    });
-    this.currentTransformRotate = theta;
-  },
+    setLeft: function setLeft(px) {
+      this.elm.setStyle({ left: px + 'px' });
+      this.currentLeft = px;
+    },
 
-  setOpacity: function(v) {
-    this.elm.setOpacity(v);
-  },
+    setPos: function setPos(pxs) {
+      if (pxs.top !== undefined) this.setTop(pxs.top);
+      if (pxs.left !== undefined) this.setLeft(pxs.left);
+    },
 
-  remove: function() {
-    this.elm.remove();
-  }
-});
-;var Bullet = Class.create(Sprite, {
+    setTransformRotate: function setTransformRotate(theta) {
+      this.elm.setStyle({
+        webkitTransform: 'rotate(' + theta + 'deg)',
+        MozTransform: 'rotate(' + theta + 'deg)',
+        msTransform: 'rotate(' + theta + 'deg)',
+        transform: 'rotate(' + theta + 'deg)'
+      });
+      this.currentTransformRotate = theta;
+    },
 
-  ship: null,
-  enemy: null,
-  isFall: null,
-  isDelete: null,
+    setOpacity: function setOpacity(v) {
+      this.elm.setOpacity(v);
+    },
 
-  initialize: function($super, ship, enemy) {
-    this.ship = ship;
-    this.enemy = enemy;
-    this.isFall = ship.isEnemy;
-    this.isDelete = false;
-    $super();
-  },
-
-  getInitTop: function() {
-    return this.isFall ? 60 : this.clientHeight - 90;
-  },
-
-  getInitLeft: function() {
-    return this.ship.getLeft() + 30;
-  },
-
-  createElement: function() {
-    var color = this.getColor();
-    var outer = new Element('div').setStyle({
-      width: '30px',
-      height: '30px',
-      zIndex: this.Z_INDEX_BASE + 6,
-      position: 'fixed'
-    });
-    var inner = new Element('div').setStyle({
-      width: '20px',
-      height: '20px',
-      margin: '5px',
-      backgroundColor: color,
-      borderRadius: '20px',
-      boxShadow: '0px 0px 10px ' + color
-    });
-    return inner.wrap(outer);
-  },
-
-  instanceOfBullet: function() {
-    return true;
-  }
-});
-;var Funnel = Class.create(Sprite, {
-
-  carrier: null,
-  isEnemy: null,
-  isDelete: null,
-
-  initialize: function($super, carrier) {
-    this.carrier = carrier;
-    this.isEnemy = carrier.isEnemy;
-    this.isDelete = false;
-    $super();
-  },
-
-  createElement: function() {
-    var color = this.getColor();
-    return this.isEnemy ?
-      this.createForEnemy(color) :
-      this.createForShip(color);
-  },
-
-  createForShip: function(color) {
-    var obj = new Element('div').setStyle({
-      width: '30px',
-      height: '30px',
-      zIndex: this.Z_INDEX_BASE + 4,
-      position: 'fixed'
-    });
-    obj.insert(new Element('div').setStyle({
-      width: '6px',
-      height: '20px',
-      marginLeft: '12px',
-      backgroundColor: color,
-      borderRadius: '2px',
-      boxShadow: '0px 0px 10px ' + color
-    }));
-    obj.insert(new Element('div').setStyle({
-      width: '20px',
-      height: '10px',
-      margin: '0px 5px 0px 5px',
-      backgroundColor: color,
-      borderRadius: '20px',
-      boxShadow: '0px 0px 10px ' + color
-    }));
-    return obj;
-  },
-
-  createForEnemy: function(color) {
-    var obj = new Element('div').setStyle({
-      width: '30px',
-      height: '30px',
-      zIndex: this.Z_INDEX_BASE + 4,
-      position: 'fixed'
-    });
-    obj.insert(new Element('div').setStyle({
-      width: '20px',
-      height: '10px',
-      margin: '0px 5px 0px 5px',
-      backgroundColor: color,
-      borderRadius: '20px',
-      boxShadow: '0px 0px 10px ' + color
-    }));
-    obj.insert(new Element('div').setStyle({
-      width: '6px',
-      height: '20px',
-      marginLeft: '12px',
-      backgroundColor: color,
-      borderRadius: '2px',
-      boxShadow: '0px 0px 10px ' + color
-    }));
-    return obj;         
-  }
-});
-;var Ship = Class.create(Sprite, {
-  
-  hitPoint: null,
-  soundHit: null,
-  soundLose: null,
-  isEnemy: null,
-  way: null,
-  nextCmd: null,
-
-  initialize: function($super, isEnemy) {
-    this.isEnemy = isEnemy;
-    this.hitPoint = 100;
-    $super();
-    this.setHitPoint(this.hitPoint);
-  },
-
-  createElement: function() {
-    var color = this.getColor();
-    return this.isEnemy ?
-      this.createEnemy(color) :
-      this.createShip(color);
-  },
-
-  createEnemy: function(color) {
-    var elm = new Element('div').setStyle({
-      width: '90px',
-      height: '60px',
-      zIndex: this.Z_INDEX_BASE + 10,
-      position: 'fixed',
-      top: '0px',
-      left: '0px'
-    });
-    elm.insert(new Element('div').setStyle({
-      width: '90px',
-      height: '30px',
-      backgroundColor: color,
-      borderRadius: '6px',
-      boxShadow: '0px 0px 30px ' + color,
-      textAlign: 'center',
-      fontWeight: 800,
-      fontSize: '20px'
-    }).update(this.hitPoint));
-    elm.insert(new Element('div').setStyle({
-      width: '30px',
-      height: '30px',
-      backgroundColor: color,
-      borderRadius: '6px',
-      boxShadow: '0px 0px 30px ' + color,
-      marginLeft: '30px'
-    }));
-    return elm;        
-  },
-
-  createShip: function(color) {
-    var elm = new Element('div').setStyle({
-      width: '90px',
-      height: '60px',
-      zIndex: this.Z_INDEX_BASE + 10,
-      position: 'fixed',
-      top: this.clientHeight - 60 + 'px',
-      left: this.clientWidth - 90 + 'px'
-    });
-    elm.insert(new Element('div').setStyle({
-      width: '30px',
-      height: '30px',
-      backgroundColor: color,
-      borderRadius: '6px',
-      boxShadow: '0px 0px 10px ' + color,
-      marginLeft: '30px'
-    }));
-    elm.insert(new Element('div').setStyle({
-      width: '90px',
-      height: '30px',
-      backgroundColor: color,
-      borderRadius: '6px',
-      boxShadow: '0px 0px 10px ' + color,
-      textAlign: 'center',
-      fontWeight: 800,
-      fontSize: '20px'
-    }).update(this.hitPoint));
-    return elm;
-  },
-
-  getInitTop: function() {
-    return this.isEnemy ? 0 : this.clientHeight - 60;
-  },
-
-  getInitLeft: function() {
-    return this.isEnemy ? 0 : this.clientWidth - 90;
-  },
-
-  setSoundHit: function(audio) {
-    this.soundHit = audio;
-  },
-
-  setSoundLose: function(audio) {
-    this.soundLose = audio;
-  },
-
-  playSoundHit: function() {
-    if (this.soundHit) this.soundHit.replay();
-  },
-
-  playSoundLose: function() {
-    if (this.soundLose) this.soundLose.replay();
-  },
-
-  hit: function() {
-    if (this.hitPoint < 1) {
-      return;
+    remove: function remove() {
+      this.elm.remove();
     }
-    this.setHitPoint(--this.hitPoint);
-    if (this.hitPoint === 0) {
-      this.playSoundLose();
-    } else {
-      this.playSoundHit();
-    }
-  },
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  isHit: function(bullet, range) {
+  var g = global;
 
-    var enemyLeft = this.getLeft();
-    var enemyIField = this.getIField ? this.getIField() : null;
-    var top = bullet.getTop();
-    var left = bullet.getLeft();
+  g.Bullet = global.Class.create(global.Sprite, {
+    ship: null,
+    enemy: null,
+    isFall: null,
+    isDelete: null,
 
-    if (enemyIField && enemyIField.isHit(bullet, range, enemyLeft)) {
+    initialize: function initialize($super, ship, enemy) {
+      this.ship = ship;
+      this.enemy = enemy;
+      this.isFall = ship.isEnemy;
+      this.isDelete = false;
+      $super();
+    },
+
+    getInitTop: function getInitTop() {
+      return this.isFall ? 60 : this.clientHeight - 90;
+    },
+
+    getInitLeft: function getInitLeft() {
+      return this.ship.getLeft() + 30;
+    },
+
+    createElement: function createElement() {
+      var color = this.getColor();
+      var outer = new Element('div').setStyle({
+        width: '30px',
+        height: '30px',
+        zIndex: this.Z_INDEX_BASE + 6,
+        position: 'fixed'
+      });
+      var inner = new Element('div').setStyle({
+        width: '20px',
+        height: '20px',
+        margin: '5px',
+        backgroundColor: color,
+        borderRadius: '20px',
+        boxShadow: '0px 0px 10px ' + color
+      });
+      return inner.wrap(outer);
+    },
+
+    instanceOfBullet: function instanceOfBullet() {
       return true;
     }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-    if ((enemyLeft - 25 < left) &&
-      (left <= enemyLeft + 5) &&
-      (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
+  var g = global;
 
-      this.hit();
-      return true;
+  g.Funnel = global.Class.create(global.Sprite, {
+    carrier: null,
+    isEnemy: null,
+    isDelete: null,
+
+    initialize: function initialize($super, carrier) {
+      this.carrier = carrier;
+      this.isEnemy = carrier.isEnemy;
+      this.isDelete = false;
+      $super();
+    },
+
+    createElement: function createElement() {
+      var color = this.getColor();
+      return this.isEnemy ?
+        this.createForEnemy(color) :
+        this.createForShip(color);
+    },
+
+    createForShip: function createForShip(color) {
+      var obj = new Element('div').setStyle({
+        width: '30px',
+        height: '30px',
+        zIndex: this.Z_INDEX_BASE + 4,
+        position: 'fixed'
+      });
+      obj.insert(new Element('div').setStyle({
+        width: '6px',
+        height: '20px',
+        marginLeft: '12px',
+        backgroundColor: color,
+        borderRadius: '2px',
+        boxShadow: '0px 0px 10px ' + color
+      }));
+      obj.insert(new Element('div').setStyle({
+        width: '20px',
+        height: '10px',
+        margin: '0px 5px 0px 5px',
+        backgroundColor: color,
+        borderRadius: '20px',
+        boxShadow: '0px 0px 10px ' + color
+      }));
+      return obj;
+    },
+
+    createForEnemy: function createForEnemy(color) {
+      var obj = new Element('div').setStyle({
+        width: '30px',
+        height: '30px',
+        zIndex: this.Z_INDEX_BASE + 4,
+        position: 'fixed'
+      });
+      obj.insert(new Element('div').setStyle({
+        width: '20px',
+        height: '10px',
+        margin: '0px 5px 0px 5px',
+        backgroundColor: color,
+        borderRadius: '20px',
+        boxShadow: '0px 0px 10px ' + color
+      }));
+      obj.insert(new Element('div').setStyle({
+        width: '6px',
+        height: '20px',
+        marginLeft: '12px',
+        backgroundColor: color,
+        borderRadius: '2px',
+        boxShadow: '0px 0px 10px ' + color
+      }));
+      return obj;
     }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-    if ((enemyLeft + 5 < left) &&
-      (left < enemyLeft + 60) &&
-      (bullet.isFall ? top + range > this.clientHeight - 90 : top + range < 60)) {
+  var g = global;
 
-      this.hit();
-      return true;
+  g.Ship = global.Class.create(global.Sprite, {
+    hitPoint: null,
+    soundHit: null,
+    soundLose: null,
+    isEnemy: null,
+    way: null,
+    nextCmd: null,
+
+    initialize: function initialize($super, isEnemy) {
+      this.isEnemy = isEnemy;
+      this.hitPoint = 100;
+      $super();
+      this.setHitPoint(this.hitPoint);
+    },
+
+    createElement: function createElement() {
+      var color = this.getColor();
+      return this.isEnemy ?
+        this.createEnemy(color) :
+        this.createShip(color);
+    },
+
+    createEnemy: function createEnemy(color) {
+      var elm = new Element('div').setStyle({
+        width: '90px',
+        height: '60px',
+        zIndex: this.Z_INDEX_BASE + 10,
+        position: 'fixed',
+        top: '0px',
+        left: '0px'
+      });
+      elm.insert(new Element('div').setStyle({
+        width: '90px',
+        height: '30px',
+        backgroundColor: color,
+        borderRadius: '6px',
+        boxShadow: '0px 0px 30px ' + color,
+        textAlign: 'center',
+        fontWeight: 800,
+        fontSize: '20px'
+      }).update(this.hitPoint));
+      elm.insert(new Element('div').setStyle({
+        width: '30px',
+        height: '30px',
+        backgroundColor: color,
+        borderRadius: '6px',
+        boxShadow: '0px 0px 30px ' + color,
+        marginLeft: '30px'
+      }));
+      return elm;
+    },
+
+    createShip: function createShip(color) {
+      var elm = new Element('div').setStyle({
+        width: '90px',
+        height: '60px',
+        zIndex: this.Z_INDEX_BASE + 10,
+        position: 'fixed',
+        top: (this.clientHeight - 60) + 'px',
+        left: (this.clientWidth - 90) + 'px'
+      });
+      elm.insert(new Element('div').setStyle({
+        width: '30px',
+        height: '30px',
+        backgroundColor: color,
+        borderRadius: '6px',
+        boxShadow: '0px 0px 10px ' + color,
+        marginLeft: '30px'
+      }));
+      elm.insert(new Element('div').setStyle({
+        width: '90px',
+        height: '30px',
+        backgroundColor: color,
+        borderRadius: '6px',
+        boxShadow: '0px 0px 10px ' + color,
+        textAlign: 'center',
+        fontWeight: 800,
+        fontSize: '20px'
+      }).update(this.hitPoint));
+      return elm;
+    },
+
+    getInitTop: function getInitTop() {
+      return this.isEnemy ? 0 : this.clientHeight - 60;
+    },
+
+    getInitLeft: function getInitLeft() {
+      return this.isEnemy ? 0 : this.clientWidth - 90;
+    },
+
+    setSoundHit: function setSoundHit(audio) {
+      this.soundHit = audio;
+    },
+
+    setSoundLose: function setSoundLose(audio) {
+      this.soundLose = audio;
+    },
+
+    playSoundHit: function playSoundHit() {
+      if (this.soundHit) this.soundHit.replay();
+    },
+
+    playSoundLose: function playSoundLose() {
+      if (this.soundLose) this.soundLose.replay();
+    },
+
+    hit: function hit() {
+      if (this.hitPoint < 1) {
+        return;
+      }
+      this.hitPoint -= 1;
+      this.setHitPoint(this.hitPoint);
+      if (this.hitPoint === 0) {
+        this.playSoundLose();
+      } else {
+        this.playSoundHit();
+      }
+    },
+
+    isHit: function isHit(bullet, range) {
+      var enemyLeft = this.getLeft();
+      var enemyIField = this.getIField ? this.getIField() : null;
+      var top = bullet.getTop();
+      var left = bullet.getLeft();
+
+      if (enemyIField && enemyIField.isHit(bullet, range, enemyLeft)) {
+        return true;
+      }
+
+      if ((enemyLeft - 25 < left) &&
+        (left <= enemyLeft + 5) &&
+        (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
+        this.hit();
+        return true;
+      }
+
+      if ((enemyLeft + 5 < left) &&
+        (left < enemyLeft + 60) &&
+        (bullet.isFall ? top + range > this.clientHeight - 90 : top + range < 60)) {
+        this.hit();
+        return true;
+      }
+
+      if ((enemyLeft + 60 <= left) &&
+        (left < enemyLeft + 90) &&
+        (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
+        this.hit();
+        return true;
+      }
+
+      if ((top + range < 0) || (this.clientHeight < (top + range))) {
+        return true;
+      }
+
+      return false;
+    },
+
+    setHitPoint: function setHitPoint(num) {
+      this.hitPoint = num;
+      this.elm.down(this.isEnemy ? 0 : 1).update(num);
+    },
+
+    getHitPoint: function getHitPoint() {
+      return this.hitPoint;
+    },
+
+    stepRight: function stepRight() {
+      this.way = this.isEnemy ? 'left' : 'right';
+    },
+
+    stepLeft: function stepLeft() {
+      this.way = this.isEnemy ? 'right' : 'left';
+    },
+
+    moveRight: function moveRight() {
+      var max = this.clientWidth - 90;
+      if (this.currentLeft + 10 <= max) {
+        this.setLeft(this.currentLeft + 10);
+      }
+    },
+
+    moveLeft: function moveLeft() {
+      var min = 0;
+      if (min <= this.currentLeft - 10) {
+        this.setLeft(this.currentLeft - 10);
+      }
+    },
+
+    move: function move() {
+      if (this.nextCmd !== null &&
+        this.nextCmd !== 'stepRight' &&
+        this.nextCmd !== 'stepLeft') {
+        this.way = null;
+      }
+      if (this.way === 'right') this.moveRight();
+      if (this.way === 'left') this.moveLeft();
     }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-    if ((enemyLeft + 60 <= left) &&
-      (left < enemyLeft + 90) &&
-      (bullet.isFall ? top + range > this.clientHeight - 60 : top + range < 30)) {
+  var g = global;
 
-      this.hit();
-      return true;
+  g.WeaponWaitStatus = global.Class.create(global.Sprite, {
+    ship: null,
+    isWeaponWaitStatus: true,
+
+    initialize: function initialize($super, ship) {
+      this.ship = ship;
+      $super();
+    },
+
+    createElement: function createElement() {
+      var color = this.getColor();
+      return new Element('div').setStyle({
+        width: '0px',
+        height: '6px',
+        backgroundColor: color,
+        zIndex: this.Z_INDEX_BASE + 11,
+        position: 'fixed',
+        boxShadow: '0px 0px 1px ' + color,
+        borderRadius: '1px'
+      });
+    },
+
+    getColor: function getColor() {
+      return '#FF0099';
+    },
+
+    getInitTop: function getInitTop() {
+      return this.ship.getTop() + (this.ship.isEnemy ? 42 : 12);
+    },
+
+    getInitLeft: function getInitLeft() {
+      return this.ship.getLeft() + 35;
+    },
+
+    setWidth: function setWidth(current, max) {
+      this.elm.setStyle({ width: Math.floor((20 * current) / max) + 'px' });
+    },
+
+    move: function move() {
+      this.setLeft(this.ship.getLeft() + 35);
     }
-
-    if ((top + range < 0) || (this.clientHeight < (top + range))) {
-      return true;
-    }
-
-    return false;
-  },
-
-  setHitPoint: function(num) {
-    this.hitPoint = num;
-    this.elm.down(this.isEnemy ? 0 : 1).update(num);
-  },
-
-  getHitPoint: function() {
-    return this.hitPoint;
-  },
-
-  stepRight: function() {
-    this.way = this.isEnemy ? 'left' : 'right';
-  },
-
-  stepLeft: function() {
-    this.way = this.isEnemy ? 'right' : 'left';
-  },
-  
-  moveRight: function() {
-    var max = this.clientWidth - 90;
-    if (this.currentLeft + 10 <= max) {
-      this.setLeft(this.currentLeft + 10);
-    }
-  },
-
-  moveLeft: function() {
-    var min = 0;
-    if (min <= this.currentLeft - 10) {
-      this.setLeft(this.currentLeft - 10);
-    }
-  },
-
-  move: function() {
-    if (this.nextCmd !== null &&
-      this.nextCmd !== 'stepRight' &&
-      this.nextCmd !== 'stepLeft') {
-
-      this.way = null;
-    }
-    if (this.way === 'right') this.moveRight();
-    if (this.way === 'left') this.moveLeft();
-  }
-});
-;var WeaponWaitStatus = Class.create(Sprite, {
-  ship: null,
-  isWeaponWaitStatus: true,
-  initialize: function($super, ship) {
-    this.ship = ship;
-    $super();
-  },
-  createElement: function() {
-    var color = this.getColor();
-    return new Element('div').setStyle({
-      width: '0px',
-      height: '6px',
-      backgroundColor: color,
-      zIndex: this.Z_INDEX_BASE + 11,
-      position: 'fixed',
-      boxShadow: '0px 0px 1px ' + color,
-      borderRadius: '1px'
-    });
-  },
-  getColor: function() {
-    return '#FF0099';
-  },
-  getInitTop: function() {
-    return this.ship.getTop() + (this.ship.isEnemy ? 42 : 12);
-  },
-  getInitLeft: function() {
-    return this.ship.getLeft() + 35;
-  },
-  setWidth: function(current, max) {
-    this.elm.setStyle({width: Math.floor(20 * current / max) + 'px'});
-  },
-  move: function() {
-    this.setLeft(this.ship.getLeft() + 35);
-  }
-});
+  });
+}(window));
 ;(function f(global) {
   'use strict';
 
@@ -9268,29 +9298,34 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     }
   });
 }(window));
-;var Background = Class.create(Sprite, {
+;(function f(global) {
+  'use strict';
 
-  createElement: function() {
-    return new Element('div').setStyle({
-      display: 'block',
-      position: 'fixed',
-      zIndex: this.Z_INDEX_BASE,
-      backgroundColor: '#333333',
-      height: this.clientHeight + 'px',
-      width: this.clientWidth + 'px',
-      borderRight: 'solid 1px #AAAAAA',
-      borderBottom: 'solid 1px #AAAAAA'
-    }).setOpacity(0.8);
-  },
+  var g = global;
 
-  resetPosition: function($super) {
-    $super();
-    this.elm.setStyle({
-      height: this.clientHeight + 'px',
-      width: this.clientWidth + 'px'
-    });
-  }
-});
+  g.Background = global.Class.create(global.Sprite, {
+    createElement: function createElement() {
+      return new Element('div').setStyle({
+        display: 'block',
+        position: 'fixed',
+        zIndex: this.Z_INDEX_BASE,
+        backgroundColor: '#333333',
+        height: this.clientHeight + 'px',
+        width: this.clientWidth + 'px',
+        borderRight: 'solid 1px #AAAAAA',
+        borderBottom: 'solid 1px #AAAAAA'
+      }).setOpacity(0.8);
+    },
+
+    resetPosition: function resetPosition($super) {
+      $super();
+      this.elm.setStyle({
+        height: this.clientHeight + 'px',
+        width: this.clientWidth + 'px'
+      });
+    }
+  });
+}(window));
 ;var BulletBezier = Class.create(Bullet, {
 
   ATTAINABLE_COUNT: 40,
