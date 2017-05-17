@@ -1,14 +1,19 @@
-var Command = Class.create({
+(function f(global) {
+  'use strict';
 
-  ship: null,
-  weapon: null,
+  var g = global;
 
-  initialize: function(ship, weapon) {
-    this.ship = ship;
-    this.weapon = weapon;
-  },
+  g.Command = global.Class.create({
+    ship: null,
+    weapon: null,
 
-  execute: function(command) {
-    if (command && command in this) this[command]();
-  }
-});
+    initialize: function initialize(ship, weapon) {
+      this.ship = ship;
+      this.weapon = weapon;
+    },
+
+    execute: function execute(command) {
+      if (command && command in this) this[command]();
+    }
+  });
+}(window));

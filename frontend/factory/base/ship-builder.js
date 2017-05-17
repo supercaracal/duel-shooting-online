@@ -1,16 +1,25 @@
-var ShipBuilder = Class.create({
+(function f(global) {
+  'use strict';
 
-  sounds: null,
-  isEnemy: null,
+  var g = global;
 
-  initialize: function(sounds, isEnemy) {
-    this.sounds = sounds;
-    this.isEnemy = isEnemy;
-  },
+  g.ShipBuilder = global.Class.create({
+    sounds: null,
+    isEnemy: null,
 
-  buildShip: Prototype.emptyFunction,
-  buildWeapon: Prototype.emptyFunction,
-  buildAction: Prototype.emptyFunction,
-  buildAI: Prototype.emptyFunction,
-  buildCommand: Prototype.emptyFunction
-});
+    initialize: function initialize(sounds, isEnemy) {
+      this.sounds = sounds;
+      this.isEnemy = isEnemy;
+    },
+
+    buildShip: global.Prototype.emptyFunction,
+
+    buildWeapon: global.Prototype.emptyFunction,
+
+    buildAction: global.Prototype.emptyFunction,
+
+    buildAI: global.Prototype.emptyFunction,
+
+    buildCommand: global.Prototype.emptyFunction
+  });
+}(window));

@@ -1,30 +1,35 @@
-var ShipBuilderNavy = Class.create(ShipBuilder, {
+(function f(global) {
+  'use strict';
 
-  buildShip: function() {
-    var ship = new ShipNavy(this.isEnemy);
-    if (!this.isEnemy) {
-      ship.setSoundHit(this.sounds.hit);
-      ship.setSoundLose(this.sounds.lose);
+  var g = global;
+
+  g.ShipBuilderNavy = global.Class.create(global.ShipBuilder, {
+    buildShip: function buildShip() {
+      var ship = new global.ShipNavy(this.isEnemy);
+      if (!this.isEnemy) {
+        ship.setSoundHit(this.sounds.hit);
+        ship.setSoundLose(this.sounds.lose);
+      }
+      return ship;
+    },
+
+    buildWeapon: function buildWeapon(ship, enemy) {
+      var weapon = new global.Weapon(ship, enemy);
+      if (this.isEnemy) return weapon;
+      weapon.setSoundAttack(this.sounds.attack);
+      return weapon;
+    },
+
+    buildAction: function buildAction() {
+      return new global.ActionShipNavy();
+    },
+
+    buildAI: function buildAI(ship, enemy, enemyWeapon) {
+      return new global.AIShipNavy(ship, enemy, enemyWeapon);
+    },
+
+    buildCommand: function buildCommand(ship, weapon) {
+      return new global.CommandShipNavy(ship, weapon);
     }
-    return ship;
-  },
-
-  buildWeapon: function(ship, enemy) {
-    var weapon = new Weapon(ship, enemy);
-    if (this.isEnemy) return weapon;
-    weapon.setSoundAttack(this.sounds.attack);
-    return weapon;
-  },
-
-  buildAction: function() {
-    return new ActionShipNavy();
-  },
-
-  buildAI: function(ship, enemy, enemyWeapon) {
-    return new AIShipNavy(ship, enemy, enemyWeapon);
-  },
-
-  buildCommand: function(ship, weapon) {
-    return new CommandShipNavy(ship, weapon);
-  }
-});
+  });
+}(window));

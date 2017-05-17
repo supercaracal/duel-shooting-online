@@ -7508,174 +7508,212 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     }
   });
 })();
-;var Action = Class.create({
+;(function f(global) {
+  'use strict';
 
-  hasTouchEvent: null,
-  hasMousedownEvent: null,
-  hasKeydownEvent: null,
-  nextCommand: null,
-  sprite: null,
+  var g = global;
 
-  initialize: function() {
-    this.hasTouchEvent = typeof new Element('div', {ontouchstart: 'return;'}).ontouchstart == 'function';
-    this.hasMousedownEvent = typeof new Element('div', {onmousedown: 'return;'}).onmousedown == 'function';
-    this.hasKeydownEvent = typeof new Element('div', {onkeydown: 'return;'}).onkeydown == 'function';
-    this.sprite = new Sprite();
-    this.setEventListener();
-  },
+  g.Action = global.Class.create({
 
-  setEventListener: function() {
-    if (this.hasTouchEvent) {
-      $(document).observe('touchstart', this.handlerTouch.bindAsEventListener(this));
-    }
-    if (this.hasMousedownEvent) {
-      $(document).observe('mousedown', this.handlerMouse.bindAsEventListener(this));
-    }
-    if (this.hasKeydownEvent) {
-      $(document).observe('keydown', this.handler.bindAsEventListener(this));
-    }
-  },
+    hasTouchEvent: null,
+    hasMousedownEvent: null,
+    hasKeydownEvent: null,
+    nextCommand: null,
+    sprite: null,
 
-  stop: function() {
-    if (this.hasTouchEvent) {
-      $(document).stopObserving('touchstart');
-    }
-    if (this.hasMousedownEvent) {
-      $(document).stopObserving('mousedown');
-    }
-    if (this.hasKeydownEvent) {
-      $(document).stopObserving('keydown');
-    }
-  },
+    initialize: function initialize() {
+      this.hasTouchEvent = typeof new Element('div', { ontouchstart: 'return;' }).ontouchstart === 'function';
+      this.hasMousedownEvent = typeof new Element('div', { onmousedown: 'return;' }).onmousedown === 'function';
+      this.hasKeydownEvent = typeof new Element('div', { onkeydown: 'return;' }).onkeydown === 'function';
+      this.sprite = new global.Sprite();
+      this.setEventListener();
+    },
 
-  getCommand: function() {
-    return this.nextCommand;
-  },
-
-  resetCommand: function() {
-    this.nextCommand = null;
-  },
-
-  handlerTouch: function(e) {
-    if (this.convertToAction(e.touches[0].pageX, e.touches[0].pageY)) e.stop();
-  },
-
-  handlerMouse: function(e) {
-    if (this.convertToAction(e.pageX, e.pageY)) e.stop();
-  }
-});
-;var AI = Class.create({
-  ship: null,
-  enemy: null,
-  enemyWeapon: null,
-  height: null,
-  shipTop: null,
-  risksByArea: null,
-  wait: null,
-  stayAreaIndexes: null,
-  seekAreaIndex: null,
-  initialize: function(ship, enemy, enemyWeapon) {
-    this.ship = ship;
-    this.enemy = enemy;
-    this.enemyWeapon = enemyWeapon;
-    this.height = ship.getClientHeight();
-    this.shipTop = ship.getTop();
-    this.wait = 0;
-    this.stayAreaIndexes = {};
-  },
-  getCommand: function() {
-    if (0 < this.wait) {
-      --this.wait;
-      return null;
-    }
-    this.wait += Math.floor(Math.random() * 100) % this.WAIT_MAX;
-    this.updateStayAreaIndexes();
-    this.updateRisksByArea();
-    this.updateSeekAreaIndex();
-    return this.getNextCommand(this.getRecommendedCommand());
-  },
-  resetCommand: Prototype.emptyFunction,
-  updateStayAreaIndexes: function() {
-    this.stayAreaIndexes.ship = Math.floor((this.ship.getLeft() + 45) / 90);
-    this.stayAreaIndexes.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
-  },
-  updateRisksByArea: function() {
-    this.risksByArea = [0, 0, 0, 0, 0, 0, 0, 0];
-    this.enemyWeapon.elms.each((function(elm) {
-      if (!elm.instanceOfBullet || !elm.instanceOfBullet()) {
-        return;
+    setEventListener: function setEventListener() {
+      if (this.hasTouchEvent) {
+        global.$(document).observe('touchstart', this.handlerTouch.bindAsEventListener(this));
       }
-      var top = elm.getTop(),
-        left = elm.getLeft(),
-        risk = Math.floor(this.height - Math.abs(top - this.shipTop)),
+      if (this.hasMousedownEvent) {
+        global.$(document).observe('mousedown', this.handlerMouse.bindAsEventListener(this));
+      }
+      if (this.hasKeydownEvent) {
+        global.$(document).observe('keydown', this.handler.bindAsEventListener(this));
+      }
+    },
+
+    stop: function stop() {
+      if (this.hasTouchEvent) {
+        global.$(document).stopObserving('touchstart');
+      }
+      if (this.hasMousedownEvent) {
+        global.$(document).stopObserving('mousedown');
+      }
+      if (this.hasKeydownEvent) {
+        global.$(document).stopObserving('keydown');
+      }
+    },
+
+    getCommand: function getCommand() {
+      return this.nextCommand;
+    },
+
+    resetCommand: function resetCommand() {
+      this.nextCommand = null;
+    },
+
+    handlerTouch: function handlerTouch(e) {
+      if (this.convertToAction(e.touches[0].pageX, e.touches[0].pageY)) e.stop();
+    },
+
+    handlerMouse: function handlerMouse(e) {
+      if (this.convertToAction(e.pageX, e.pageY)) e.stop();
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.AI = global.Class.create({
+    ship: null,
+    enemy: null,
+    enemyWeapon: null,
+    height: null,
+    shipTop: null,
+    risksByArea: null,
+    wait: null,
+    stayAreaIndexes: null,
+    seekAreaIndex: null,
+
+    initialize: function initialize(ship, enemy, enemyWeapon) {
+      this.ship = ship;
+      this.enemy = enemy;
+      this.enemyWeapon = enemyWeapon;
+      this.height = ship.getClientHeight();
+      this.shipTop = ship.getTop();
+      this.wait = 0;
+      this.stayAreaIndexes = {};
+    },
+
+    getCommand: function getCommand() {
+      if (this.wait > 0) {
+        this.wait -= 1;
+        return null;
+      }
+      this.wait += Math.floor(Math.random() * 100) % this.WAIT_MAX;
+      this.updateStayAreaIndexes();
+      this.updateRisksByArea();
+      this.updateSeekAreaIndex();
+      return this.getNextCommand(this.getRecommendedCommand());
+    },
+
+    resetCommand: global.Prototype.emptyFunction,
+
+    updateStayAreaIndexes: function updateStayAreaIndexes() {
+      this.stayAreaIndexes.ship = Math.floor((this.ship.getLeft() + 45) / 90);
+      this.stayAreaIndexes.enemy = Math.floor((this.enemy.getLeft() + 45) / 90);
+    },
+
+    updateRisksByArea: function updateRisksByArea() {
+      this.risksByArea = [0, 0, 0, 0, 0, 0, 0, 0];
+      this.enemyWeapon.elms.each((function fm(elm) {
+        var top;
+        var left;
+        var risk;
+        var areaIndex;
+        if (!elm.instanceOfBullet || !elm.instanceOfBullet()) {
+          return;
+        }
+        top = elm.getTop();
+        left = elm.getLeft();
+        risk = Math.floor(this.height - Math.abs(top - this.shipTop));
         areaIndex = Math.floor((left + 15) / 90);
-      this.risksByArea[7 < areaIndex ? 7 : areaIndex] += risk;
-    }).bind(this));
-  },
-  updateSeekAreaIndex: function() {
-    var seekInfo = {idx: null, minDiffEnemy: null, minRisk: null};
-    for (var i = 0, length = this.risksByArea.size(); i < length; ++i) {
-      var diffEnemy = Math.abs(i - this.stayAreaIndexes.enemy);
-      if (seekInfo.minRisk === null || this.risksByArea[i] < seekInfo.minRisk ||
-        (this.risksByArea[i] === seekInfo.minRisk && diffEnemy < seekInfo.minDiffEnemy)) {
+        this.risksByArea[areaIndex > 7 ? 7 : areaIndex] += risk;
+      }).bind(this));
+    },
 
-        seekInfo.idx = i;
-        seekInfo.minDiffEnemy = diffEnemy;
-        seekInfo.minRisk = this.risksByArea[i];
+    updateSeekAreaIndex: function updateSeekAreaIndex() {
+      var seekInfo = { idx: null, minDiffEnemy: null, minRisk: null };
+      var i;
+      var length;
+      var diffEnemy;
+      for (i = 0, length = this.risksByArea.size(); i < length; i += 1) {
+        diffEnemy = Math.abs(i - this.stayAreaIndexes.enemy);
+        if (seekInfo.minRisk === null || this.risksByArea[i] < seekInfo.minRisk ||
+          (this.risksByArea[i] === seekInfo.minRisk && diffEnemy < seekInfo.minDiffEnemy)) {
+          seekInfo.idx = i;
+          seekInfo.minDiffEnemy = diffEnemy;
+          seekInfo.minRisk = this.risksByArea[i];
+        }
       }
+      this.seekAreaIndex = seekInfo.idx;
+    },
+
+    getRecommendedCommand: function getRecommendedCommand() {
+      var shipLeftAreaIndex = Math.floor(this.ship.getLeft() / 90);
+      var shipRightAreaIndex = Math.floor((this.ship.getLeft() + 89) / 90);
+
+      if (this.seekAreaIndex < this.stayAreaIndexes.ship ||
+        this.seekAreaIndex < shipLeftAreaIndex ||
+        this.seekAreaIndex < shipRightAreaIndex) {
+        return this.ship.isEnemy ? 'stepRight' : 'stepLeft';
+      }
+      if (this.stayAreaIndexes.ship < this.seekAreaIndex ||
+        shipLeftAreaIndex < this.seekAreaIndex ||
+        shipRightAreaIndex < this.seekAreaIndex) {
+        return this.ship.isEnemy ? 'stepLeft' : 'stepRight';
+      }
+      return 'attack';
+    },
+
+    stop: global.Prototype.emptyFunction
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.Command = global.Class.create({
+    ship: null,
+    weapon: null,
+
+    initialize: function initialize(ship, weapon) {
+      this.ship = ship;
+      this.weapon = weapon;
+    },
+
+    execute: function execute(command) {
+      if (command && command in this) this[command]();
     }
-    this.seekAreaIndex = seekInfo.idx;
-  },
-  getRecommendedCommand: function() {
-    var shipLeftAreaIndex = Math.floor(this.ship.getLeft() / 90),
-      shipRightAreaIndex = Math.floor((this.ship.getLeft() + 89) / 90);
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-    if (this.seekAreaIndex < this.stayAreaIndexes.ship ||
-      this.seekAreaIndex < shipLeftAreaIndex ||
-      this.seekAreaIndex < shipRightAreaIndex) {
+  var g = global;
 
-      return this.ship.isEnemy ? 'stepRight' : 'stepLeft';
-    }
-    if (this.stayAreaIndexes.ship < this.seekAreaIndex ||
-      shipLeftAreaIndex < this.seekAreaIndex ||
-      shipRightAreaIndex < this.seekAreaIndex) {
+  g.ShipBuilder = global.Class.create({
+    sounds: null,
+    isEnemy: null,
 
-      return this.ship.isEnemy ? 'stepLeft' : 'stepRight';
-    }
-    return 'attack';
-  },
-  stop: Prototype.emptyFunction
-});
-;var Command = Class.create({
+    initialize: function initialize(sounds, isEnemy) {
+      this.sounds = sounds;
+      this.isEnemy = isEnemy;
+    },
 
-  ship: null,
-  weapon: null,
+    buildShip: global.Prototype.emptyFunction,
 
-  initialize: function(ship, weapon) {
-    this.ship = ship;
-    this.weapon = weapon;
-  },
+    buildWeapon: global.Prototype.emptyFunction,
 
-  execute: function(command) {
-    if (command && command in this) this[command]();
-  }
-});
-;var ShipBuilder = Class.create({
+    buildAction: global.Prototype.emptyFunction,
 
-  sounds: null,
-  isEnemy: null,
+    buildAI: global.Prototype.emptyFunction,
 
-  initialize: function(sounds, isEnemy) {
-    this.sounds = sounds;
-    this.isEnemy = isEnemy;
-  },
-
-  buildShip: Prototype.emptyFunction,
-  buildWeapon: Prototype.emptyFunction,
-  buildAction: Prototype.emptyFunction,
-  buildAI: Prototype.emptyFunction,
-  buildCommand: Prototype.emptyFunction
-});
+    buildCommand: global.Prototype.emptyFunction
+  });
+}(window));
 ;(function f(global) {
   'use strict';
 
@@ -8312,561 +8350,649 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     this.setLeft(this.ship.getLeft() + 35);
   }
 });
-;var ActionShipNavy = Class.create(Action, {
+;(function f(global) {
+  'use strict';
 
-  KEY_A: 65,
-  KEY_S: 83,
-  KEY_D: 68,
-  KEY_F: 70,
-  KEY_Z: 90,
-  KEY_X: 88,
-  KEY_C: 67,
-  KEY_V: 86,
+  var g = global;
 
-  handler: function(e) {
-    if (e.altGraphKey || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
-    switch (e.keyCode) {
-      case Event.KEY_RIGHT:
-        this.nextCommand = 'stepRight';
-        e.stop();
-        break;
-      case Event.KEY_LEFT:
+  g.ActionShipNavy = global.Class.create(global.Action, {
+
+    KEY_A: 65,
+    KEY_S: 83,
+    KEY_D: 68,
+    KEY_F: 70,
+    KEY_Z: 90,
+    KEY_X: 88,
+    KEY_C: 67,
+    KEY_V: 86,
+
+    handler: function handler(e) {
+      if (e.altGraphKey || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      switch (e.keyCode) {
+        case Event.KEY_RIGHT:
+          this.nextCommand = 'stepRight';
+          e.stop();
+          break;
+        case Event.KEY_LEFT:
+          this.nextCommand = 'stepLeft';
+          e.stop();
+          break;
+        case Event.KEY_UP:
+          this.nextCommand = 'attack';
+          e.stop();
+          break;
+        case this.KEY_A:
+          this.nextCommand = 'attack1';
+          e.stop();
+          break;
+        case this.KEY_S:
+          this.nextCommand = 'attack2';
+          e.stop();
+          break;
+        case this.KEY_D:
+          this.nextCommand = 'attack3';
+          e.stop();
+          break;
+        case this.KEY_F:
+          this.nextCommand = 'attack4';
+          e.stop();
+          break;
+        case this.KEY_Z:
+          this.nextCommand = 'attack5';
+          e.stop();
+          break;
+        case this.KEY_X:
+          this.nextCommand = 'attack6';
+          e.stop();
+          break;
+        case this.KEY_C:
+          this.nextCommand = 'attack7';
+          e.stop();
+          break;
+        case this.KEY_V:
+          this.nextCommand = 'attack8';
+          e.stop();
+          break;
+        default:
+          break;
+      }
+    },
+
+    convertToAction: function convertToAction(x, y) {
+      var screenUpperPart = (y > 0) && (y < this.sprite.clientHeight / 2);
+      var screenLowerPart = (this.sprite.clientHeight / 2 < y) && (y < this.sprite.clientHeight);
+      var screenLeft = (x > 0) && (x < this.sprite.clientWidth / 3);
+      var screenCenter =
+        (this.sprite.clientWidth / 3 < x) && (x < (this.sprite.clientWidth / 3) * 2);
+      var screenRight = ((this.sprite.clientWidth / 3) * 2 < x) && (x < this.sprite.clientWidth);
+
+      if (screenLowerPart && screenLeft) {
         this.nextCommand = 'stepLeft';
-        e.stop();
-        break;
-      case Event.KEY_UP:
+        return true;
+      }
+      if (screenLowerPart && screenCenter) {
         this.nextCommand = 'attack';
-        e.stop();
-        break;
-      case this.KEY_A:
-        this.nextCommand = 'attack1';
-        e.stop();
-        break;
-      case this.KEY_S:
-        this.nextCommand = 'attack2';
-        e.stop();
-        break;
-      case this.KEY_D:
-        this.nextCommand = 'attack3';
-        e.stop();
-        break;
-      case this.KEY_F:
-        this.nextCommand = 'attack4';
-        e.stop();
-        break;
-      case this.KEY_Z:
-        this.nextCommand = 'attack5';
-        e.stop();
-        break;
-      case this.KEY_X:
-        this.nextCommand = 'attack6';
-        e.stop();
-        break;
-      case this.KEY_C:
-        this.nextCommand = 'attack7';
-        e.stop();
-        break;
-      case this.KEY_V:
-        this.nextCommand = 'attack8';
-        e.stop();
-        break;
-    }
-  },
-
-  convertToAction: function(x, y) {
-
-    var screenUpperPart = (0 < y) && (y < this.sprite.clientHeight / 2);
-    var screenLowerPart = (this.sprite.clientHeight / 2 < y) && (y < this.sprite.clientHeight);
-    var screenLeft = (0 < x) && (x < this.sprite.clientWidth / 3);
-    var screenCenter = (this.sprite.clientWidth / 3 < x) && (x < this.sprite.clientWidth / 3 * 2);
-    var screenRight = (this.sprite.clientWidth / 3 * 2 < x) && (x < this.sprite.clientWidth);
-
-    if (screenLowerPart && screenLeft) {
-      this.nextCommand = 'stepLeft';
-      return true;
-    }
-    if (screenLowerPart && screenCenter) {
-      this.nextCommand = 'attack';
-      return true;
-    }
-    if (screenLowerPart && screenRight) {
-      this.nextCommand = 'stepRight';
-      return true;
-    }
-    if (screenUpperPart && screenLeft) {
-      this.nextCommand = 'stepLeft';
-      return true;
-    }
-    if (screenUpperPart && screenCenter) {
-      this.nextCommand = 'attack';
-      return true;
-    }
-    if (screenUpperPart && screenRight) {
-      this.nextCommand = 'stepRight';
-      return true;
-    }
-    return false;
-  }
-});
-;var ActionShipRed = Class.create(Action, {
-
-  KEY_F: 70,
-  KEY_I: 73,
-  KEY_N: 78,
-
-  handler: function(e) {
-    if (e.altGraphKey || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
-    switch (e.keyCode) {
-      case Event.KEY_RIGHT:
+        return true;
+      }
+      if (screenLowerPart && screenRight) {
         this.nextCommand = 'stepRight';
-        e.stop();
-        break;
-      case Event.KEY_LEFT:
+        return true;
+      }
+      if (screenUpperPart && screenLeft) {
         this.nextCommand = 'stepLeft';
-        e.stop();
-        break;
-      case Event.KEY_UP:
+        return true;
+      }
+      if (screenUpperPart && screenCenter) {
         this.nextCommand = 'attack';
-        e.stop();
-        break;
-      case this.KEY_I:
-        this.nextCommand = 'barrier';
-        e.stop();
-        break;
-      case this.KEY_F:
-        this.nextCommand = 'funnel';
-        e.stop();
-        break;
-      case this.KEY_N:
+        return true;
+      }
+      if (screenUpperPart && screenRight) {
+        this.nextCommand = 'stepRight';
+        return true;
+      }
+      return false;
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.ActionShipRed = global.Class.create(global.Action, {
+
+    KEY_F: 70,
+    KEY_I: 73,
+    KEY_N: 78,
+
+    handler: function handler(e) {
+      if (e.altGraphKey || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      switch (e.keyCode) {
+        case Event.KEY_RIGHT:
+          this.nextCommand = 'stepRight';
+          e.stop();
+          break;
+        case Event.KEY_LEFT:
+          this.nextCommand = 'stepLeft';
+          e.stop();
+          break;
+        case Event.KEY_UP:
+          this.nextCommand = 'attack';
+          e.stop();
+          break;
+        case this.KEY_I:
+          this.nextCommand = 'barrier';
+          e.stop();
+          break;
+        case this.KEY_F:
+          this.nextCommand = 'funnel';
+          e.stop();
+          break;
+        case this.KEY_N:
+          this.nextCommand = 'avoid';
+          e.stop();
+          break;
+        default:
+          break;
+      }
+    },
+
+    convertToAction: function convertToAction(x, y) {
+      var screenUpperPart = (y > 0) && (y < this.sprite.clientHeight / 2);
+      var screenLowerPart = (this.sprite.clientHeight / 2 < y) && (y < this.sprite.clientHeight);
+      var screenLeft = (x > 0) && (x < this.sprite.clientWidth / 3);
+      var screenCenter =
+        (this.sprite.clientWidth / 3 < x) && (x < (this.sprite.clientWidth / 3) * 2);
+      var screenRight = ((this.sprite.clientWidth / 3) * 2 < x) && (x < this.sprite.clientWidth);
+
+      if (screenLowerPart && screenLeft) {
+        this.nextCommand = 'stepLeft';
+        return true;
+      }
+      if (screenLowerPart && screenCenter) {
         this.nextCommand = 'avoid';
-        e.stop();
-        break;
-    }
-  },
-
-  convertToAction: function(x, y) {
-
-    var screenUpperPart = (0 < y) && (y < this.sprite.clientHeight / 2);
-    var screenLowerPart = (this.sprite.clientHeight / 2 < y) && (y < this.sprite.clientHeight);
-    var screenLeft = (0 < x) && (x < this.sprite.clientWidth / 3);
-    var screenCenter = (this.sprite.clientWidth / 3 < x) && (x < this.sprite.clientWidth / 3 * 2);
-    var screenRight = (this.sprite.clientWidth / 3 * 2 < x) && (x < this.sprite.clientWidth);
-
-    if (screenLowerPart && screenLeft) {
-      this.nextCommand = 'stepLeft';
-      return true;
-    }
-    if (screenLowerPart && screenCenter) {
-      this.nextCommand = 'avoid';
-      return true;
-    }
-    if (screenLowerPart && screenRight) {
-      this.nextCommand = 'stepRight';
-      return true;
-    }
-    if (screenUpperPart && screenLeft) {
-      this.nextCommand = 'funnel';
-      return true;
-    }
-    if (screenUpperPart && screenCenter) {
-      this.nextCommand = 'attack';
-      return true;
-    }
-    if (screenUpperPart && screenRight) {
-      this.nextCommand = 'barrier';
-      return true;
-    }
-    return false;
-  }
-});
-;var ActionShipWhite = Class.create(Action, {
-
-  KEY_F: 70,
-  KEY_M: 77,
-
-  handler: function(e) {
-    if (e.altGraphKey || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
-    switch (e.keyCode) {
-      case Event.KEY_RIGHT:
+        return true;
+      }
+      if (screenLowerPart && screenRight) {
         this.nextCommand = 'stepRight';
-        e.stop();
-        break;
-      case Event.KEY_LEFT:
-        this.nextCommand = 'stepLeft';
-        e.stop();
-        break;
-      case Event.KEY_UP:
-        this.nextCommand = 'attack';
-        e.stop();
-        break;
-      case Event.KEY_DOWN:
-        this.nextCommand = 'wait';
-        e.stop();
-        break;
-      case this.KEY_F:
+        return true;
+      }
+      if (screenUpperPart && screenLeft) {
         this.nextCommand = 'funnel';
-        e.stop();
-        break;
-      case this.KEY_M:
+        return true;
+      }
+      if (screenUpperPart && screenCenter) {
+        this.nextCommand = 'attack';
+        return true;
+      }
+      if (screenUpperPart && screenRight) {
+        this.nextCommand = 'barrier';
+        return true;
+      }
+      return false;
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.ActionShipWhite = global.Class.create(global.Action, {
+
+    KEY_F: 70,
+    KEY_M: 77,
+
+    handler: function handler(e) {
+      if (e.altGraphKey || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      switch (e.keyCode) {
+        case Event.KEY_RIGHT:
+          this.nextCommand = 'stepRight';
+          e.stop();
+          break;
+        case Event.KEY_LEFT:
+          this.nextCommand = 'stepLeft';
+          e.stop();
+          break;
+        case Event.KEY_UP:
+          this.nextCommand = 'attack';
+          e.stop();
+          break;
+        case Event.KEY_DOWN:
+          this.nextCommand = 'wait';
+          e.stop();
+          break;
+        case this.KEY_F:
+          this.nextCommand = 'funnel';
+          e.stop();
+          break;
+        case this.KEY_M:
+          this.nextCommand = 'megaCannon';
+          e.stop();
+          break;
+        default:
+          break;
+      }
+    },
+
+    convertToAction: function convertToAction(x, y) {
+      var screenUpperPart = (y > 0) && (y < this.sprite.clientHeight / 2);
+      var screenLowerPart = (this.sprite.clientHeight / 2 < y) && (y < this.sprite.clientHeight);
+      var screenLeft = (x > 0) && (x < this.sprite.clientWidth / 3);
+      var screenCenter =
+        (this.sprite.clientWidth / 3 < x) && (x < (this.sprite.clientWidth / 3) * 2);
+      var screenRight = ((this.sprite.clientWidth / 3) * 2 < x) && (x < this.sprite.clientWidth);
+
+      if (screenLowerPart && screenLeft) {
+        this.nextCommand = 'stepLeft';
+        return true;
+      }
+      if (screenLowerPart && screenCenter) {
+        this.nextCommand = 'wait';
+        return true;
+      }
+      if (screenLowerPart && screenRight) {
+        this.nextCommand = 'stepRight';
+        return true;
+      }
+      if (screenUpperPart && screenLeft) {
+        this.nextCommand = 'funnel';
+        return true;
+      }
+      if (screenUpperPart && screenCenter) {
+        this.nextCommand = 'attack';
+        return true;
+      }
+      if (screenUpperPart && screenRight) {
         this.nextCommand = 'megaCannon';
-        e.stop();
-        break;
+        return true;
+      }
+      return false;
     }
-  },
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  convertToAction: function(x, y) {
+  var g = global;
 
-    var screenUpperPart = (0 < y) && (y < this.sprite.clientHeight / 2);
-    var screenLowerPart = (this.sprite.clientHeight / 2 < y) && (y < this.sprite.clientHeight);
-    var screenLeft = (0 < x) && (x < this.sprite.clientWidth / 3);
-    var screenCenter = (this.sprite.clientWidth / 3 < x) && (x < this.sprite.clientWidth / 3 * 2);
-    var screenRight = (this.sprite.clientWidth / 3 * 2 < x) && (x < this.sprite.clientWidth);
+  g.AIShipNavy = global.Class.create(global.AI, {
+    WAIT_MAX: 3,
 
-    if (screenLowerPart && screenLeft) {
-      this.nextCommand = 'stepLeft';
-      return true;
+    getNextCommand: function getNextCommand(recommendedCommand) {
+      var idxs;
+      if (recommendedCommand !== 'attack' || (2).isTiming()) {
+        return recommendedCommand;
+      }
+      switch (this.stayAreaIndexes.enemy) {
+        case 0:
+          idxs = this.ship.isEnemy ? [5, 4, 3] : [2, 3, 4];
+          break;
+        case 1:
+          idxs = this.ship.isEnemy ? [4, 3, 2] : [3, 4, 5];
+          break;
+        case 2:
+          idxs = this.ship.isEnemy ? [7, 3, 2] : [0, 4, 5];
+          break;
+        case 3:
+          idxs = this.ship.isEnemy ? [6, 2, 1] : [1, 5, 6];
+          break;
+        case 4:
+          idxs = this.ship.isEnemy ? [6, 5, 1] : [1, 2, 6];
+          break;
+        case 5:
+          idxs = this.ship.isEnemy ? [5, 4, 0] : [3, 4, 7];
+          break;
+        case 6:
+          idxs = this.ship.isEnemy ? [5, 4, 3] : [2, 3, 4];
+          break;
+        case 7:
+          idxs = this.ship.isEnemy ? [4, 3, 2] : [3, 4, 5];
+          break;
+        default:
+          break;
+      }
+      return 'attack' + (idxs[Math.floor(Math.random() * 100) % 3] + 1);
     }
-    if (screenLowerPart && screenCenter) {
-      this.nextCommand = 'wait';
-      return true;
-    }
-    if (screenLowerPart && screenRight) {
-      this.nextCommand = 'stepRight';
-      return true;
-    }
-    if (screenUpperPart && screenLeft) {
-      this.nextCommand = 'funnel';
-      return true;
-    }
-    if (screenUpperPart && screenCenter) {
-      this.nextCommand = 'attack';
-      return true;
-    }
-    if (screenUpperPart && screenRight) {
-      this.nextCommand = 'megaCannon';
-      return true;
-    }
-    return false;
-  }
-});
-;var AIShipNavy = Class.create(AI, {
-  WAIT_MAX: 3,
-  getNextCommand: function(recommendedCommand) {
-    if (recommendedCommand !== 'attack' || (2).isTiming()) {
-      return recommendedCommand;
-    }
-    var idxs;
-    switch (this.stayAreaIndexes.enemy) {
-      case 0:
-        idxs = this.ship.isEnemy ? [5, 4, 3] : [2, 3, 4];
-        break;
-      case 1:
-        idxs = this.ship.isEnemy ? [4, 3, 2] : [3, 4, 5];
-        break;
-      case 2:
-        idxs = this.ship.isEnemy ? [7, 3, 2] : [0, 4, 5];
-        break;
-      case 3:
-        idxs = this.ship.isEnemy ? [6, 2, 1] : [1, 5, 6];
-        break;
-      case 4:
-        idxs = this.ship.isEnemy ? [6, 5, 1] : [1, 2, 6];
-        break;
-      case 5:
-        idxs = this.ship.isEnemy ? [5, 4, 0] : [3, 4, 7];
-        break;
-      case 6:
-        idxs = this.ship.isEnemy ? [5, 4, 3] : [2, 3, 4];
-        break;
-      case 7:
-        idxs = this.ship.isEnemy ? [4, 3, 2] : [3, 4, 5];
-        break;
-      default:
-        break;
-    }
-    return 'attack' + (idxs[Math.floor(Math.random() * 100) % 3] + 1);
-  }
-});
-;var AIShipRed = Class.create(AI, {
-  WAIT_MAX: 7,
-  funnelCount: 0,
-  getNextCommand: function(recommendedCommand) {
-    this.updateFunnelCount();
-    if (this.funnelCount < 2) {
-      if (this.isShipFixedOnArea()) {
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.AIShipRed = global.Class.create(global.AI, {
+    WAIT_MAX: 7,
+
+    funnelCount: 0,
+
+    getNextCommand: function getNextCommand(recommendedCommand) {
+      var iFieldInfo;
+      this.updateFunnelCount();
+      if (this.funnelCount < 2) {
+        if (this.isShipFixedOnArea()) {
+          return 'funnel';
+        }
+        return 'stepLeft';
+      }
+      if (recommendedCommand !== 'attack') {
+        return this.isAvoidTiming(recommendedCommand) ? 'avoid' : recommendedCommand;
+      }
+      if (this.ship.isIFieldEnable()) {
+        return 'barrier';
+      }
+      iFieldInfo = this.ship.getIFieldInfo();
+      if (iFieldInfo.isActive || (13).isTiming()) {
         return 'funnel';
       }
-      return 'stepLeft';
+      return recommendedCommand;
+    },
+
+    updateFunnelCount: function updateFunnelCount() {
+      var funnelInfo = this.ship.getFunnelInfo();
+      if (funnelInfo.firstLeft !== null && funnelInfo.secondLeft !== null) {
+        this.funnelCount = 2;
+      } else if (funnelInfo.firstLeft !== null && funnelInfo.secondLeft === null) {
+        this.funnelCount = 1;
+      } else {
+        this.funnelCount = 0;
+      }
+    },
+
+    isShipFixedOnArea: function isShipFixedOnArea() {
+      return ((this.funnelCount === 0 &&
+        this.stayAreaIndexes.ship === (this.ship.isEnemy ? 1 : 6)) ||
+        (this.funnelCount === 1 &&
+          this.stayAreaIndexes.ship === (this.ship.isEnemy ? 6 : 1)));
+    },
+
+    isAvoidTiming: function isAvoidTiming(recommendedCommand) {
+      return ((49).isTiming() &&
+        ((!this.ship.isEnemy && recommendedCommand === 'stepLeft' && this.stayAreaIndexes.ship > 3) ||
+         (!this.ship.isEnemy && recommendedCommand === 'stepRight' && this.stayAreaIndexes.ship < 4) ||
+         (this.ship.isEnemy && recommendedCommand === 'stepLeft' && this.stayAreaIndexes.ship < 4) ||
+         (this.ship.isEnemy && recommendedCommand === 'stepRight' && this.stayAreaIndexes.ship > 3)));
     }
-    if (recommendedCommand !== 'attack') {
-      return this.isAvoidTiming(recommendedCommand) ? 'avoid' : recommendedCommand;
-    }
-    if (this.ship.isIFieldEnable()) {
-      return 'barrier';
-    }
-    var iFieldInfo = this.ship.getIFieldInfo();
-    if (iFieldInfo.isActive || (13).isTiming()) {
-      return 'funnel';
-    }
-    return recommendedCommand;
-  },
-  updateFunnelCount: function() {
-    var funnelInfo = this.ship.getFunnelInfo();
-    if (funnelInfo.firstLeft !== null && funnelInfo.secondLeft !== null) {
-      this.funnelCount = 2;
-    } else if (funnelInfo.firstLeft !== null && funnelInfo.secondLeft === null) {
-      this.funnelCount = 1;
-    } else {
-      this.funnelCount = 0;
-    }
-  },
-  isShipFixedOnArea: function() {
-    return ((this.funnelCount === 0 && this.stayAreaIndexes.ship === (this.ship.isEnemy ? 1 : 6)) ||
-      (this.funnelCount === 1 && this.stayAreaIndexes.ship === (this.ship.isEnemy ? 6 : 1)));
-  },
-  isAvoidTiming: function(recommendedCommand) {
-    return ((49).isTiming() &&
-      ((!this.ship.isEnemy && recommendedCommand === 'stepLeft' && 3 < this.stayAreaIndexes.ship) ||
-       (!this.ship.isEnemy && recommendedCommand === 'stepRight' && this.stayAreaIndexes.ship < 4) ||
-       (this.ship.isEnemy && recommendedCommand === 'stepLeft' && this.stayAreaIndexes.ship < 4) ||
-       (this.ship.isEnemy && recommendedCommand === 'stepRight' && 3 < this.stayAreaIndexes.ship)));
-  }
-});
-;var AIShipWhite = Class.create(AI, {
-  WAIT_MAX: 3,
-  getNextCommand: function(recommendedCommand) {
-    if (recommendedCommand !== 'attack') {
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.AIShipWhite = global.Class.create(global.AI, {
+    WAIT_MAX: 3,
+
+    getNextCommand: function getNextCommand(recommendedCommand) {
+      if (recommendedCommand !== 'attack') {
+        return recommendedCommand;
+      }
+      if (this.ship.isMegaCannonEnabled &&
+        Math.abs(this.stayAreaIndexes.enemy - this.stayAreaIndexes.ship) < 3) {
+        return 'megaCannon';
+      }
+      if (this.ship.isNotFunnelEmpty &&
+        this.stayAreaIndexes.ship !== this.stayAreaIndexes.enemy) {
+        return 'funnel';
+      }
+      if ((49).isTiming() && (13).isTiming()) {
+        return 'wait';
+      }
       return recommendedCommand;
     }
-    if (this.ship.isMegaCannonEnabled &&
-      Math.abs(this.stayAreaIndexes.enemy - this.stayAreaIndexes.ship) < 3) {
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-      return 'megaCannon';
+  var g = global;
+
+  g.CommandShipNavy = global.Class.create(global.Command, {
+    stepRight: function stepRight() {
+      this.ship.stepRight();
+    },
+
+    stepLeft: function stepLeft() {
+      this.ship.stepLeft();
+    },
+
+    attack: function attack() {
+      this.weapon.addBulletBezierAuto();
+    },
+
+    attack1: function attack1() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 660 : 30);
+    },
+
+    attack2: function attack2() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 570 : 120);
+    },
+
+    attack3: function attack3() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 480 : 210);
+    },
+
+    attack4: function attack4() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 390 : 300);
+    },
+
+    attack5: function attack5() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 300 : 390);
+    },
+
+    attack6: function attack6() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 210 : 480);
+    },
+
+    attack7: function attack7() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 120 : 570);
+    },
+
+    attack8: function attack8() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 30 : 660);
     }
-    if (this.ship.isNotFunnelEmpty &&
-      this.stayAreaIndexes.ship !== this.stayAreaIndexes.enemy) {
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-      return 'funnel';
+  var g = global;
+
+  g.CommandShipRed = global.Class.create(global.Command, {
+
+    stepRight: function stepRight() {
+      this.ship.stepRight();
+    },
+
+    stepLeft: function stepLeft() {
+      this.ship.stepLeft();
+    },
+
+    avoid: function avoid() {
+      this.ship.avoid();
+    },
+
+    barrier: function barrier() {
+      this.ship.barrier();
+    },
+
+    attack: function attack() {
+      if (this.ship.iField && this.ship.iField.isActive) {
+        return;
+      }
+      this.weapon.addBulletHoming();
+    },
+
+    funnel: function funnel() {
+      this.weapon.addFunnelCircle();
     }
-    if ((49).isTiming() && (13).isTiming()) {
-      return 'wait';
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.CommandShipWhite = global.Class.create(global.Command, {
+
+    stepRight: function stepRight() {
+      this.ship.stepRight();
+    },
+
+    stepLeft: function stepLeft() {
+      this.ship.stepLeft();
+    },
+
+    wait: global.Prototype.emptyFunction,
+
+    attack: function attack() {
+      this.weapon.addBulletLinear();
+    },
+
+    funnel: function funnel() {
+      this.weapon.addFunnelSlider();
+    },
+
+    megaCannon: function megaCannon() {
+      this.weapon.fireMegaCannon();
     }
-    return recommendedCommand;
-  }
-});
-;var CommandShipNavy = Class.create(Command, {
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  stepRight: function() {
-    this.ship.stepRight();
-  },
+  var g = global;
 
-  stepLeft: function() {
-    this.ship.stepLeft();
-  },
+  g.ShipBuilderNavy = global.Class.create(global.ShipBuilder, {
+    buildShip: function buildShip() {
+      var ship = new global.ShipNavy(this.isEnemy);
+      if (!this.isEnemy) {
+        ship.setSoundHit(this.sounds.hit);
+        ship.setSoundLose(this.sounds.lose);
+      }
+      return ship;
+    },
 
-  attack: function() {
-    this.weapon.addBulletBezierAuto();
-  },
+    buildWeapon: function buildWeapon(ship, enemy) {
+      var weapon = new global.Weapon(ship, enemy);
+      if (this.isEnemy) return weapon;
+      weapon.setSoundAttack(this.sounds.attack);
+      return weapon;
+    },
 
-  attack1: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 660 : 30);
-  },
+    buildAction: function buildAction() {
+      return new global.ActionShipNavy();
+    },
 
-  attack2: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 570 : 120);
-  },
+    buildAI: function buildAI(ship, enemy, enemyWeapon) {
+      return new global.AIShipNavy(ship, enemy, enemyWeapon);
+    },
 
-  attack3: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 480 : 210);
-  },
-
-  attack4: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 390 : 300);
-  },
-
-  attack5: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 300 : 390);
-  },
-
-  attack6: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 210 : 480);
-  },
-
-  attack7: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 120 : 570);
-  },
-
-  attack8: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 30 : 660);
-  }
-});
-;var CommandShipRed = Class.create(Command, {
-
-  stepRight: function() {
-    this.ship.stepRight();
-  },
-
-  stepLeft: function() {
-    this.ship.stepLeft();
-  },
-
-  avoid: function() {
-    this.ship.avoid();
-  },
-
-  barrier: function() {
-    this.ship.barrier();
-  },
-
-  attack: function() {
-    if (this.ship.iField && this.ship.iField.isActive) {
-      return;
+    buildCommand: function buildCommand(ship, weapon) {
+      return new global.CommandShipNavy(ship, weapon);
     }
-    this.weapon.addBulletHoming();
-  },
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  funnel: function() {
-    this.weapon.addFunnelCircle();
-  }
-});
-;var CommandShipWhite = Class.create(Command, {
+  var g = global;
 
-  stepRight: function() {
-    this.ship.stepRight();
-  },
+  g.ShipBuilderRed = global.Class.create(global.ShipBuilder, {
+    buildShip: function buildShip() {
+      var ship = new global.ShipRed(this.isEnemy);
+      if (!this.isEnemy) {
+        ship.setSoundHit(this.sounds.hit);
+        ship.setSoundLose(this.sounds.lose);
+        ship.setSoundNewtype(this.sounds.newtype);
+      }
+      return ship;
+    },
 
-  stepLeft: function() {
-    this.ship.stepLeft();
-  },
+    buildWeapon: function buildWeapon(ship, enemy) {
+      var weapon = new global.Weapon(ship, enemy);
+      if (this.isEnemy) {
+        weapon.addIField();
+      } else {
+        weapon.addIField(this.sounds.iField);
+      }
+      weapon.addFunnelDefences();
+      if (this.isEnemy) return weapon;
+      weapon.setSoundAttack(this.sounds.attack);
+      weapon.setSoundFunnelGo(this.sounds.funnelGo);
+      weapon.setSoundFunnelAttack(this.sounds.funnelAtk);
+      return weapon;
+    },
 
-  wait: Prototype.emptyFunction,
+    buildAction: function buildAction() {
+      return new global.ActionShipRed();
+    },
 
-  attack: function() {
-    this.weapon.addBulletLinear();
-  },
+    buildAI: function buildAI(ship, enemy, enemyWeapon) {
+      return new global.AIShipRed(ship, enemy, enemyWeapon);
+    },
 
-  funnel: function() {
-    this.weapon.addFunnelSlider();
-  },
-
-  megaCannon: function() {
-    this.weapon.fireMegaCannon();
-  }
-});
-;var ShipBuilderNavy = Class.create(ShipBuilder, {
-
-  buildShip: function() {
-    var ship = new ShipNavy(this.isEnemy);
-    if (!this.isEnemy) {
-      ship.setSoundHit(this.sounds.hit);
-      ship.setSoundLose(this.sounds.lose);
+    buildCommand: function buildCommand(ship, weapon) {
+      return new global.CommandShipRed(ship, weapon);
     }
-    return ship;
-  },
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  buildWeapon: function(ship, enemy) {
-    var weapon = new Weapon(ship, enemy);
-    if (this.isEnemy) return weapon;
-    weapon.setSoundAttack(this.sounds.attack);
-    return weapon;
-  },
+  var g = global;
 
-  buildAction: function() {
-    return new ActionShipNavy();
-  },
+  g.ShipBuilderWhite = global.Class.create(global.ShipBuilder, {
+    buildShip: function buildShip() {
+      var ship = new global.ShipWhite(this.isEnemy);
+      if (!this.isEnemy) {
+        ship.setSoundHit(this.sounds.hit);
+        ship.setSoundLose(this.sounds.lose);
+      }
+      return ship;
+    },
 
-  buildAI: function(ship, enemy, enemyWeapon) {
-    return new AIShipNavy(ship, enemy, enemyWeapon);
-  },
+    buildWeapon: function buildWeapon(ship, enemy) {
+      var weapon = new global.Weapon(ship, enemy);
+      weapon.addWeaponWaitStatusMegaCannon();
+      if (this.isEnemy) return weapon;
+      weapon.setSoundAttack(this.sounds.attack);
+      weapon.setSoundMegaCannon(this.sounds.megaCannon);
+      weapon.setSoundFunnelGo(this.sounds.funnelGo);
+      weapon.setSoundFunnelAttack(this.sounds.funnelAtk);
+      return weapon;
+    },
 
-  buildCommand: function(ship, weapon) {
-    return new CommandShipNavy(ship, weapon);
-  }
-});
-;var ShipBuilderRed = Class.create(ShipBuilder, {
+    buildAction: function buildAction() {
+      return new global.ActionShipWhite();
+    },
 
-  buildShip: function() {
-    var ship = new ShipRed(this.isEnemy);
-    if (!this.isEnemy) {
-      ship.setSoundHit(this.sounds.hit);
-      ship.setSoundLose(this.sounds.lose);
-      ship.setSoundNewtype(this.sounds.newtype);
+    buildAI: function buildAI(ship, enemy, enemyWeapon) {
+      return new global.AIShipWhite(ship, enemy, enemyWeapon);
+    },
+
+    buildCommand: function buildCommand(ship, weapon) {
+      return new global.CommandShipWhite(ship, weapon);
     }
-    return ship;
-  },
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  buildWeapon: function(ship, enemy) {
-    var weapon = new Weapon(ship, enemy);
-    if (this.isEnemy) {
-      weapon.addIField();
-    } else {
-      weapon.addIField(this.sounds.iField);
-    }
-    weapon.addFunnelDefences();
-    if (this.isEnemy) return weapon;
-    weapon.setSoundAttack(this.sounds.attack);
-    weapon.setSoundFunnelGo(this.sounds.funnelGo);
-    weapon.setSoundFunnelAttack(this.sounds.funnelAtk);
-    return weapon;
-  },
+  var g = global;
 
-  buildAction: function() {
-    return new ActionShipRed();
-  },
+  g.ShipFactory = {};
 
-  buildAI: function(ship, enemy, enemyWeapon) {
-    return new AIShipRed(ship, enemy, enemyWeapon);
-  },
+  g.ShipFactory.getBuilderAsShip = function getBuilderAsShip(color, sounds) {
+    var isEnemy = false;
+    return new global['ShipBuilder' + color.capitalize()](sounds, isEnemy);
+  };
 
-  buildCommand: function(ship, weapon) {
-    return new CommandShipRed(ship, weapon);
-  }
-});
-;var ShipBuilderWhite = Class.create(ShipBuilder, {
-
-  buildShip: function() {
-    var ship = new ShipWhite(this.isEnemy);
-    if (!this.isEnemy) {
-      ship.setSoundHit(this.sounds.hit);
-      ship.setSoundLose(this.sounds.lose);
-    }
-    return ship;
-  },
-
-  buildWeapon: function(ship, enemy) {
-    var weapon = new Weapon(ship, enemy);
-    weapon.addWeaponWaitStatusMegaCannon();
-    if (this.isEnemy) return weapon;
-    weapon.setSoundAttack(this.sounds.attack);
-    weapon.setSoundMegaCannon(this.sounds.megaCannon);
-    weapon.setSoundFunnelGo(this.sounds.funnelGo);
-    weapon.setSoundFunnelAttack(this.sounds.funnelAtk);
-    return weapon;
-  },
-
-  buildAction: function() {
-    return new ActionShipWhite();
-  },
-
-  buildAI: function(ship, enemy, enemyWeapon) {
-    return new AIShipWhite(ship, enemy, enemyWeapon);
-  },
-
-  buildCommand: function(ship, weapon) {
-    return new CommandShipWhite(ship, weapon);
-  }
-});
-;var ShipFactory = {};
-
-ShipFactory.getBuilderAsShip = function(color, sounds) {
-  var isEnemy = false;
-  return new window['ShipBuilder' + color.capitalize()](sounds, isEnemy);
-};
-
-ShipFactory.getBuilderAsEnemy = function(color, sounds) {
-  var isEnemy = true;
-  return new window['ShipBuilder' + color.capitalize()](sounds, isEnemy);
-};
+  g.ShipFactory.getBuilderAsEnemy = function getBuilderAsEnemy(color, sounds) {
+    var isEnemy = true;
+    return new global['ShipBuilder' + color.capitalize()](sounds, isEnemy);
+  };
+}(window));
 ;(function f(global) {
   'use strict';
 

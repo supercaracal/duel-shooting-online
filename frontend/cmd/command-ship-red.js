@@ -1,29 +1,35 @@
-var CommandShipRed = Class.create(Command, {
+(function f(global) {
+  'use strict';
 
-  stepRight: function() {
-    this.ship.stepRight();
-  },
+  var g = global;
 
-  stepLeft: function() {
-    this.ship.stepLeft();
-  },
+  g.CommandShipRed = global.Class.create(global.Command, {
 
-  avoid: function() {
-    this.ship.avoid();
-  },
+    stepRight: function stepRight() {
+      this.ship.stepRight();
+    },
 
-  barrier: function() {
-    this.ship.barrier();
-  },
+    stepLeft: function stepLeft() {
+      this.ship.stepLeft();
+    },
 
-  attack: function() {
-    if (this.ship.iField && this.ship.iField.isActive) {
-      return;
+    avoid: function avoid() {
+      this.ship.avoid();
+    },
+
+    barrier: function barrier() {
+      this.ship.barrier();
+    },
+
+    attack: function attack() {
+      if (this.ship.iField && this.ship.iField.isActive) {
+        return;
+      }
+      this.weapon.addBulletHoming();
+    },
+
+    funnel: function funnel() {
+      this.weapon.addFunnelCircle();
     }
-    this.weapon.addBulletHoming();
-  },
-
-  funnel: function() {
-    this.weapon.addFunnelCircle();
-  }
-});
+  });
+}(window));

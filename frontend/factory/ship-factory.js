@@ -1,11 +1,17 @@
-var ShipFactory = {};
+(function f(global) {
+  'use strict';
 
-ShipFactory.getBuilderAsShip = function(color, sounds) {
-  var isEnemy = false;
-  return new window['ShipBuilder' + color.capitalize()](sounds, isEnemy);
-};
+  var g = global;
 
-ShipFactory.getBuilderAsEnemy = function(color, sounds) {
-  var isEnemy = true;
-  return new window['ShipBuilder' + color.capitalize()](sounds, isEnemy);
-};
+  g.ShipFactory = {};
+
+  g.ShipFactory.getBuilderAsShip = function getBuilderAsShip(color, sounds) {
+    var isEnemy = false;
+    return new global['ShipBuilder' + color.capitalize()](sounds, isEnemy);
+  };
+
+  g.ShipFactory.getBuilderAsEnemy = function getBuilderAsEnemy(color, sounds) {
+    var isEnemy = true;
+    return new global['ShipBuilder' + color.capitalize()](sounds, isEnemy);
+  };
+}(window));

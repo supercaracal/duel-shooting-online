@@ -1,24 +1,30 @@
-var CommandShipWhite = Class.create(Command, {
+(function f(global) {
+  'use strict';
 
-  stepRight: function() {
-    this.ship.stepRight();
-  },
+  var g = global;
 
-  stepLeft: function() {
-    this.ship.stepLeft();
-  },
+  g.CommandShipWhite = global.Class.create(global.Command, {
 
-  wait: Prototype.emptyFunction,
+    stepRight: function stepRight() {
+      this.ship.stepRight();
+    },
 
-  attack: function() {
-    this.weapon.addBulletLinear();
-  },
+    stepLeft: function stepLeft() {
+      this.ship.stepLeft();
+    },
 
-  funnel: function() {
-    this.weapon.addFunnelSlider();
-  },
+    wait: global.Prototype.emptyFunction,
 
-  megaCannon: function() {
-    this.weapon.fireMegaCannon();
-  }
-});
+    attack: function attack() {
+      this.weapon.addBulletLinear();
+    },
+
+    funnel: function funnel() {
+      this.weapon.addFunnelSlider();
+    },
+
+    megaCannon: function megaCannon() {
+      this.weapon.fireMegaCannon();
+    }
+  });
+}(window));

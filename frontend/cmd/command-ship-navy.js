@@ -1,46 +1,51 @@
-var CommandShipNavy = Class.create(Command, {
+(function f(global) {
+  'use strict';
 
-  stepRight: function() {
-    this.ship.stepRight();
-  },
+  var g = global;
 
-  stepLeft: function() {
-    this.ship.stepLeft();
-  },
+  g.CommandShipNavy = global.Class.create(global.Command, {
+    stepRight: function stepRight() {
+      this.ship.stepRight();
+    },
 
-  attack: function() {
-    this.weapon.addBulletBezierAuto();
-  },
+    stepLeft: function stepLeft() {
+      this.ship.stepLeft();
+    },
 
-  attack1: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 660 : 30);
-  },
+    attack: function attack() {
+      this.weapon.addBulletBezierAuto();
+    },
 
-  attack2: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 570 : 120);
-  },
+    attack1: function attack1() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 660 : 30);
+    },
 
-  attack3: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 480 : 210);
-  },
+    attack2: function attack2() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 570 : 120);
+    },
 
-  attack4: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 390 : 300);
-  },
+    attack3: function attack3() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 480 : 210);
+    },
 
-  attack5: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 300 : 390);
-  },
+    attack4: function attack4() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 390 : 300);
+    },
 
-  attack6: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 210 : 480);
-  },
+    attack5: function attack5() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 300 : 390);
+    },
 
-  attack7: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 120 : 570);
-  },
+    attack6: function attack6() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 210 : 480);
+    },
 
-  attack8: function() {
-    this.weapon.addBulletBezierManual(this.ship.isEnemy ? 30 : 660);
-  }
-});
+    attack7: function attack7() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 120 : 570);
+    },
+
+    attack8: function attack8() {
+      this.weapon.addBulletBezierManual(this.ship.isEnemy ? 30 : 660);
+    }
+  });
+}(window));
