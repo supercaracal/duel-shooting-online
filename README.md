@@ -1,5 +1,7 @@
 # Duel Shooting Online
 
+[![Build Status](https://travis-ci.org/supercaracal/duel-shooting-online.svg?branch=master)](https://travis-ci.org/supercaracal/duel-shooting-online)
+
 ## What's this?
 
 This is a shooting game. You can play on your browser.

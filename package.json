@@ -6,7 +6,8 @@
     "online": "PLAY_MODE=online node backend/web.js",
     "offline": "PLAY_MODE=offline node backend/web.js",
     "demo": "PLAY_MODE=demo node backend/web.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "grunt lint"
   },
   "engines": {
     "node": "7.7.4",

@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - "7"
+sudo: false
+notifications:
+  email: false
+before_script:
+  - npm install -g grunt-cli
+script:
+  - npm run-script lint
