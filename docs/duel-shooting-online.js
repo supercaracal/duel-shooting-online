@@ -9082,57 +9082,66 @@ ShipFactory.getBuilderAsEnemy = function(color, sounds) {
     }
   });
 }(window));
-;var Sound = Class.create({
+;(function f(global) {
+  'use strict';
 
-  hasAudioElement: null,
+  var g = global;
 
-  initialize: function() {
-    this.hasAudioElement = this.checkAudio();
-    this.addAudioMethods();
-  },
+  g.Sound = global.Class.create({
 
-  checkAudio: function() {
-    var canPlayMpeg = typeof Audio == 'function' &&
-      Audio.name == 'HTMLAudioElement' &&
-      typeof Audio.prototype.canPlayType == 'function' &&
-      new Audio().canPlayType('audio/mpeg');
-    return canPlayMpeg == 'probably' || canPlayMpeg == 'maybe';
-  },
+    hasAudioElement: null,
 
-  addAudioMethods: function() {
-    if (!this.hasAudioElement) {
-      return;
-    }
-    Element.addMethods('audio', {
-      stop: function (audio) {
-        try {
-          audio.currentTime = 0;
-        } catch(e) {
-          if (console) console.log(e);
-        }
-      },
-      replay: function (audio) {
-        try {
-          audio.currentTime = 0;
-          audio.play();
-        } catch(e) {
-          if (console) console.log(e);
-        }
+    initialize: function initialize() {
+      this.hasAudioElement = this.checkAudio();
+      this.addAudioMethods();
+    },
+
+    checkAudio: function checkAudio() {
+      var canPlayMpeg = typeof Audio === 'function' &&
+        Audio.name === 'HTMLAudioElement' &&
+        typeof Audio.prototype.canPlayType === 'function' &&
+        new Audio().canPlayType('audio/mpeg');
+      return canPlayMpeg === 'probably' || canPlayMpeg === 'maybe';
+    },
+
+    addAudioMethods: function addAudioMethods() {
+      if (!this.hasAudioElement) {
+        return;
       }
-    });
-  },
+      Element.addMethods('audio', {
+        stop: function stop(audio) {
+          var a = audio;
+          try {
+            a.currentTime = 0;
+          } catch (e) {
+            //
+          }
+        },
+        replay: function replay(audio) {
+          var a = audio;
+          try {
+            a.currentTime = 0;
+            audio.play();
+          } catch (e) {
+            //
+          }
+        }
+      });
+    },
 
-  createAudio: function(src) {
-    if (this.hasAudioElement) {
-      var audio = new Element('audio', {src: src});
-      if (Prototype.Browser.MobileSafari) {
-        audio.load();
+    createAudio: function createAudio(src) {
+      var audio;
+      if (this.hasAudioElement) {
+        audio = new Element('audio', { src: src });
+        if (global.Prototype.Browser.MobileSafari) {
+          audio.load();
+        }
+        return audio;
       }
-      return audio;
+      return null;
     }
-    return null;
-  }
-});
+  });
+}(window));
 ;var Background = Class.create(Sprite, {
 
   createElement: function() {
@@ -10024,457 +10033,472 @@ ShipFactory.getBuilderAsEnemy = function(color, sounds) {
 ;var WeaponWaitStatusMegaCannon = Class.create(WeaponWaitStatus, {
   isWeaponWaitStatusMegaCannon: true
 });
-;var Synchronizer = Class.create({
+;(function f(global) {
+  'use strict';
 
-  socket: null,
-  controlShip: null,
-  ships: null,
-  cmds: null,
-  weapons: null,
-  chat: null,
-  duelistCounter: null,
-  chatForm: null,
+  var g = global;
 
-  initialize: function(uri, callback, finish) {
-    this.ships = {};
-    this.cmds = {};
-    this.weapons = {};
-    this.chat = new Chat();
-    this.duelistCounter = new DuelistCounter();
-    this.duelistCounter.renderElement();
-    this.chatForm = new ChatForm();
-    this.chatForm.renderElement();
+  g.Synchronizer = global.Class.create({
 
-    this.socket = io.connect(uri);
-    this.setupChatEvent();
-    this.listenShipControl();
-    this.listenDuelReady(callback);
-    this.listenYouWin(finish);
-    this.listenDuelistCount();
-    this.socket.emit('duty', {});
-  },
+    socket: null,
+    controlShip: null,
+    ships: null,
+    cmds: null,
+    weapons: null,
+    chat: null,
+    duelistCounter: null,
+    chatForm: null,
 
-  setupChatEvent: function() {
-    this.chatForm.elm.observe('submit', (function(e) {
-      e.stop();
-      var v = this.chatForm.getValue();
-      if (v) this.socket.emit('chat', v);
-    }).bindAsEventListener(this));
-    this.socket.on('chat', (function(data) {
-      this.chat.add(data);
-    }).bind(this));
-  },
+    initialize: function initialize(uri, callback, finish) {
+      this.ships = {};
+      this.cmds = {};
+      this.weapons = {};
+      this.chat = new global.Chat();
+      this.duelistCounter = new global.DuelistCounter();
+      this.duelistCounter.renderElement();
+      this.chatForm = new global.ChatForm();
+      this.chatForm.renderElement();
 
-  listenShipControl: function() {
-    this.socket.on('You have control', this.youHaveControl.bind(this));
-    this.socket.on('You have no control', this.youHaveNoControl.bind(this));
-  },
+      this.socket = global.io.connect(uri);
+      this.setupChatEvent();
+      this.listenShipControl();
+      this.listenDuelReady(callback);
+      this.listenYouWin(finish);
+      this.listenDuelistCount();
+      this.socket.emit('duty', {});
+    },
 
-  listenDuelReady: function(callback) {
-    this.socket.on('ready', callback);
-  },
-
-  listenYouWin: function(finish) {
-    this.socket.on('You win', finish);
-  },
-
-  listenDuelistCount: function() {
-    this.socket.on('duelist count', this.updateDuelistCount.bind(this));
-  },
-
-  listenShipCommand: function() {
-    this.socket.on('attack', this.attack.bind(this));
-  },
-
-  youHaveControl: function(data) {
-    this.controlShip = data.ship;
-    this.socket.emit('I have control', {ship: this.controlShip});
-    if (typeof console !== 'undefined') {
-      console.log('I have control: ' + this.controlShip);
-    }
-  },
-
-  youHaveNoControl: function(data) {
-    (function() { this.socket.emit('duty', {}); }).bind(this).delay(5);
-  },
-
-  updateDuelistCount: function(cnt) {
-    this.duelistCounter.update('Duelists: ' + cnt);
-  },
-
-  attack: function(data) {
-    if (!this.cmds[data.color]) return;
-    if (data.color != this.controlShip) this.critical(data);
-    this.ships[data.color].nextCmd = data.cmd;
-    this.cmds[data.color].execute(data.cmd);
-  },
-
-  critical: function(data) {
-    var methodName = 'critical' + data.color.capitalize();
-    this[(methodName in this) ? methodName : 'criticalDefault'](data);
-  },
-
-  criticalDefault: function(data) {
-    if (!this.ships[data.color]) return;
-    this.ships[data.color].setHitPoint(data.hp);
-    if (this.ships[data.color].nextCmd !== 'stepRight' &&
-      this.ships[data.color].nextCmd !== 'stepLeft') {
-
-      this.ships[data.color].setLeft(
-        this.ships[data.color].clientWidth - data.left - 90);
-    }
-  },
-
-  criticalRed: function(data) {
-    if (!this.ships.red) return;
-    this.ships.red.setHitPoint(data.hp);
-    if (this.ships.red.nextCmd !== 'stepRight' &&
-      this.ships.red.nextCmd !== 'stepLeft') {
-
-      this.ships.red.setLeft(
-        this.ships.red.clientWidth - data.left - 90);
-    }
-    if (data.iField.isActive) {
-      this.ships.red.iField.setHeight(data.iField.height);
-      this.ships.red.iField.invoke();
-    } else {
-      this.ships.red.iField.cancel();
-    }
-    if (!this.weapons.red) return;
-    if (data.funnel.firstLeft === null && data.funnel.secondLeft === null) {
-      this.weapons.red.removeFunnelCircle(2);
-    }
-    if (data.funnel.firstLeft !== null &&
-      data.funnel.secondLeft === null &&
-      this.weapons.red.funnelCircles.size() === 2) {
-
-      this.weapons.red.removeFunnelCircle(1);
-    }
-    var left;
-    if (data.funnel.firstLeft !== null) {
-      if (this.weapons.red.funnelCircles.size() === 0) {
-        this.weapons.red.addFunnelCircle();
-      }
-      left = this.ships.red.clientWidth - data.funnel.firstLeft - 30;
-      if (left !== this.ships.red.funnels[0].initLeft) {
-        this.ships.red.funnels[0].initLeft = left;
-      }
-      this.ships.red.funnels[0].theta = data.funnel.firstTheta;
-    }
-    if (data.funnel.secondLeft !== null) {
-      if (this.weapons.red.funnelCircles.size() === 1) {
-        this.weapons.red.addFunnelCircle();
-      }
-      left = this.ships.red.clientWidth - data.funnel.secondLeft - 30;
-      if (left !== this.ships.red.funnels[1].initLeft) {
-        this.ships.red.funnels[1].initLeft = left;
-      }
-      this.ships.red.funnels[1].theta = data.funnel.secondTheta;
-    }
-  },
-
-  pushAttackInfo: function(cmd) {
-    if (!cmd) return;
-    var data = {
-      color: this.controlShip,
-      cmd: cmd,
-      hp: this.ships[this.controlShip].getHitPoint(),
-      left: this.ships[this.controlShip].getLeft()
-    };
-    if (this.controlShip == 'red') {
-      data.iField = this.ships.red.getIFieldInfo();
-      data.funnel = this.ships.red.getFunnelInfo();
-    }
-    this.socket.emit('attack', data);
-  },
-
-  setShipAndCommand: function(color, ship, cmd) {
-    this.ships[color] = ship;
-    this.cmds[color] = cmd;
-  },
-
-  setShipRedWeapon: function(weapon) {
-    this.weapons.red = weapon;
-  },
-
-  stop: function() {
-    this.socket.disconnect();
-    this.chatForm.elm.disable();
-    this.chatForm.elm.stopObserving('submit');
-  }
-});
-;var Chat = Class.create({
-
-  elms: null,
-
-  initialize: function() {
-    this.elms = [];
-  },
-
-  add: function(text) {
-    var elm = new NicoNico(text);
-    elm.renderElement();
-    this.elms.push(elm);
-  },
-
-  move: function() {
-    for (var i = 0, len = this.elms.size(); i < len; i++) {
-      this.elms[i].move();
-      if (this.elms[i].isDelete) this.elms[i] = null;
-    }
-    this.elms = this.elms.compact();
-  }
-});
-;var Weapon = Class.create({
-
-  FUNNEL_SLIDER_MAX: 5,
-  FUNNEL_CIRCLE_MAX: 2,
-  MEGA_CANNON_WAIT: 250,
-  MEGA_CANNON_HEIGHT: 29,
-
-  ship: null,
-  enemy: null,
-
-  funnelSliderCount: null,
-  funnelCircles: null,
-  megaCannonWaitCount: null,
-  megaCannonHeightCount: null,
-
-  soundFunnelGo: null,
-  soundFunnelAttack: null,
-  soundAttack: null,
-  soundMegaCannon: null,
-
-  elms: null,
-
-  initialize: function(ship, enemy) {
-    this.ship = ship;
-    this.enemy = enemy;
-
-    this.funnelSliderCount = 0;
-    this.funnelCircles = [];
-    this.megaCannonWaitCount = 0;
-    this.megaCannonHeightCount = 0;
-
-    this.elms = [];
-  },
-
-  move: function() {
-    if (0 < this.megaCannonWaitCount) {
-      --this.megaCannonWaitCount;
-      if (!this.megaCannonWaitCount) this.ship.enableMegaCannonStatus();
-    }
-    if (0 < this.megaCannonHeightCount) {
-      if (this.megaCannonHeightCount % 3 === 0) this.addBulletLinearFromMegaCannon();
-      --this.megaCannonHeightCount;
-    }
-    this.funnelCircles.each(function(x) { x.move(); });
-    for (var i = 0, len = this.elms.size(); i < len; i++) {
-      this.elms[i].move();
-      if (this.elms[i].isFunnelSliderAttack) {
-        this.addBulletLinearFromFunnel(this.elms[i].getLeft());
-        this.elms[i].isFunnelSliderAttack = false;
-      }
-      if (this.elms[i].isWeaponWaitStatusMegaCannon) {
-        this.elms[i].setWidth(this.megaCannonWaitCount, this.MEGA_CANNON_WAIT);
-      }
-      if (this.elms[i].isFunnelSlider) {
-        if (this.funnelSliderCount <= this.FUNNEL_SLIDER_MAX) {
-          this.ship.enableFunnelStatus();
-        } else {
-          this.ship.disableFunnelStatus();
-        }
-      }
-      if (this.elms[i].isDelete) {
-        if (this.elms[i].isFunnelSlider) {
-          --this.funnelSliderCount;
-        }
-        this.elms[i] = null;
-      }
-    }
-    this.elms = this.elms.compact();
-  },
-
-  setSoundFunnelGo: function(audio) {
-    this.soundFunnelGo = audio;
-  },
-
-  setSoundFunnelAttack: function(audio) {
-    this.soundFunnelAttack = audio;
-  },
-
-  setSoundAttack: function(audio) {
-    this.soundAttack = audio;
-  },
-
-  setSoundMegaCannon: function(audio) {
-    this.soundMegaCannon = audio;
-  },
-
-  playSoundFunnelGo: function(audio) {
-    if (this.soundFunnelGo) this.soundFunnelGo.replay();
-  },
-
-  playSoundFunnelAttack: function() {
-    if (this.soundFunnelAttack) this.soundFunnelAttack.replay();
-  },
-
-  playSoundAttack: function() {
-    if (this.soundAttack) this.soundAttack.replay(); 
-  },
-
-  playSoundMegaCannon: function() {
-    if (this.soundMegaCannon) this.soundMegaCannon.replay();
-  },
-
-  addBulletLinear: function() {
-    var elm = new BulletLinear(this.ship, this.enemy);
-    this.elms.push(elm);
-    elm.renderElement();
-    this.playSoundAttack();
-  },
-
-  addBulletHoming: function() {
-    var elm = new BulletHoming(this.ship, this.enemy);
-    this.elms.push(elm);
-    elm.renderElement();     
-    this.playSoundAttack();
-  },
-
-  addBulletBezierAuto: function() {
-    var enemyLeft = this.enemy.getLeft();
-    var elmL = new BulletBezier(this.ship, this.enemy, enemyLeft - 60);
-    var elmC = new BulletBezier(this.ship, this.enemy, enemyLeft + 30);
-    var elmR = new BulletBezier(this.ship, this.enemy, enemyLeft + 120);
-    this.elms.push(elmL);
-    this.elms.push(elmC);
-    this.elms.push(elmR);
-    elmL.renderElement();
-    elmC.renderElement();
-    elmR.renderElement();
-    this.playSoundAttack();
-  },
-
-  addBulletBezierManual: function(left) {
-    var elm = new BulletBezier(this.ship, this.enemy, left);
-    this.elms.push(elm);
-    elm.renderElement();
-    this.playSoundAttack();
-  },
-
-  addBulletLinearFromFunnel: function(left) {
-    var elm = new BulletLinear(this.ship, this.enemy);
-    elm.setPos({top: (this.ship.isEnemy ? 90 : elm.clientHeight - 120), left: left});
-    this.elms.push(elm);
-    elm.renderElement();
-    this.playSoundFunnelAttack();
-  },
-
-  addBulletLinearFromMegaCannon: function() {
-    var elmL = new BulletLinear(this.ship, this.enemy);
-    var elmM = new BulletLinear(this.ship, this.enemy);
-    var elmR = new BulletLinear(this.ship, this.enemy);
-    elmL.setPos({
-      top: this.ship.isEnemy ? 60 : this.ship.clientHeight - 90,
-      left: this.ship.getLeft()
-    });
-    elmM.setPos({
-      top: this.ship.isEnemy ? 60 : this.ship.clientHeight - 90,
-      left: this.ship.getLeft() + 30
-    });
-    elmR.setPos({
-      top: this.ship.isEnemy ? 60 : this.ship.clientHeight - 90,
-      left: this.ship.getLeft() + 60
-    });
-    this.elms.push(elmL);
-    this.elms.push(elmM);
-    this.elms.push(elmR);
-    elmL.renderElement();
-    elmM.renderElement();
-    elmR.renderElement();
-  },
-
-  addBulletHomingFromFunnel: function(top, left) {
-    var elm = new BulletHoming(this.ship, this.enemy);
-    elm.setPos({top: top, left: left});
-    this.elms.push(elm);
-    elm.renderElement();
-  },
-
-  addFunnelSlider: function() {
-    if (this.FUNNEL_SLIDER_MAX <= this.funnelSliderCount) {
-      return;
-    }
-    var elm = new FunnelSlider(this.ship, this.enemy);
-    this.elms.push(elm);
-    ++this.funnelSliderCount;
-    elm.renderElement();
-    this.playSoundFunnelGo();
-  },
-
-  addFunnelCircle: function() {
-    if (this.FUNNEL_CIRCLE_MAX <= this.funnelCircles.size()) {
-      this.funnelCircles.each((function(x) {
-        this.addBulletHomingFromFunnel(
-          x.getTop() + (x.isEnemy ? 30 : -30),
-          x.getLeft()
-        );             
+    setupChatEvent: function setupChatEvent() {
+      this.chatForm.elm.observe('submit', (function onSubmit(e) {
+        var v;
+        e.stop();
+        v = this.chatForm.getValue();
+        if (v) this.socket.emit('chat', v);
+      }).bindAsEventListener(this));
+      this.socket.on('chat', (function onChat(data) {
+        this.chat.add(data);
       }).bind(this));
-      this.playSoundFunnelAttack();
-      return;
+    },
+
+    listenShipControl: function listenShipControl() {
+      this.socket.on('You have control', this.youHaveControl.bind(this));
+      this.socket.on('You have no control', this.youHaveNoControl.bind(this));
+    },
+
+    listenDuelReady: function listenDuelReady(callback) {
+      this.socket.on('ready', callback);
+    },
+
+    listenYouWin: function listenYouWin(finish) {
+      this.socket.on('You win', finish);
+    },
+
+    listenDuelistCount: function listenDuelistCount() {
+      this.socket.on('duelist count', this.updateDuelistCount.bind(this));
+    },
+
+    listenShipCommand: function listenShipCommand() {
+      this.socket.on('attack', this.attack.bind(this));
+    },
+
+    youHaveControl: function youHaveControl(data) {
+      this.controlShip = data.ship;
+      this.socket.emit('I have control', { ship: this.controlShip });
+    },
+
+    youHaveNoControl: function youHaveNoControl() {
+      (function duty() { this.socket.emit('duty', {}); }).bind(this).delay(5);
+    },
+
+    updateDuelistCount: function updateDuelistCount(cnt) {
+      this.duelistCounter.update('Duelists: ' + cnt);
+    },
+
+    attack: function attack(data) {
+      if (!this.cmds[data.color]) return;
+      if (data.color !== this.controlShip) this.critical(data);
+      this.ships[data.color].nextCmd = data.cmd;
+      this.cmds[data.color].execute(data.cmd);
+    },
+
+    critical: function critical(data) {
+      var methodName = 'critical' + data.color.capitalize();
+      this[(methodName in this) ? methodName : 'criticalDefault'](data);
+    },
+
+    criticalDefault: function criticalDefault(data) {
+      if (!this.ships[data.color]) return;
+      this.ships[data.color].setHitPoint(data.hp);
+      if (this.ships[data.color].nextCmd !== 'stepRight' && this.ships[data.color].nextCmd !== 'stepLeft') {
+        this.ships[data.color].setLeft(this.ships[data.color].clientWidth - data.left - 90);
+      }
+    },
+
+    criticalRed: function criticalRed(data) {
+      var left;
+      if (!this.ships.red) return;
+      this.ships.red.setHitPoint(data.hp);
+      if (this.ships.red.nextCmd !== 'stepRight' && this.ships.red.nextCmd !== 'stepLeft') {
+        this.ships.red.setLeft(this.ships.red.clientWidth - data.left - 90);
+      }
+      if (data.iField.isActive) {
+        this.ships.red.iField.setHeight(data.iField.height);
+        this.ships.red.iField.invoke();
+      } else {
+        this.ships.red.iField.cancel();
+      }
+      if (!this.weapons.red) return;
+      if (data.funnel.firstLeft === null && data.funnel.secondLeft === null) {
+        this.weapons.red.removeFunnelCircle(2);
+      }
+      if (data.funnel.firstLeft !== null && data.funnel.secondLeft === null &&
+        this.weapons.red.funnelCircles.size() === 2) {
+        this.weapons.red.removeFunnelCircle(1);
+      }
+      if (data.funnel.firstLeft !== null) {
+        if (this.weapons.red.funnelCircles.size() === 0) {
+          this.weapons.red.addFunnelCircle();
+        }
+        left = this.ships.red.clientWidth - data.funnel.firstLeft - 30;
+        if (left !== this.ships.red.funnels[0].initLeft) {
+          this.ships.red.funnels[0].initLeft = left;
+        }
+        this.ships.red.funnels[0].theta = data.funnel.firstTheta;
+      }
+      if (data.funnel.secondLeft !== null) {
+        if (this.weapons.red.funnelCircles.size() === 1) {
+          this.weapons.red.addFunnelCircle();
+        }
+        left = this.ships.red.clientWidth - data.funnel.secondLeft - 30;
+        if (left !== this.ships.red.funnels[1].initLeft) {
+          this.ships.red.funnels[1].initLeft = left;
+        }
+        this.ships.red.funnels[1].theta = data.funnel.secondTheta;
+      }
+    },
+
+    pushAttackInfo: function pushAttackInfo(cmd) {
+      var data;
+      if (!cmd) return;
+      data = {
+        color: this.controlShip,
+        cmd: cmd,
+        hp: this.ships[this.controlShip].getHitPoint(),
+        left: this.ships[this.controlShip].getLeft()
+      };
+      if (this.controlShip === 'red') {
+        data.iField = this.ships.red.getIFieldInfo();
+        data.funnel = this.ships.red.getFunnelInfo();
+      }
+      this.socket.emit('attack', data);
+    },
+
+    setShipAndCommand: function setShipAndCommand(color, ship, cmd) {
+      this.ships[color] = ship;
+      this.cmds[color] = cmd;
+    },
+
+    setShipRedWeapon: function setShipRedWeapon(weapon) {
+      this.weapons.red = weapon;
+    },
+
+    stop: function stop() {
+      this.socket.disconnect();
+      this.chatForm.elm.disable();
+      this.chatForm.elm.stopObserving('submit');
     }
-    var funnel = new FunnelCircle(this.ship);
-    this.ship.addFunnel(funnel);
-    this.funnelCircles.push(funnel);
-    funnel.renderElement();
-    this.playSoundFunnelGo();
-  },
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  addIField: function(audio) {
-    var iField = new IField(this.ship),
-      wws = new WeaponWaitStatusIField(this.ship);
-    iField.setSound(audio);
-    iField.setWaitStatus(wws);
-    this.elms.push(iField);
-    this.elms.push(wws);
-    iField.renderElement();
-    wws.renderElement();
-  },
+  var g = global;
 
-  addFunnelDefences: function() {
-    var l = new FunnelDefenceLeft(this.ship, this.ship.getIField());
-    var r = new FunnelDefenceRight(this.ship, this.ship.getIField());
-    this.elms.push(l);
-    this.elms.push(r);
-    l.renderElement();
-    r.renderElement();
-  },
+  g.Chat = global.Class.create({
 
-  addWeaponWaitStatusMegaCannon: function() {
-    var wws = new WeaponWaitStatusMegaCannon(this.ship);
-    this.elms.push(wws);
-    wws.renderElement();
-  },
+    elms: null,
 
-  removeFunnelCircle: function(num) {
-    var elm;
-    elm = this.funnelCircles.shift();
-    if (elm) elm.remove();
-    this.ship.funnels.shift();
-    if (1 < num) {
+    initialize: function initialize() {
+      this.elms = [];
+    },
+
+    add: function add(text) {
+      var elm = new global.NicoNico(text);
+      elm.renderElement();
+      this.elms.push(elm);
+    },
+
+    move: function move() {
+      var i;
+      var len;
+      for (i = 0, len = this.elms.size(); i < len; i += 1) {
+        this.elms[i].move();
+        if (this.elms[i].isDelete) this.elms[i] = null;
+      }
+      this.elms = this.elms.compact();
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.Weapon = global.Class.create({
+
+    FUNNEL_SLIDER_MAX: 5,
+    FUNNEL_CIRCLE_MAX: 2,
+    MEGA_CANNON_WAIT: 250,
+    MEGA_CANNON_HEIGHT: 29,
+
+    ship: null,
+    enemy: null,
+
+    funnelSliderCount: null,
+    funnelCircles: null,
+    megaCannonWaitCount: null,
+    megaCannonHeightCount: null,
+
+    soundFunnelGo: null,
+    soundFunnelAttack: null,
+    soundAttack: null,
+    soundMegaCannon: null,
+
+    elms: null,
+
+    initialize: function initialize(ship, enemy) {
+      this.ship = ship;
+      this.enemy = enemy;
+
+      this.funnelSliderCount = 0;
+      this.funnelCircles = [];
+      this.megaCannonWaitCount = 0;
+      this.megaCannonHeightCount = 0;
+
+      this.elms = [];
+    },
+
+    move: function move() {
+      var i;
+      var len;
+      if (this.megaCannonWaitCount > 0) {
+        this.megaCannonWaitCount -= 1;
+        if (!this.megaCannonWaitCount) this.ship.enableMegaCannonStatus();
+      }
+      if (this.megaCannonHeightCount > 0) {
+        if (this.megaCannonHeightCount % 3 === 0) this.addBulletLinearFromMegaCannon();
+        this.megaCannonHeightCount -= 1;
+      }
+      this.funnelCircles.each(function fm(x) { x.move(); });
+      for (i = 0, len = this.elms.size(); i < len; i += 1) {
+        this.elms[i].move();
+        if (this.elms[i].isFunnelSliderAttack) {
+          this.addBulletLinearFromFunnel(this.elms[i].getLeft());
+          this.elms[i].isFunnelSliderAttack = false;
+        }
+        if (this.elms[i].isWeaponWaitStatusMegaCannon) {
+          this.elms[i].setWidth(this.megaCannonWaitCount, this.MEGA_CANNON_WAIT);
+        }
+        if (this.elms[i].isFunnelSlider) {
+          if (this.funnelSliderCount <= this.FUNNEL_SLIDER_MAX) {
+            this.ship.enableFunnelStatus();
+          } else {
+            this.ship.disableFunnelStatus();
+          }
+        }
+        if (this.elms[i].isDelete) {
+          if (this.elms[i].isFunnelSlider) {
+            this.funnelSliderCount -= 1;
+          }
+          this.elms[i] = null;
+        }
+      }
+      this.elms = this.elms.compact();
+    },
+
+    setSoundFunnelGo: function setSoundFunnelGo(audio) {
+      this.soundFunnelGo = audio;
+    },
+
+    setSoundFunnelAttack: function setSoundFunnelAttack(audio) {
+      this.soundFunnelAttack = audio;
+    },
+
+    setSoundAttack: function setSoundAttack(audio) {
+      this.soundAttack = audio;
+    },
+
+    setSoundMegaCannon: function setSoundMegaCannon(audio) {
+      this.soundMegaCannon = audio;
+    },
+
+    playSoundFunnelGo: function playSoundFunnelGo() {
+      if (this.soundFunnelGo) this.soundFunnelGo.replay();
+    },
+
+    playSoundFunnelAttack: function playSoundFunnelAttack() {
+      if (this.soundFunnelAttack) this.soundFunnelAttack.replay();
+    },
+
+    playSoundAttack: function playSoundAttack() {
+      if (this.soundAttack) this.soundAttack.replay();
+    },
+
+    playSoundMegaCannon: function playSoundMegaCannon() {
+      if (this.soundMegaCannon) this.soundMegaCannon.replay();
+    },
+
+    addBulletLinear: function addBulletLinear() {
+      var elm = new global.BulletLinear(this.ship, this.enemy);
+      this.elms.push(elm);
+      elm.renderElement();
+      this.playSoundAttack();
+    },
+
+    addBulletHoming: function addBulletHoming() {
+      var elm = new global.BulletHoming(this.ship, this.enemy);
+      this.elms.push(elm);
+      elm.renderElement();
+      this.playSoundAttack();
+    },
+
+    addBulletBezierAuto: function addBulletBezierAuto() {
+      var enemyLeft = this.enemy.getLeft();
+      var elmL = new global.BulletBezier(this.ship, this.enemy, enemyLeft - 60);
+      var elmC = new global.BulletBezier(this.ship, this.enemy, enemyLeft + 30);
+      var elmR = new global.BulletBezier(this.ship, this.enemy, enemyLeft + 120);
+      this.elms.push(elmL);
+      this.elms.push(elmC);
+      this.elms.push(elmR);
+      elmL.renderElement();
+      elmC.renderElement();
+      elmR.renderElement();
+      this.playSoundAttack();
+    },
+
+    addBulletBezierManual: function addBulletBezierManual(left) {
+      var elm = new global.BulletBezier(this.ship, this.enemy, left);
+      this.elms.push(elm);
+      elm.renderElement();
+      this.playSoundAttack();
+    },
+
+    addBulletLinearFromFunnel: function addBulletLinearFromFunnel(left) {
+      var elm = new global.BulletLinear(this.ship, this.enemy);
+      elm.setPos({ top: (this.ship.isEnemy ? 90 : elm.clientHeight - 120), left: left });
+      this.elms.push(elm);
+      elm.renderElement();
+      this.playSoundFunnelAttack();
+    },
+
+    addBulletLinearFromMegaCannon: function addBulletLinearFromMegaCannon() {
+      var elmL = new global.BulletLinear(this.ship, this.enemy);
+      var elmM = new global.BulletLinear(this.ship, this.enemy);
+      var elmR = new global.BulletLinear(this.ship, this.enemy);
+      elmL.setPos({
+        top: this.ship.isEnemy ? 60 : this.ship.clientHeight - 90,
+        left: this.ship.getLeft()
+      });
+      elmM.setPos({
+        top: this.ship.isEnemy ? 60 : this.ship.clientHeight - 90,
+        left: this.ship.getLeft() + 30
+      });
+      elmR.setPos({
+        top: this.ship.isEnemy ? 60 : this.ship.clientHeight - 90,
+        left: this.ship.getLeft() + 60
+      });
+      this.elms.push(elmL);
+      this.elms.push(elmM);
+      this.elms.push(elmR);
+      elmL.renderElement();
+      elmM.renderElement();
+      elmR.renderElement();
+    },
+
+    addBulletHomingFromFunnel: function addBulletHomingFromFunnel(top, left) {
+      var elm = new global.BulletHoming(this.ship, this.enemy);
+      elm.setPos({ top: top, left: left });
+      this.elms.push(elm);
+      elm.renderElement();
+    },
+
+    addFunnelSlider: function addFunnelSlider() {
+      var elm;
+      if (this.FUNNEL_SLIDER_MAX <= this.funnelSliderCount) {
+        return;
+      }
+      elm = new global.FunnelSlider(this.ship, this.enemy);
+      this.elms.push(elm);
+      this.funnelSliderCount += 1;
+      elm.renderElement();
+      this.playSoundFunnelGo();
+    },
+
+    addFunnelCircle: function addFunnelCircle() {
+      var funnel;
+      if (this.FUNNEL_CIRCLE_MAX <= this.funnelCircles.size()) {
+        this.funnelCircles.each((function fm(x) {
+          this.addBulletHomingFromFunnel(
+            x.getTop() + (x.isEnemy ? 30 : -30),
+            x.getLeft()
+          );
+        }).bind(this));
+        this.playSoundFunnelAttack();
+        return;
+      }
+      funnel = new global.FunnelCircle(this.ship);
+      this.ship.addFunnel(funnel);
+      this.funnelCircles.push(funnel);
+      funnel.renderElement();
+      this.playSoundFunnelGo();
+    },
+
+    addIField: function addIField(audio) {
+      var iField = new global.IField(this.ship);
+      var wws = new global.WeaponWaitStatusIField(this.ship);
+      iField.setSound(audio);
+      iField.setWaitStatus(wws);
+      this.elms.push(iField);
+      this.elms.push(wws);
+      iField.renderElement();
+      wws.renderElement();
+    },
+
+    addFunnelDefences: function addFunnelDefences() {
+      var l = new global.FunnelDefenceLeft(this.ship, this.ship.getIField());
+      var r = new global.FunnelDefenceRight(this.ship, this.ship.getIField());
+      this.elms.push(l);
+      this.elms.push(r);
+      l.renderElement();
+      r.renderElement();
+    },
+
+    addWeaponWaitStatusMegaCannon: function addWeaponWaitStatusMegaCannon() {
+      var wws = new global.WeaponWaitStatusMegaCannon(this.ship);
+      this.elms.push(wws);
+      wws.renderElement();
+    },
+
+    removeFunnelCircle: function removeFunnelCircle(num) {
+      var elm;
       elm = this.funnelCircles.shift();
       if (elm) elm.remove();
       this.ship.funnels.shift();
-    }
-  },
+      if (num > 1) {
+        elm = this.funnelCircles.shift();
+        if (elm) elm.remove();
+        this.ship.funnels.shift();
+      }
+    },
 
-  fireMegaCannon: function() {
-    if (0 < this.megaCannonWaitCount) {
-      return;
+    fireMegaCannon: function fireMegaCannon() {
+      if (this.megaCannonWaitCount > 0) {
+        return;
+      }
+      this.ship.disableMegaCannonStatus();
+      this.megaCannonWaitCount = this.MEGA_CANNON_WAIT;
+      this.megaCannonHeightCount = this.MEGA_CANNON_HEIGHT;
+      this.playSoundMegaCannon();
     }
-    this.ship.disableMegaCannonStatus();
-    this.megaCannonWaitCount = this.MEGA_CANNON_WAIT;
-    this.megaCannonHeightCount = this.MEGA_CANNON_HEIGHT;
-    this.playSoundMegaCannon();
-  }
-});
+  });
+}(window));

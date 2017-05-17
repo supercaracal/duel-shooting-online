@@ -1,51 +1,60 @@
-var Sound = Class.create({
+(function f(global) {
+  'use strict';
 
-  hasAudioElement: null,
+  var g = global;
 
-  initialize: function() {
-    this.hasAudioElement = this.checkAudio();
-    this.addAudioMethods();
-  },
+  g.Sound = global.Class.create({
 
-  checkAudio: function() {
-    var canPlayMpeg = typeof Audio == 'function' &&
-      Audio.name == 'HTMLAudioElement' &&
-      typeof Audio.prototype.canPlayType == 'function' &&
-      new Audio().canPlayType('audio/mpeg');
-    return canPlayMpeg == 'probably' || canPlayMpeg == 'maybe';
-  },
+    hasAudioElement: null,
 
-  addAudioMethods: function() {
-    if (!this.hasAudioElement) {
-      return;
-    }
-    Element.addMethods('audio', {
-      stop: function (audio) {
-        try {
-          audio.currentTime = 0;
-        } catch(e) {
-          if (console) console.log(e);
-        }
-      },
-      replay: function (audio) {
-        try {
-          audio.currentTime = 0;
-          audio.play();
-        } catch(e) {
-          if (console) console.log(e);
-        }
+    initialize: function initialize() {
+      this.hasAudioElement = this.checkAudio();
+      this.addAudioMethods();
+    },
+
+    checkAudio: function checkAudio() {
+      var canPlayMpeg = typeof Audio === 'function' &&
+        Audio.name === 'HTMLAudioElement' &&
+        typeof Audio.prototype.canPlayType === 'function' &&
+        new Audio().canPlayType('audio/mpeg');
+      return canPlayMpeg === 'probably' || canPlayMpeg === 'maybe';
+    },
+
+    addAudioMethods: function addAudioMethods() {
+      if (!this.hasAudioElement) {
+        return;
       }
-    });
-  },
+      Element.addMethods('audio', {
+        stop: function stop(audio) {
+          var a = audio;
+          try {
+            a.currentTime = 0;
+          } catch (e) {
+            //
+          }
+        },
+        replay: function replay(audio) {
+          var a = audio;
+          try {
+            a.currentTime = 0;
+            audio.play();
+          } catch (e) {
+            //
+          }
+        }
+      });
+    },
 
-  createAudio: function(src) {
-    if (this.hasAudioElement) {
-      var audio = new Element('audio', {src: src});
-      if (Prototype.Browser.MobileSafari) {
-        audio.load();
+    createAudio: function createAudio(src) {
+      var audio;
+      if (this.hasAudioElement) {
+        audio = new Element('audio', { src: src });
+        if (global.Prototype.Browser.MobileSafari) {
+          audio.load();
+        }
+        return audio;
       }
-      return audio;
+      return null;
     }
-    return null;
-  }
-});
+  });
+}(window));

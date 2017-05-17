@@ -1,22 +1,30 @@
-var Chat = Class.create({
+(function f(global) {
+  'use strict';
 
-  elms: null,
+  var g = global;
 
-  initialize: function() {
-    this.elms = [];
-  },
+  g.Chat = global.Class.create({
 
-  add: function(text) {
-    var elm = new NicoNico(text);
-    elm.renderElement();
-    this.elms.push(elm);
-  },
+    elms: null,
 
-  move: function() {
-    for (var i = 0, len = this.elms.size(); i < len; i++) {
-      this.elms[i].move();
-      if (this.elms[i].isDelete) this.elms[i] = null;
+    initialize: function initialize() {
+      this.elms = [];
+    },
+
+    add: function add(text) {
+      var elm = new global.NicoNico(text);
+      elm.renderElement();
+      this.elms.push(elm);
+    },
+
+    move: function move() {
+      var i;
+      var len;
+      for (i = 0, len = this.elms.size(); i < len; i += 1) {
+        this.elms[i].move();
+        if (this.elms[i].isDelete) this.elms[i] = null;
+      }
+      this.elms = this.elms.compact();
     }
-    this.elms = this.elms.compact();
-  }
-});
+  });
+}(window));
