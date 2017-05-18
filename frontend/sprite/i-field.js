@@ -1,123 +1,128 @@
-var IField = Class.create(Sprite, {
+(function f(global) {
+  'use strict';
 
-  WAIT: 250,
+  var g = global;
 
-  isActive: null,
-  carrier: null,
-  isEnemy: null,
-  waitCount: null,
-  sound: null,
-  waitStatus: null,
+  g.IField = global.Class.create(global.Sprite, {
+    WAIT: 250,
 
-  initialize: function($super, carrier) {
-    this.isActive = false;
-    this.carrier = carrier;
-    this.isEnemy = carrier.isEnemy;
-    this.waitCount = 0;
-    $super();
-    this.carrier.setIField(this);
-  },
+    isActive: null,
+    carrier: null,
+    isEnemy: null,
+    waitCount: null,
+    sound: null,
+    waitStatus: null,
 
-  createElement: function() {
-    var color = '#FFFFFF';
-    return new Element('div')
-      .setStyle({
-        width: '100px',
-        height: '20px',
-        backgroundColor: color,
-        zIndex: this.Z_INDEX_BASE + 11,
-        position: 'fixed',
-        boxShadow: '0px 0px 10px ' + color,
-        borderRadius: '10px',
-        display: 'none'
-      }).setOpacity(0.5);
-  },
+    initialize: function initialize($super, carrier) {
+      this.isActive = false;
+      this.carrier = carrier;
+      this.isEnemy = carrier.isEnemy;
+      this.waitCount = 0;
+      $super();
+      this.carrier.setIField(this);
+    },
 
-  getInitTop: function() {
-    return this.carrier.getTop() + (this.isEnemy ? 65 : -25); 
-  },
+    createElement: function createElement() {
+      var color = '#FFFFFF';
+      return new Element('div')
+        .setStyle({
+          width: '100px',
+          height: '20px',
+          backgroundColor: color,
+          zIndex: this.Z_INDEX_BASE + 11,
+          position: 'fixed',
+          boxShadow: '0px 0px 10px ' + color,
+          borderRadius: '10px',
+          display: 'none'
+        }).setOpacity(0.5);
+    },
 
-  getInitLeft: function() {
-    return this.carrier.getLeft() - 5;
-  },
+    getInitTop: function getInitTop() {
+      return this.carrier.getTop() + (this.isEnemy ? 65 : -25);
+    },
 
-  getHeight: function() {
-    return this.elm.getHeight();
-  },
+    getInitLeft: function getInitLeft() {
+      return this.carrier.getLeft() - 5;
+    },
 
-  setHeight: function(h) {
-    this.elm.setStyle({height: h + 'px'});
-    this.setTop(this.getInitTop() + (20 - h) / 2);
-  },
+    getHeight: function getHeight() {
+      return this.elm.getHeight();
+    },
 
-  setSound: function(audio) {
-    this.sound = audio;
-  },
+    setHeight: function setHeight(h) {
+      this.elm.setStyle({ height: h + 'px' });
+      this.setTop(this.getInitTop() + ((20 - h) / 2));
+    },
 
-  setWaitStatus: function(waitStatus) {
-    this.waitStatus = waitStatus;
-  },
+    setSound: function setSound(audio) {
+      this.sound = audio;
+    },
 
-  playSound: function() {
-    if (this.sound) this.sound.replay();
-  },
+    setWaitStatus: function setWaitStatus(waitStatus) {
+      this.waitStatus = waitStatus;
+    },
 
-  hit: function() {
-    h = this.getHeight();
-    h -= 2;
-    this.setHeight(h);
-    if (h <= 0) {
-      this.cancel();
-      this.waitCount = this.WAIT;
+    playSound: function playSound() {
+      if (this.sound) this.sound.replay();
+    },
+
+    hit: function hit() {
+      var h = this.getHeight();
+      h -= 2;
+      this.setHeight(h);
+      if (h <= 0) {
+        this.cancel();
+        this.waitCount = this.WAIT;
+      }
+    },
+
+    isHit: function isHit(bullet, range, enemyLeft) {
+      var top = bullet.getTop();
+      var left = bullet.getLeft();
+      if (this.isActive &&
+        (bullet.isFall ? top + range > this.clientHeight - 110 : top + range < 80) &&
+        enemyLeft - 25 < left &&
+        left < enemyLeft + 95) {
+        this.hit();
+        return true;
+      }
+      return false;
+    },
+
+    barrier: function barrier() {
+      if (this.waitCount > 0 || this.isActive) {
+        return;
+      }
+      this.setHeight(20);
+      this.invoke();
+      this.playSound();
+    },
+
+    invoke: function invoke() {
+      this.isActive = true;
+      this.elm.show();
+    },
+
+    cancel: function cancel() {
+      this.isActive = false;
+      this.elm.hide();
+    },
+
+    move: function move() {
+      this.setLeft(this.carrier.getLeft() - 5);
+      if (this.isActive) this.changeColor();
+      if (this.waitCount > 0) {
+        this.waitCount -= 1;
+      }
+      this.waitStatus.setWidth(this.waitCount, this.WAIT);
+    },
+
+    changeColor: function changeColor() {
+      var color = '#' +
+        Math.floor(Math.random() * 100).toColorPart() +
+        Math.floor(Math.random() * 100).toColorPart() +
+        Math.floor(Math.random() * 100).toColorPart();
+      this.elm.setStyle({ backgroundColor: color });
     }
-  },
-
-  isHit: function(bullet, range, enemyLeft) {
-    var top = bullet.getTop();
-    var left = bullet.getLeft();
-    if (this.isActive &&
-      (bullet.isFall ? top + range > this.clientHeight - 110 : top + range < 80) &&
-      enemyLeft - 25 < left &&
-      left < enemyLeft + 95) {
-
-      this.hit();
-      return true;
-    }
-  },
-
-  barrier: function() {
-    if (0 < this.waitCount || this.isActive) {
-      return;
-    }
-    this.setHeight(20);
-    this.invoke();
-    this.playSound();
-  },
-
-  invoke: function() {
-    this.isActive = true;
-    this.elm.show();
-  },
-
-  cancel: function() {
-    this.isActive = false;
-    this.elm.hide();
-  },
-
-  move: function() {
-    this.setLeft(this.carrier.getLeft() - 5);
-    if (this.isActive) this.changeColor();
-    if (0 < this.waitCount) {
-      --this.waitCount;
-    }
-    this.waitStatus.setWidth(this.waitCount, this.WAIT);
-  },
-
-  changeColor: function () {
-    var color = '#' +
-      Math.floor(Math.random() * 100).toColorPart() +
-      Math.floor(Math.random() * 100).toColorPart() +
-      Math.floor(Math.random() * 100).toColorPart();
-    this.elm.setStyle({backgroundColor: color});
-  }
-});
+  });
+}(window));

@@ -1,45 +1,51 @@
-var TimeKeeper = Class.create(Sprite, {
-  
-  timerId: null,
-  time: null,
+(function f(global) {
+  'use strict';
 
-  initialize: function($super) {
-    this.time = 0;
-    $super();
-  },
+  var g = global;
 
-  createElement: function() {
-    return new Element('div').setStyle({
-      zIndex: this.Z_INDEX_BASE + 20,
-      position: 'fixed',
-      height: '30px',
-      width: '100px',
-      fontSize: '20px',
-      fontWeight: 800,
-      color: '#FFFFFF',
-      textAlign: 'right'
-    }).update(this.time);
-  },
+  g.TimeKeeper = global.Class.create(global.Sprite, {
+    timerId: null,
+    time: null,
 
-  getInitTop: function() {
-    return 2;
-  },
+    initialize: function initialize($super) {
+      this.time = 0;
+      $super();
+    },
 
-  getInitLeft: function() {
-    return this.clientWidth - 110;
-  },
+    createElement: function createElement() {
+      return new Element('div').setStyle({
+        zIndex: this.Z_INDEX_BASE + 20,
+        position: 'fixed',
+        height: '30px',
+        width: '100px',
+        fontSize: '20px',
+        fontWeight: 800,
+        color: '#FFFFFF',
+        textAlign: 'right'
+      }).update(this.time);
+    },
 
-  increment: function() {
-    this.elm.update(++this.time);
-  },
+    getInitTop: function getInitTop() {
+      return 2;
+    },
 
-  start: function() {
-    if (this.timerId !== null) return;
-    this.timerId = setInterval(this.increment.bind(this), 1000);
-  },
+    getInitLeft: function getInitLeft() {
+      return this.clientWidth - 110;
+    },
 
-  stop: function() {
-    clearInterval(this.timerId);
-    this.timerId = null;
-  }
-});
+    increment: function increment() {
+      this.time += 1;
+      this.elm.update(this.time);
+    },
+
+    start: function start() {
+      if (this.timerId !== null) return;
+      this.timerId = setInterval(this.increment.bind(this), 1000);
+    },
+
+    stop: function stop() {
+      clearInterval(this.timerId);
+      this.timerId = null;
+    }
+  });
+}(window));

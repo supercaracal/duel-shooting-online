@@ -1,29 +1,35 @@
-var ShipNavy = Class.create(Ship, {
+(function f(global) {
+  'use strict';
 
-  shadowSize : 20,
-  colors: ['FF0000', 'FF6600','FFFF00','00FF00', '00FFFF','0000FF','990099'],
+  var g = global;
 
-  getColor: function() {
-    return '#0F0F3F';
-  },
+  g.ShipNavy = global.Class.create(global.Ship, {
+    shadowSize: 20,
+    colors: ['FF0000', 'FF6600', 'FFFF00', '00FF00', '00FFFF', '0000FF', '990099'],
 
-  createElement: function($super) {
-    return $super().setStyle({color: '#FFFFFF'});
-  },
+    getColor: function getColor() {
+      return '#0F0F3F';
+    },
 
-  move: function($super) {
-    $super();
-    ++this.shadowSize;
-    var color = '#' + this.colors[0];
-    this.elm.down().setStyle({
-      boxShadow: '0px 0px ' + this.shadowSize + 'px ' + color
-    });
-    this.elm.down(1).setStyle({
-      boxShadow: '0px 0px ' + this.shadowSize + 'px ' + color
-    });
-    if (50 < this.shadowSize) {
-      this.shadowSize = 20;
-      this.colors.push(this.colors.shift());
+    createElement: function createElement($super) {
+      return $super().setStyle({ color: '#FFFFFF' });
+    },
+
+    move: function move($super) {
+      var color;
+      $super();
+      this.shadowSize += 1;
+      color = '#' + this.colors[0];
+      this.elm.down().setStyle({
+        boxShadow: '0px 0px ' + this.shadowSize + 'px ' + color
+      });
+      this.elm.down(1).setStyle({
+        boxShadow: '0px 0px ' + this.shadowSize + 'px ' + color
+      });
+      if (this.shadowSize > 50) {
+        this.shadowSize = 20;
+        this.colors.push(this.colors.shift());
+      }
     }
-  }
-});
+  });
+}(window));

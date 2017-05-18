@@ -1,25 +1,30 @@
-var ShipWhite = Class.create(Ship, {
+(function f(global) {
+  'use strict';
 
-  isMegaCannonEnabled: true,
-  isNotFunnelEmpty: true,
+  var g = global;
 
-  getColor: function() {
-    return '#FFFFFF';
-  },
+  g.ShipWhite = global.Class.create(global.Ship, {
+    isMegaCannonEnabled: true,
+    isNotFunnelEmpty: true,
 
-  enableMegaCannonStatus: function() {
-    this.isMegaCannonEnabled = true;
-  },
+    getColor: function getColor() {
+      return '#FFFFFF';
+    },
 
-  disableMegaCannonStatus: function() {
-    this.isMegaCannonEnabled = false;
-  },
+    enableMegaCannonStatus: function enableMegaCannonStatus() {
+      this.isMegaCannonEnabled = true;
+    },
 
-  enableFunnelStatus: function() {
-    this.isNotFunnelEmpty = true;
-  },
+    disableMegaCannonStatus: function disableMegaCannonStatus() {
+      this.isMegaCannonEnabled = false;
+    },
 
-  disableFunnelStatus: function() {
-    this.isNotFunnelEmpty = false;
-  }
-});
+    enableFunnelStatus: function enableFunnelStatus() {
+      this.isNotFunnelEmpty = true;
+    },
+
+    disableFunnelStatus: function disableFunnelStatus() {
+      this.isNotFunnelEmpty = false;
+    }
+  });
+}(window));

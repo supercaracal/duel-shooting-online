@@ -9326,874 +9326,1002 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     }
   });
 }(window));
-;var BulletBezier = Class.create(Bullet, {
+;(function f(global) {
+  'use strict';
 
-  ATTAINABLE_COUNT: 40,
-  pos: null,
-  leftRange: null,
-  topRange: null,
-  count: null,
+  var g = global;
 
-  initialize: function($super, ship, enemy, left) {
-    $super(ship, enemy);
-    this.pos = {
-      ship: {
-        top: ship.getTop() + (this.isFall ? 60 : -30),
-        left: ship.getLeft() + 30
-      },
-      enemy: {
-        top: enemy.getTop() + (this.isFall ? -30 : 60),
-        left: left
+  g.BulletBezier = global.Class.create(global.Bullet, {
+    ATTAINABLE_COUNT: 40,
+
+    pos: null,
+    leftRange: null,
+    topRange: null,
+    count: null,
+
+    initialize: function initialize($super, ship, enemy, left) {
+      $super(ship, enemy);
+      this.pos = {
+        ship: {
+          top: ship.getTop() + (this.isFall ? 60 : -30),
+          left: ship.getLeft() + 30
+        },
+        enemy: {
+          top: enemy.getTop() + (this.isFall ? -30 : 60),
+          left: left
+        }
+      };
+      this.leftRange = -(this.pos.ship.left - this.pos.enemy.left) / this.ATTAINABLE_COUNT;
+      this.topRange = -(this.pos.ship.top - this.pos.enemy.top) / this.ATTAINABLE_COUNT;
+      this.count = 0;
+    },
+
+    getColor: function getColor() {
+      return '#FFFF33';
+    },
+
+    move: function move() {
+      var left;
+      this.count += 1;
+      if (this.enemy.isHit(this, this.topRange)) {
+        this.isDelete = true;
+        this.elm.remove();
+        return;
       }
-    };
-    this.leftRange = -(this.pos.ship.left - this.pos.enemy.left) / this.ATTAINABLE_COUNT;
-    this.topRange = -(this.pos.ship.top - this.pos.enemy.top) / this.ATTAINABLE_COUNT;
-    this.count = 0;
-  },
-
-  getColor: function() {
-    return '#FFFF33';
-  },
-
-  move: function() {
-    ++this.count;
-    if (this.enemy.isHit(this, this.topRange)) {
-      this.isDelete = true;
-      this.elm.remove();
-      return;
+      left = this.pos.ship.left + (this.leftRange * this.count);
+      this.setPos({
+        top: this.pos.ship.top +
+          ((this.topRange * this.count * this.count) / this.ATTAINABLE_COUNT),
+        left: left + (((this.pos.enemy.left - left) * this.count) / this.ATTAINABLE_COUNT)
+      });
     }
-    var left = this.pos.ship.left + this.leftRange * this.count;
-    this.setPos({
-      top: this.pos.ship.top + this.topRange * this.count * this.count / this.ATTAINABLE_COUNT,
-      left: left + (this.pos.enemy.left - left) * this.count / this.ATTAINABLE_COUNT
-    });
-  }
-});
-;var BulletHoming = Class.create(Bullet, {
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  getColor: function() {
-    return '#FF55FF';
-  },
+  var g = global;
 
-  move: function() {
-    var range = this.isFall ? 5 : -5;
-    if (this.enemy.isHit(this, range)) {
-      this.isDelete = true;
-      this.elm.remove();
-      return;
+  g.BulletHoming = global.Class.create(global.Bullet, {
+    getColor: function getColor() {
+      return '#FF55FF';
+    },
+
+    move: function move() {
+      var top;
+      var left;
+      var enemyLeft;
+      var distance;
+      var range = this.isFall ? 5 : -5;
+      if (this.enemy.isHit(this, range)) {
+        this.isDelete = true;
+        this.elm.remove();
+        return;
+      }
+      top = this.getTop();
+      left = this.getLeft();
+      enemyLeft = this.enemy.getLeft();
+      if (this.isFall ? (this.clientHeight / 2) < top : (this.clientHeight / 2) > top) {
+        range *= 3;
+        distance = 0;
+      } else if (left < enemyLeft) {
+        distance = 10;
+      } else if ((enemyLeft + 60) < left) {
+        distance = -10;
+      } else {
+        distance = 0;
+      }
+      this.setPos({ top: top + range, left: left + distance });
     }
-    var top = this.getTop();
-    var left = this.getLeft();
-    var enemyLeft = this.enemy.getLeft();
-    if (this.isFall ? (this.clientHeight / 2) < top : (this.clientHeight / 2) > top) {
-      range = range * 3;
-      distance = 0;
-    } else if (left < enemyLeft) {
-      distance = 10;
-    } else if ((enemyLeft + 60) < left) {
-      distance = -10;
-    } else {
-      distance = 0;
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.BulletLinear = global.Class.create(global.Bullet, {
+    getColor: function getColor() {
+      return '#55FF55';
+    },
+
+    move: function move() {
+      var range = this.isFall ? 10 : -10;
+      if (this.enemy.isHit(this, range)) {
+        this.isDelete = true;
+        this.elm.remove();
+        return;
+      }
+      this.setTop(this.getTop() + range);
     }
-    this.setPos({top: top + range, left: left + distance});
-  }
-});
-;var BulletLinear = Class.create(Bullet, {
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  getColor: function() {
-    return '#55FF55';
-  },
+  var g = global;
 
-  move: function() {
-    var range = this.isFall ? 10 : -10;
-    if (this.enemy.isHit(this, range)) {
-      this.isDelete = true;
-      this.elm.remove();
-      return;
-    }
-    this.setTop(this.getTop() + range);
-  }
-});
-;var ChatForm = Class.create(Sprite, {
+  g.ChatForm = global.Class.create(global.Sprite, {
+    textField: null,
 
-  textField: null,
-
-  createElement: function() {
-    var form = new Element('form', {action: '#', method: 'post'}).setStyle({
-      zIndex: this.Z_INDEX_BASE + 2000,
-      position: 'fixed',
-      backgroundColor: '#EFEFEF'
-    });
-    this.textField = new Element('input', { type: 'text', value: '' })
-      .setStyle({ width: '400px' });
-    var button = new Element('input', { type: 'submit', value: 'send' });
-    form.insert(this.textField).insert(button);
-    return form;
-  },
-
-  getInitTop: function() {
-    return this.clientHeight + 10;
-  },
-
-  getInitLeft: function() {
-    return 270;
-  },
-
-  getValue: function() {
-    return $F(this.textField);
-  }
-});
-;var Condition = Class.create(Sprite, {
-
-  timerId: null,
-
-  createElement: function() {
-    return new Element('div').setStyle({
-      display: 'none',
-      position: 'fixed',
-      zIndex: this.Z_INDEX_BASE + 101,
-      fontSize: '20px',
-      fontWeight: 800,
-      top: '0px',
-      left: '0px'
-    });
-  },
-
-  setupPosition: function() {
-    var dim = this.elm.getDimensions();
-    this.elm.setStyle({
-      display: 'block',
-      top: this.clientHeight / 2 - (dim.height / 2 - 0) + 100 + 'px',
-      left: this.clientWidth / 2 - (dim.width / 2 - 0) + 'px'
-    });
-  },
-
-  update: function(text, color) {
-    if (this.timerId) clearTimeout(this.timerId);
-    this.elm.update(text);
-    this.elm.setStyle({color: color});
-    this.setupPosition();
-    this.elm.show();
-  },
-
-  updateAndDelayHide: function(text, color) {
-    this.update(text, color);
-    this.timerId = this.elm.hide.bind(this.elm).delay(7);
-  }
-});
-;var DuelistCounter = Class.create(Sprite, {
-
-  createElement: function() {
-    return new Element('div').setStyle({
-      position: 'fixed',
-      zIndex: this.Z_INDEX_BASE,
-      fontSize: '20px',
-      fontWeight: 800
-    });
-  },
-
-  getInitTop: function() {
-    return this.clientHeight + 10;
-  },
-
-  getInitLeft: function() {
-    return 10;
-  },
-
-  update: function(text) {
-    this.elm.update(text);
-    this.remove();
-    this.renderElement();
-  }
-});
-;var ForkMeOnGitHub = Class.create(Sprite, {
-
-  createElement: function() {
-    return new Element('img', {
-      src: 'https://s3.amazonaws.com/github/ribbons/forkme_left_white_ffffff.png',
-      alt: 'Fork me on GitHub'
-    }).setStyle({border: 'none'}).wrap(new Element('a', {
-      href: 'https://github.com/supercaracal/duelshooting_online'
-    })).setStyle({
-      position: 'fixed',
-      zIndex: this.Z_INDEX_BASE + 4000
-    });
-  },
-
-  getInitTop: function() {
-    return 0;
-  },
-
-  getInitLeft: function() {
-    return 0;
-  }
-});
-;var FunnelCircle = Class.create(Funnel, {
-
-  r: null,
-  theta: null,
-  speed: null,
-  isClockwise: null,
-
-  initialize: function($super, carrier) {
-    $super(carrier);
-    this.r = 70;
-    this.theta = this.isEnemy ? 0 : 180;
-    this.speed = 3;
-    this.isCloclwise = this.isEnemy;
-  },
-
-  getInitTop: function() {
-    return this.carrier.getTop() + (this.isEnemy ? 60 : -30);
-  },
-
-  getInitLeft: function() {
-    return this.carrier.getLeft() + 30;
-  },
-
-  getColor: function() {
-    return '#FF9900';
-  },
-
-  move: function() {
-    var y = this.initLeft + Math.sin(Math.PI / 180 * this.theta) * this.r;
-    var x = this.initTop + (this.isEnemy ? 0 : -140) + this.r - Math.cos(Math.PI / 180 * this.theta) * this.r;
-    this.setPos({top: x, left: y});
-    this.theta += this.isClockwise ? this.speed : -this.speed;
-    if (this.theta < 0 || 360 < this.theta ) {
-      this.theta = this.isClockwise ? 0 : 360;
-    }
-  }
-});
-;var FunnelDefenceLeft = Class.create(Funnel, {
-
-  iField: null,
-
-  initialize: function($super, carrier, iField) {
-    this.iField = iField;
-    $super(carrier);
-    this.setTransformRotate(this.getInitTransformRotate());
-  },
-
-  getInitTop: function() {
-    return this.carrier.getTop() + (this.isEnemy ? 60 : -30);
-  },
-
-  getInitLeft: function() {
-    return this.carrier.getLeft() - 40;
-  },
-
-  getInitTransformRotate: function() {
-    return 135;
-  },
-
-  getColor: function() {
-    return '#FF9900';
-  },
-
-  move: function() {
-    if (this.iField.isActive) {
-      this.setTransformRotate(this.isEnemy ? 270 : 90);
-    } else {
-      var deg = this.getTransformRotate();
-      deg = deg > 360 ? 0 : deg;
-      this.setTransformRotate(++deg);
-    }
-    this.setPos({top: this.getInitTop(), left: this.getInitLeft()});
-  }
-});
-;var FunnelDefenceRight = Class.create(Funnel, {
-
-  iField: null,
-
-  initialize: function($super, carrier, iField) {
-    this.iField = iField;
-    $super(carrier);
-    this.setTransformRotate(this.getInitTransformRotate());
-  },
-
-  getInitTop: function() {
-    return this.carrier.getTop() + (this.isEnemy ? 60 : -30);
-  },
-
-  getInitLeft: function() {
-    return this.carrier.getLeft() + 100;
-  },
-
-  getInitTransformRotate: function() {
-    return 225;
-  },
-
-  getColor: function() {
-    return '#FF9900';
-  },
-
-  move: function() {
-    if (this.iField.isActive) {
-      this.setTransformRotate(this.isEnemy ? 90 : 270);
-    } else {
-      var deg = this.getTransformRotate();
-      deg = deg < 0 ? 360 : deg;
-      this.setTransformRotate(--deg);
-    }
-    this.setPos({top: this.getInitTop(), left: this.getInitLeft()});
-  }
-});
-;var FunnelSlider = Class.create(Funnel, {
-
-  target: null,
-  isComeback: null,
-  isFunnelSliderAttack: null,
-  isFunnelSlider: null,
-
-  initialize: function($super, carrier, target) {
-    this.isComeback = false;
-    this.isFunnelSliderAttack = false;
-    this.isFunnelSlider = true;
-    this.target = target;
-    $super(carrier);
-  },
-
-  getInitTop: function() {
-    return this.carrier.getTop() + (this.isEnemy ? 60 : -30);
-  },
-
-  getInitLeft: function() {
-    return this.carrier.getLeft() + 30;
-  },
-
-  getColor: function() {
-    return '#9999FF';
-  },
-
-  move: function() {
-    if (this.isComeback) {
-      this.moveComeback();
-    } else {
-      this.moveChase();
-    }
-  },
-
-  moveComeback: function() {
-    var shipCenterLeft = this.carrier.getLeft() + 30;
-    var left = this.getLeft();
-    if (Math.abs(shipCenterLeft - left) < 30) {
-      this.isDelete = true;
-      this.elm.remove();
-      return;
-    }
-    this.setLeft(left + ((shipCenterLeft - left) > 0 ? 10 : -10));
-  },
-
-  moveChase: function() {
-    var enemyCenterLeft = this.target.getLeft() + 30;
-    var left = this.getLeft();
-    if (Math.abs(enemyCenterLeft - left) < 30) {
-      this.isComeback = true;
-      this.isFunnelSliderAttack = true;
-      return;
-    }
-    this.setLeft(left + ((enemyCenterLeft - left) > 0 ? 10 : -10));
-  }
-});
-;var IField = Class.create(Sprite, {
-
-  WAIT: 250,
-
-  isActive: null,
-  carrier: null,
-  isEnemy: null,
-  waitCount: null,
-  sound: null,
-  waitStatus: null,
-
-  initialize: function($super, carrier) {
-    this.isActive = false;
-    this.carrier = carrier;
-    this.isEnemy = carrier.isEnemy;
-    this.waitCount = 0;
-    $super();
-    this.carrier.setIField(this);
-  },
-
-  createElement: function() {
-    var color = '#FFFFFF';
-    return new Element('div')
-      .setStyle({
-        width: '100px',
-        height: '20px',
-        backgroundColor: color,
-        zIndex: this.Z_INDEX_BASE + 11,
+    createElement: function createElement() {
+      var button;
+      var form = new Element('form', { action: '#', method: 'post' }).setStyle({
+        zIndex: this.Z_INDEX_BASE + 2000,
         position: 'fixed',
-        boxShadow: '0px 0px 10px ' + color,
-        borderRadius: '10px',
-        display: 'none'
-      }).setOpacity(0.5);
-  },
+        backgroundColor: '#EFEFEF'
+      });
+      this.textField = new Element('input', { type: 'text', value: '' })
+        .setStyle({ width: '400px' });
+      button = new Element('input', { type: 'submit', value: 'send' });
+      form.insert(this.textField).insert(button);
+      return form;
+    },
 
-  getInitTop: function() {
-    return this.carrier.getTop() + (this.isEnemy ? 65 : -25); 
-  },
+    getInitTop: function getInitTop() {
+      return this.clientHeight + 10;
+    },
 
-  getInitLeft: function() {
-    return this.carrier.getLeft() - 5;
-  },
+    getInitLeft: function getInitLeft() {
+      return 270;
+    },
 
-  getHeight: function() {
-    return this.elm.getHeight();
-  },
-
-  setHeight: function(h) {
-    this.elm.setStyle({height: h + 'px'});
-    this.setTop(this.getInitTop() + (20 - h) / 2);
-  },
-
-  setSound: function(audio) {
-    this.sound = audio;
-  },
-
-  setWaitStatus: function(waitStatus) {
-    this.waitStatus = waitStatus;
-  },
-
-  playSound: function() {
-    if (this.sound) this.sound.replay();
-  },
-
-  hit: function() {
-    h = this.getHeight();
-    h -= 2;
-    this.setHeight(h);
-    if (h <= 0) {
-      this.cancel();
-      this.waitCount = this.WAIT;
+    getValue: function getValue() {
+      return global.$F(this.textField);
     }
-  },
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  isHit: function(bullet, range, enemyLeft) {
-    var top = bullet.getTop();
-    var left = bullet.getLeft();
-    if (this.isActive &&
-      (bullet.isFall ? top + range > this.clientHeight - 110 : top + range < 80) &&
-      enemyLeft - 25 < left &&
-      left < enemyLeft + 95) {
+  var g = global;
 
-      this.hit();
-      return true;
+  g.Condition = global.Class.create(global.Sprite, {
+    timerId: null,
+
+    createElement: function createElement() {
+      return new Element('div').setStyle({
+        display: 'none',
+        position: 'fixed',
+        zIndex: this.Z_INDEX_BASE + 101,
+        fontSize: '20px',
+        fontWeight: 800,
+        top: '0px',
+        left: '0px'
+      });
+    },
+
+    setupPosition: function setupPosition() {
+      var dim = this.elm.getDimensions();
+      this.elm.setStyle({
+        display: 'block',
+        top: ((this.clientHeight / 2) - ((dim.height / 2) - 0)) + 100 + 'px',
+        left: ((this.clientWidth / 2) - ((dim.width / 2) - 0)) + 'px'
+      });
+    },
+
+    update: function update(text, color) {
+      if (this.timerId) clearTimeout(this.timerId);
+      this.elm.update(text);
+      this.elm.setStyle({ color: color });
+      this.setupPosition();
+      this.elm.show();
+    },
+
+    updateAndDelayHide: function updateAndDelayHide(text, color) {
+      this.update(text, color);
+      this.timerId = this.elm.hide.bind(this.elm).delay(7);
     }
-  },
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  barrier: function() {
-    if (0 < this.waitCount || this.isActive) {
-      return;
-    }
-    this.setHeight(20);
-    this.invoke();
-    this.playSound();
-  },
+  var g = global;
 
-  invoke: function() {
-    this.isActive = true;
-    this.elm.show();
-  },
+  g.DuelistCounter = global.Class.create(global.Sprite, {
+    createElement: function createElement() {
+      return new Element('div').setStyle({
+        position: 'fixed',
+        zIndex: this.Z_INDEX_BASE,
+        fontSize: '20px',
+        fontWeight: 800
+      });
+    },
 
-  cancel: function() {
-    this.isActive = false;
-    this.elm.hide();
-  },
+    getInitTop: function getInitTop() {
+      return this.clientHeight + 10;
+    },
 
-  move: function() {
-    this.setLeft(this.carrier.getLeft() - 5);
-    if (this.isActive) this.changeColor();
-    if (0 < this.waitCount) {
-      --this.waitCount;
-    }
-    this.waitStatus.setWidth(this.waitCount, this.WAIT);
-  },
+    getInitLeft: function getInitLeft() {
+      return 10;
+    },
 
-  changeColor: function () {
-    var color = '#' +
-      Math.floor(Math.random() * 100).toColorPart() +
-      Math.floor(Math.random() * 100).toColorPart() +
-      Math.floor(Math.random() * 100).toColorPart();
-    this.elm.setStyle({backgroundColor: color});
-  }
-});
-;var NicoNico = Class.create(Sprite, {
-
-  text: null,
-  dim: null,
-  seed: null,
-
-  initialize: function ($super, text) {
-    this.text = text;
-    this.seed = this.getSeed();
-    $super();
-  },
-
-  createElement: function() {
-    return new Element('span').setStyle({
-      color: this.getColor(),
-      fontSize: this.getSeed() + 8 + 'px',
-      fontWeight: 'bolder',
-      zIndex: this.Z_INDEX_BASE + 1000 + this.getSeed() + 1,
-      position: 'fixed',
-      whiteSpace: 'nowrap'
-    }).update(this.text);
-  },
-
-  getInitTop: function() {
-    return Math.floor(this.clientHeight * (this.getSeed() / 100));
-  },
-
-  getInitLeft: function() {
-    return document.viewport.getWidth() ||
-      document.documentElement.clientWidth ||
-      document.body.clientWidth ||
-      document.body.scrollWidth ||
-      this.clientWidth;
-  },
-
-  renderElement: function($super) {
-    $super();
-    this.dim = this.elm.getDimensions();
-    if (this.clientHeight < this.getTop() + this.dim.height) {
-      this.setTop(this.clientHeight - this.dim.height);
-    }
-  },
-
-  move: function () {
-    var x = this.getLeft();
-    if (x < -this.dim.width) {
-      this.isDelete = true;
+    update: function update(text) {
+      this.elm.update(text);
       this.remove();
-      return;
+      this.renderElement();
     }
-    x -= this.seed % 10 + 5;
-    this.setLeft(x);
-  },
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  getSeed: function () {
-    return Math.floor(Math.random() * 100);
-  },
+  var g = global;
 
-  getColor: function() {
-    var color = null;
-    var changePos = this.getSeed() % 6;
-    var changeVal = this.getSeed() % 16;
-    var hexs = {
-       0: '0F',
-       1: '1F',
-       2: '2F',
-       3: '3F',
-       4: '4F',
-       5: '5F',
-       6: '6F',
-       7: '7F',
-       8: '8F',
-       9: '9F',
-      10: 'AF',
-      11: 'BF',
-      12: 'CF',
-      13: 'DF',
-      14: 'EF',
-      15: 'FF'
-    };
-    switch (changePos) {
-      case 0:
-        color = '#' + hexs[changeVal] + 'FF' + 'FF';
-        break;
-      case 1:
-        color = '#' + 'FF' + hexs[changeVal] + 'FF';
-        break;
-      case 2:
-        color = '#' + 'FF' + 'FF' + hexs[changeVal];
-        break;
-      case 3:
-        color = '#' + hexs[changeVal] + hexs[changeVal] + 'FF';
-        break;
-      case 4:
-        color = '#' + hexs[changeVal] + 'FF' + hexs[changeVal];
-        break;
-      case 5:
-        color = '#' + 'FF' + hexs[changeVal] + hexs[changeVal];
-        break;
-      default:
-        color = '#FFFFFF';
-        break;
+  g.ForkMeOnGitHub = global.Class.create(global.Sprite, {
+    createElement: function createElement() {
+      return new Element('img', {
+        src: 'https://s3.amazonaws.com/github/ribbons/forkme_left_white_ffffff.png',
+        alt: 'Fork me on GitHub'
+      }).setStyle({ border: 'none' }).wrap(new Element('a', {
+        href: 'https://github.com/supercaracal/duelshooting_online'
+      })).setStyle({
+        position: 'fixed',
+        zIndex: this.Z_INDEX_BASE + 4000
+      });
+    },
+
+    getInitTop: function getInitTop() {
+      return 0;
+    },
+
+    getInitLeft: function getInitLeft() {
+      return 0;
     }
-    return color;
-  }
-});
-;var Opening = Class.create(Sprite, {
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  timerId: null,
-  title: null,
-  titleOpacity: 0.0,
-  backgroundOpacity: 1.0,
+  var g = global;
 
-  initialize: function($super, title) {
-    this.title = title;
-    $super();
-  },
+  g.FunnelCircle = global.Class.create(global.Funnel, {
+    r: null,
+    theta: null,
+    speed: null,
+    isClockwise: null,
 
-  createElement: function() {
-    var background = new Element('div').setStyle({
-      display: 'block',
-      position: 'fixed',
-      zIndex: this.Z_INDEX_BASE + 100,
-      backgroundColor: '#111111',
-      height: this.clientHeight + 'px',
-      width: this.clientWidth + 'px'
-    }).setOpacity(this.backgroundOpacity);
-    return background;
-  },
+    initialize: function initialize($super, carrier) {
+      $super(carrier);
+      this.r = 70;
+      this.theta = this.isEnemy ? 0 : 180;
+      this.speed = 3;
+      this.isCloclwise = this.isEnemy;
+    },
 
-  show: function() {
-    this.title.renderElement();
-    this.renderElement();
-    this.timerId = setInterval(this.appear.bind(this), 128);      
-  },
+    getInitTop: function getInitTop() {
+      return this.carrier.getTop() + (this.isEnemy ? 60 : -30);
+    },
 
-  appear: function() {
-    if (this.titleOpacity >= 1.0) {
+    getInitLeft: function getInitLeft() {
+      return this.carrier.getLeft() + 30;
+    },
+
+    getColor: function getColor() {
+      return '#FF9900';
+    },
+
+    move: function move() {
+      var y = this.initLeft + (Math.sin((Math.PI / 180) * this.theta) * this.r);
+      var x = (this.initTop + (this.isEnemy ? 0 : -140) + this.r) -
+        (Math.cos((Math.PI / 180) * this.theta) * this.r);
+      this.setPos({ top: x, left: y });
+      this.theta += this.isClockwise ? this.speed : -this.speed;
+      if (this.theta < 0 || this.theta > 360) {
+        this.theta = this.isClockwise ? 0 : 360;
+      }
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.FunnelDefenceLeft = global.Class.create(global.Funnel, {
+    iField: null,
+
+    initialize: function initialize($super, carrier, iField) {
+      this.iField = iField;
+      $super(carrier);
+      this.setTransformRotate(this.getInitTransformRotate());
+    },
+
+    getInitTop: function getInitTop() {
+      return this.carrier.getTop() + (this.isEnemy ? 60 : -30);
+    },
+
+    getInitLeft: function getInitLeft() {
+      return this.carrier.getLeft() - 40;
+    },
+
+    getInitTransformRotate: function getInitTransformRotate() {
+      return 135;
+    },
+
+    getColor: function getColor() {
+      return '#FF9900';
+    },
+
+    move: function move() {
+      var deg;
+      if (this.iField.isActive) {
+        this.setTransformRotate(this.isEnemy ? 270 : 90);
+      } else {
+        deg = this.getTransformRotate();
+        deg = deg > 360 ? 0 : deg;
+        deg += 1;
+        this.setTransformRotate(deg);
+      }
+      this.setPos({ top: this.getInitTop(), left: this.getInitLeft() });
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.FunnelDefenceRight = global.Class.create(global.Funnel, {
+    iField: null,
+
+    initialize: function initialize($super, carrier, iField) {
+      this.iField = iField;
+      $super(carrier);
+      this.setTransformRotate(this.getInitTransformRotate());
+    },
+
+    getInitTop: function getInitTop() {
+      return this.carrier.getTop() + (this.isEnemy ? 60 : -30);
+    },
+
+    getInitLeft: function getInitLeft() {
+      return this.carrier.getLeft() + 100;
+    },
+
+    getInitTransformRotate: function getInitTransformRotate() {
+      return 225;
+    },
+
+    getColor: function getColor() {
+      return '#FF9900';
+    },
+
+    move: function move() {
+      var deg;
+      if (this.iField.isActive) {
+        this.setTransformRotate(this.isEnemy ? 90 : 270);
+      } else {
+        deg = this.getTransformRotate();
+        deg = deg < 0 ? 360 : deg;
+        deg -= 1;
+        this.setTransformRotate(deg);
+      }
+      this.setPos({ top: this.getInitTop(), left: this.getInitLeft() });
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.FunnelSlider = global.Class.create(global.Funnel, {
+    target: null,
+    isComeback: null,
+    isFunnelSliderAttack: null,
+    isFunnelSlider: null,
+
+    initialize: function initialize($super, carrier, target) {
+      this.isComeback = false;
+      this.isFunnelSliderAttack = false;
+      this.isFunnelSlider = true;
+      this.target = target;
+      $super(carrier);
+    },
+
+    getInitTop: function getInitTop() {
+      return this.carrier.getTop() + (this.isEnemy ? 60 : -30);
+    },
+
+    getInitLeft: function getInitLeft() {
+      return this.carrier.getLeft() + 30;
+    },
+
+    getColor: function getColor() {
+      return '#9999FF';
+    },
+
+    move: function move() {
+      if (this.isComeback) {
+        this.moveComeback();
+      } else {
+        this.moveChase();
+      }
+    },
+
+    moveComeback: function moveComeback() {
+      var shipCenterLeft = this.carrier.getLeft() + 30;
+      var left = this.getLeft();
+      if (Math.abs(shipCenterLeft - left) < 30) {
+        this.isDelete = true;
+        this.elm.remove();
+        return;
+      }
+      this.setLeft(left + ((shipCenterLeft - left) > 0 ? 10 : -10));
+    },
+
+    moveChase: function moveChase() {
+      var enemyCenterLeft = this.target.getLeft() + 30;
+      var left = this.getLeft();
+      if (Math.abs(enemyCenterLeft - left) < 30) {
+        this.isComeback = true;
+        this.isFunnelSliderAttack = true;
+        return;
+      }
+      this.setLeft(left + ((enemyCenterLeft - left) > 0 ? 10 : -10));
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.IField = global.Class.create(global.Sprite, {
+    WAIT: 250,
+
+    isActive: null,
+    carrier: null,
+    isEnemy: null,
+    waitCount: null,
+    sound: null,
+    waitStatus: null,
+
+    initialize: function initialize($super, carrier) {
+      this.isActive = false;
+      this.carrier = carrier;
+      this.isEnemy = carrier.isEnemy;
+      this.waitCount = 0;
+      $super();
+      this.carrier.setIField(this);
+    },
+
+    createElement: function createElement() {
+      var color = '#FFFFFF';
+      return new Element('div')
+        .setStyle({
+          width: '100px',
+          height: '20px',
+          backgroundColor: color,
+          zIndex: this.Z_INDEX_BASE + 11,
+          position: 'fixed',
+          boxShadow: '0px 0px 10px ' + color,
+          borderRadius: '10px',
+          display: 'none'
+        }).setOpacity(0.5);
+    },
+
+    getInitTop: function getInitTop() {
+      return this.carrier.getTop() + (this.isEnemy ? 65 : -25);
+    },
+
+    getInitLeft: function getInitLeft() {
+      return this.carrier.getLeft() - 5;
+    },
+
+    getHeight: function getHeight() {
+      return this.elm.getHeight();
+    },
+
+    setHeight: function setHeight(h) {
+      this.elm.setStyle({ height: h + 'px' });
+      this.setTop(this.getInitTop() + ((20 - h) / 2));
+    },
+
+    setSound: function setSound(audio) {
+      this.sound = audio;
+    },
+
+    setWaitStatus: function setWaitStatus(waitStatus) {
+      this.waitStatus = waitStatus;
+    },
+
+    playSound: function playSound() {
+      if (this.sound) this.sound.replay();
+    },
+
+    hit: function hit() {
+      var h = this.getHeight();
+      h -= 2;
+      this.setHeight(h);
+      if (h <= 0) {
+        this.cancel();
+        this.waitCount = this.WAIT;
+      }
+    },
+
+    isHit: function isHit(bullet, range, enemyLeft) {
+      var top = bullet.getTop();
+      var left = bullet.getLeft();
+      if (this.isActive &&
+        (bullet.isFall ? top + range > this.clientHeight - 110 : top + range < 80) &&
+        enemyLeft - 25 < left &&
+        left < enemyLeft + 95) {
+        this.hit();
+        return true;
+      }
+      return false;
+    },
+
+    barrier: function barrier() {
+      if (this.waitCount > 0 || this.isActive) {
+        return;
+      }
+      this.setHeight(20);
+      this.invoke();
+      this.playSound();
+    },
+
+    invoke: function invoke() {
+      this.isActive = true;
+      this.elm.show();
+    },
+
+    cancel: function cancel() {
+      this.isActive = false;
+      this.elm.hide();
+    },
+
+    move: function move() {
+      this.setLeft(this.carrier.getLeft() - 5);
+      if (this.isActive) this.changeColor();
+      if (this.waitCount > 0) {
+        this.waitCount -= 1;
+      }
+      this.waitStatus.setWidth(this.waitCount, this.WAIT);
+    },
+
+    changeColor: function changeColor() {
+      var color = '#' +
+        Math.floor(Math.random() * 100).toColorPart() +
+        Math.floor(Math.random() * 100).toColorPart() +
+        Math.floor(Math.random() * 100).toColorPart();
+      this.elm.setStyle({ backgroundColor: color });
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.NicoNico = global.Class.create(global.Sprite, {
+    text: null,
+    dim: null,
+    seed: null,
+
+    initialize: function initialize($super, text) {
+      this.text = text;
+      this.seed = this.getSeed();
+      $super();
+    },
+
+    createElement: function createElement() {
+      return new Element('span').setStyle({
+        color: this.getColor(),
+        fontSize: this.getSeed() + 8 + 'px',
+        fontWeight: 'bolder',
+        zIndex: this.Z_INDEX_BASE + 1000 + this.getSeed() + 1,
+        position: 'fixed',
+        whiteSpace: 'nowrap'
+      }).update(this.text);
+    },
+
+    getInitTop: function getInitTop() {
+      return Math.floor(this.clientHeight * (this.getSeed() / 100));
+    },
+
+    getInitLeft: function getInitLeft() {
+      return document.viewport.getWidth() ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth ||
+        document.body.scrollWidth ||
+        this.clientWidth;
+    },
+
+    renderElement: function renderElement($super) {
+      $super();
+      this.dim = this.elm.getDimensions();
+      if (this.clientHeight < this.getTop() + this.dim.height) {
+        this.setTop(this.clientHeight - this.dim.height);
+      }
+    },
+
+    move: function move() {
+      var x = this.getLeft();
+      if (x < -this.dim.width) {
+        this.isDelete = true;
+        this.remove();
+        return;
+      }
+      x -= (this.seed % 10) + 5;
+      this.setLeft(x);
+    },
+
+    getSeed: function getSeed() {
+      return Math.floor(Math.random() * 100);
+    },
+
+    getColor: function getColor() {
+      var color = null;
+      var changePos = this.getSeed() % 6;
+      var changeVal = this.getSeed() % 16;
+      var hexs = {
+        0: '0F',
+        1: '1F',
+        2: '2F',
+        3: '3F',
+        4: '4F',
+        5: '5F',
+        6: '6F',
+        7: '7F',
+        8: '8F',
+        9: '9F',
+        10: 'AF',
+        11: 'BF',
+        12: 'CF',
+        13: 'DF',
+        14: 'EF',
+        15: 'FF'
+      };
+      switch (changePos) {
+        case 0:
+          color = '#' + hexs[changeVal] + 'FFFF';
+          break;
+        case 1:
+          color = '#FF' + hexs[changeVal] + 'FF';
+          break;
+        case 2:
+          color = '#FFFF' + hexs[changeVal];
+          break;
+        case 3:
+          color = '#' + hexs[changeVal] + hexs[changeVal] + 'FF';
+          break;
+        case 4:
+          color = '#' + hexs[changeVal] + 'FF' + hexs[changeVal];
+          break;
+        case 5:
+          color = '#FF' + hexs[changeVal] + hexs[changeVal];
+          break;
+        default:
+          color = '#FFFFFF';
+          break;
+      }
+      return color;
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.Opening = global.Class.create(global.Sprite, {
+    timerId: null,
+    title: null,
+    titleOpacity: 0.0,
+    backgroundOpacity: 1.0,
+
+    initialize: function initialize($super, title) {
+      this.title = title;
+      $super();
+    },
+
+    createElement: function createElement() {
+      var background = new Element('div').setStyle({
+        display: 'block',
+        position: 'fixed',
+        zIndex: this.Z_INDEX_BASE + 100,
+        backgroundColor: '#111111',
+        height: this.clientHeight + 'px',
+        width: this.clientWidth + 'px'
+      }).setOpacity(this.backgroundOpacity);
+      return background;
+    },
+
+    show: function show() {
+      this.title.renderElement();
+      this.renderElement();
+      this.timerId = setInterval(this.appear.bind(this), 128);
+    },
+
+    appear: function appear() {
+      if (this.titleOpacity >= 1.0) {
+        clearInterval(this.timerId);
+      }
+      this.titleOpacity += 0.1;
+      this.title.setOpacity(this.titleOpacity);
+    },
+
+    hide: function hide() {
       clearInterval(this.timerId);
+      this.title.remove();
+      this.timerId = setInterval(this.fade.bind(this), 32);
+    },
+
+    fade: function fade() {
+      if (this.backgroundOpacity <= 0.0) {
+        clearInterval(this.timerId);
+        this.elm.remove();
+      }
+      this.backgroundOpacity -= 0.1;
+      this.elm.setOpacity(this.backgroundOpacity);
     }
-    this.titleOpacity += 0.1;
-    this.title.setOpacity(this.titleOpacity);
-  },
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  hide: function() {
-    clearInterval(this.timerId);
-    this.title.remove();
-    this.timerId = setInterval(this.fade.bind(this), 32);
-  },
+  var g = global;
 
-  fade: function() {
-    if (this.backgroundOpacity <= 0.0) {
+  g.ShipAfterimage = global.Class.create(global.Ship, {
+    getColor: function getColor() {
+      return '#FF5555';
+    },
+
+    spot: function spot(top, left, hitPoint) {
+      this.elm.setOpacity(0.2);
+      this.setPos({ top: top, left: left });
+      this.setHitPoint(hitPoint);
+      this.renderElement();
+      (function rm() { this.elm.remove(); }).bind(this).delay(0.3);
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.ShipNavy = global.Class.create(global.Ship, {
+    shadowSize: 20,
+    colors: ['FF0000', 'FF6600', 'FFFF00', '00FF00', '00FFFF', '0000FF', '990099'],
+
+    getColor: function getColor() {
+      return '#0F0F3F';
+    },
+
+    createElement: function createElement($super) {
+      return $super().setStyle({ color: '#FFFFFF' });
+    },
+
+    move: function move($super) {
+      var color;
+      $super();
+      this.shadowSize += 1;
+      color = '#' + this.colors[0];
+      this.elm.down().setStyle({
+        boxShadow: '0px 0px ' + this.shadowSize + 'px ' + color
+      });
+      this.elm.down(1).setStyle({
+        boxShadow: '0px 0px ' + this.shadowSize + 'px ' + color
+      });
+      if (this.shadowSize > 50) {
+        this.shadowSize = 20;
+        this.colors.push(this.colors.shift());
+      }
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.ShipRed = global.Class.create(global.Ship, {
+    soundNewtype: null,
+    iField: null,
+    funnels: null,
+
+    initialize: function initialize($super, isEnemy) {
+      $super(isEnemy);
+      this.funnels = [];
+    },
+
+    getColor: function getColor() {
+      return '#FF5555';
+    },
+
+    setSoundNewtype: function setSoundNewtype(audio) {
+      this.soundNewtype = audio;
+    },
+
+    playSoundNewtype: function playSoundNewtype() {
+      if (this.soundNewtype) this.soundNewtype.replay();
+    },
+
+    setIField: function setIField(iField) {
+      this.iField = iField;
+    },
+
+    getIField: function getIField() {
+      return this.iField;
+    },
+
+    getIFieldInfo: function getIFieldInfo() {
+      return { isActive: this.iField.isActive, height: this.iField.getHeight() };
+    },
+
+    getFunnelInfo: function getFunnelInfo() {
+      return {
+        firstLeft: this.funnels[0] ? this.funnels[0].initLeft : null,
+        firstTheta: this.funnels[0] ? this.funnels[0].theta : null,
+        secondLeft: this.funnels[1] ? this.funnels[1].initLeft : null,
+        secondTheta: this.funnels[1] ? this.funnels[1].theta : null
+      };
+    },
+
+    addFunnel: function addFunnel(funnel) {
+      this.funnels.push(funnel);
+    },
+
+    isIFieldEnable: function isIFieldEnable() {
+      return (!this.iField.isActive && !this.iField.waitCount);
+    },
+
+    barrier: function barrier() {
+      this.iField.barrier();
+    },
+
+    avoid: function avoid() {
+      var sign = (this.getLeft() + 45) < this.clientWidth / 2 ? 1 : -1;
+      var top = this.getTop();
+      var left = this.getLeft();
+      this.setLeft(left + (90 * sign));
+      [left, left + (10 * 3 * sign), left + (10 * 6 * sign)].each((function sp(imgLeft) {
+        var shadow = new global.ShipAfterimage(this.isEnemy);
+        shadow.spot(top, imgLeft, this.hitPoint);
+      }).bind(this));
+      this.playSoundNewtype();
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.ShipWhite = global.Class.create(global.Ship, {
+    isMegaCannonEnabled: true,
+    isNotFunnelEmpty: true,
+
+    getColor: function getColor() {
+      return '#FFFFFF';
+    },
+
+    enableMegaCannonStatus: function enableMegaCannonStatus() {
+      this.isMegaCannonEnabled = true;
+    },
+
+    disableMegaCannonStatus: function disableMegaCannonStatus() {
+      this.isMegaCannonEnabled = false;
+    },
+
+    enableFunnelStatus: function enableFunnelStatus() {
+      this.isNotFunnelEmpty = true;
+    },
+
+    disableFunnelStatus: function disableFunnelStatus() {
+      this.isNotFunnelEmpty = false;
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
+
+  var g = global;
+
+  g.TimeKeeper = global.Class.create(global.Sprite, {
+    timerId: null,
+    time: null,
+
+    initialize: function initialize($super) {
+      this.time = 0;
+      $super();
+    },
+
+    createElement: function createElement() {
+      return new Element('div').setStyle({
+        zIndex: this.Z_INDEX_BASE + 20,
+        position: 'fixed',
+        height: '30px',
+        width: '100px',
+        fontSize: '20px',
+        fontWeight: 800,
+        color: '#FFFFFF',
+        textAlign: 'right'
+      }).update(this.time);
+    },
+
+    getInitTop: function getInitTop() {
+      return 2;
+    },
+
+    getInitLeft: function getInitLeft() {
+      return this.clientWidth - 110;
+    },
+
+    increment: function increment() {
+      this.time += 1;
+      this.elm.update(this.time);
+    },
+
+    start: function start() {
+      if (this.timerId !== null) return;
+      this.timerId = setInterval(this.increment.bind(this), 1000);
+    },
+
+    stop: function stop() {
       clearInterval(this.timerId);
-      this.elm.remove();
+      this.timerId = null;
     }
-    this.backgroundOpacity -= 0.1;
-    this.elm.setOpacity(this.backgroundOpacity);
-  }
-});
-;var ShipAfterimage = Class.create(Ship, {
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  getColor: function() {
-    return '#FF5555';
-  },
+  var g = global;
 
-  spot: function(top, left, hitPoint) {
-    this.elm.setOpacity(0.2);
-    this.setPos({top: top, left: left});
-    this.setHitPoint(hitPoint);
-    this.renderElement();
-    (function() { this.elm.remove(); }).bind(this).delay(0.3);
-  }
-});
-;var ShipNavy = Class.create(Ship, {
+  g.Title = global.Class.create(global.Sprite, {
+    TITLE_TEXT: 'Duel Shooting',
 
-  shadowSize : 20,
-  colors: ['FF0000', 'FF6600','FFFF00','00FF00', '00FFFF','0000FF','990099'],
+    createElement: function createElement() {
+      return new Element('div').setStyle({
+        display: 'none',
+        position: 'fixed',
+        zIndex: this.Z_INDEX_BASE + 101,
+        fontSize: '36px',
+        color: '#FFFFFF',
+        top: '0px',
+        left: '0px'
+      }).update(this.TITLE_TEXT).setOpacity(0.0);
+    },
 
-  getColor: function() {
-    return '#0F0F3F';
-  },
-
-  createElement: function($super) {
-    return $super().setStyle({color: '#FFFFFF'});
-  },
-
-  move: function($super) {
-    $super();
-    ++this.shadowSize;
-    var color = '#' + this.colors[0];
-    this.elm.down().setStyle({
-      boxShadow: '0px 0px ' + this.shadowSize + 'px ' + color
-    });
-    this.elm.down(1).setStyle({
-      boxShadow: '0px 0px ' + this.shadowSize + 'px ' + color
-    });
-    if (50 < this.shadowSize) {
-      this.shadowSize = 20;
-      this.colors.push(this.colors.shift());
+    setupPosition: function setupPosition() {
+      var dim;
+      this.renderElement();
+      dim = this.elm.getDimensions();
+      this.elm.setStyle({
+        display: 'block',
+        top: ((this.clientHeight / 2) - ((dim.height / 2) - 0)) + 'px',
+        left: ((this.clientWidth / 2) - ((dim.width / 2) - 0)) + 'px'
+      });
+      this.remove();
     }
-  }
-});
-;var ShipRed = Class.create(Ship, {
-  
-  soundNewtype: null,
-  iField: null,
-  funnels: null,
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  initialize: function($super, isEnemy) {
-    $super(isEnemy);
-    this.funnels = [];
-  },
+  var g = global;
 
-  getColor: function() {
-    return '#FF5555';
-  },
+  g.WeaponWaitStatusIField = global.Class.create(global.WeaponWaitStatus, {
+    getColor: function getColor() {
+      return '#99FF00';
+    }
+  });
+}(window));
+;(function f(global) {
+  'use strict';
 
-  setSoundNewtype: function(audio) {
-    this.soundNewtype = audio;
-  },
+  var g = global;
 
-  playSoundNewtype: function() {
-    if (this.soundNewtype) this.soundNewtype.replay();
-  },
-
-  setIField: function(iField) {
-    this.iField = iField;
-  },
-
-  getIField: function() {
-    return this.iField;
-  },
-
-  getIFieldInfo: function() {
-    return {isActive: this.iField.isActive, height: this.iField.getHeight()};
-  },
-
-  getFunnelInfo: function() {
-    return {
-      firstLeft: this.funnels[0] ? this.funnels[0].initLeft : null,
-      firstTheta: this.funnels[0] ? this.funnels[0].theta : null,
-      secondLeft: this.funnels[1] ? this.funnels[1].initLeft : null,
-      secondTheta: this.funnels[1] ? this.funnels[1].theta : null
-    };
-  },
-
-  addFunnel: function(funnel) {
-    this.funnels.push(funnel);
-  },
-
-  isIFieldEnable: function() {
-    return (!this.iField.isActive && !this.iField.waitCount);
-  },
-
-  barrier: function() {
-    this.iField.barrier();
-  },
-
-  avoid: function() {
-    var sign = (this.getLeft() + 45) < this.clientWidth / 2 ? 1 : -1;
-    var top = this.getTop();
-    var left = this.getLeft();
-    this.setLeft(left + 90 * sign);
-    [left, left + (10 * 3 * sign), left + (10 * 6 * sign)].each((function(left) {
-      var shadow = new ShipAfterimage(this.isEnemy);
-      shadow.spot(top, left, this.hitPoint);
-    }).bind(this));
-    this.playSoundNewtype();
-  }
-});
-;var ShipWhite = Class.create(Ship, {
-
-  isMegaCannonEnabled: true,
-  isNotFunnelEmpty: true,
-
-  getColor: function() {
-    return '#FFFFFF';
-  },
-
-  enableMegaCannonStatus: function() {
-    this.isMegaCannonEnabled = true;
-  },
-
-  disableMegaCannonStatus: function() {
-    this.isMegaCannonEnabled = false;
-  },
-
-  enableFunnelStatus: function() {
-    this.isNotFunnelEmpty = true;
-  },
-
-  disableFunnelStatus: function() {
-    this.isNotFunnelEmpty = false;
-  }
-});
-;var TimeKeeper = Class.create(Sprite, {
-  
-  timerId: null,
-  time: null,
-
-  initialize: function($super) {
-    this.time = 0;
-    $super();
-  },
-
-  createElement: function() {
-    return new Element('div').setStyle({
-      zIndex: this.Z_INDEX_BASE + 20,
-      position: 'fixed',
-      height: '30px',
-      width: '100px',
-      fontSize: '20px',
-      fontWeight: 800,
-      color: '#FFFFFF',
-      textAlign: 'right'
-    }).update(this.time);
-  },
-
-  getInitTop: function() {
-    return 2;
-  },
-
-  getInitLeft: function() {
-    return this.clientWidth - 110;
-  },
-
-  increment: function() {
-    this.elm.update(++this.time);
-  },
-
-  start: function() {
-    if (this.timerId !== null) return;
-    this.timerId = setInterval(this.increment.bind(this), 1000);
-  },
-
-  stop: function() {
-    clearInterval(this.timerId);
-    this.timerId = null;
-  }
-});
-;var Title = Class.create(Sprite, {
-
-  TITLE_TEXT: 'Duel Shooting',
-
-  createElement: function() {
-    return new Element('div').setStyle({
-      display: 'none',
-      position: 'fixed',
-      zIndex: this.Z_INDEX_BASE + 101,
-      fontSize: '36px',
-      color: '#FFFFFF',
-      top: '0px',
-      left: '0px'
-    }).update(this.TITLE_TEXT).setOpacity(0.0);
-  },
-
-  setupPosition: function() {
-    this.renderElement();
-    var dim = this.elm.getDimensions();
-    this.elm.setStyle({
-      display: 'block',
-      top: this.clientHeight / 2 - (dim.height / 2 - 0) + 'px',
-      left: this.clientWidth / 2 - (dim.width / 2 - 0) + 'px'
-    });
-    this.remove();
-  }
-});
-;var WeaponWaitStatusIField = Class.create(WeaponWaitStatus, {
-  getColor: function() {
-    return '#99FF00';
-  }
-});
-;var WeaponWaitStatusMegaCannon = Class.create(WeaponWaitStatus, {
-  isWeaponWaitStatusMegaCannon: true
-});
+  g.WeaponWaitStatusMegaCannon = global.Class.create(global.WeaponWaitStatus, {
+    isWeaponWaitStatusMegaCannon: true
+  });
+}(window));
 ;(function f(global) {
   'use strict';
 

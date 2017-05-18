@@ -1,29 +1,35 @@
-var ChatForm = Class.create(Sprite, {
+(function f(global) {
+  'use strict';
 
-  textField: null,
+  var g = global;
 
-  createElement: function() {
-    var form = new Element('form', {action: '#', method: 'post'}).setStyle({
-      zIndex: this.Z_INDEX_BASE + 2000,
-      position: 'fixed',
-      backgroundColor: '#EFEFEF'
-    });
-    this.textField = new Element('input', { type: 'text', value: '' })
-      .setStyle({ width: '400px' });
-    var button = new Element('input', { type: 'submit', value: 'send' });
-    form.insert(this.textField).insert(button);
-    return form;
-  },
+  g.ChatForm = global.Class.create(global.Sprite, {
+    textField: null,
 
-  getInitTop: function() {
-    return this.clientHeight + 10;
-  },
+    createElement: function createElement() {
+      var button;
+      var form = new Element('form', { action: '#', method: 'post' }).setStyle({
+        zIndex: this.Z_INDEX_BASE + 2000,
+        position: 'fixed',
+        backgroundColor: '#EFEFEF'
+      });
+      this.textField = new Element('input', { type: 'text', value: '' })
+        .setStyle({ width: '400px' });
+      button = new Element('input', { type: 'submit', value: 'send' });
+      form.insert(this.textField).insert(button);
+      return form;
+    },
 
-  getInitLeft: function() {
-    return 270;
-  },
+    getInitTop: function getInitTop() {
+      return this.clientHeight + 10;
+    },
 
-  getValue: function() {
-    return $F(this.textField);
-  }
-});
+    getInitLeft: function getInitLeft() {
+      return 270;
+    },
+
+    getValue: function getValue() {
+      return global.$F(this.textField);
+    }
+  });
+}(window));

@@ -1,22 +1,27 @@
-var ForkMeOnGitHub = Class.create(Sprite, {
+(function f(global) {
+  'use strict';
 
-  createElement: function() {
-    return new Element('img', {
-      src: 'https://s3.amazonaws.com/github/ribbons/forkme_left_white_ffffff.png',
-      alt: 'Fork me on GitHub'
-    }).setStyle({border: 'none'}).wrap(new Element('a', {
-      href: 'https://github.com/supercaracal/duelshooting_online'
-    })).setStyle({
-      position: 'fixed',
-      zIndex: this.Z_INDEX_BASE + 4000
-    });
-  },
+  var g = global;
 
-  getInitTop: function() {
-    return 0;
-  },
+  g.ForkMeOnGitHub = global.Class.create(global.Sprite, {
+    createElement: function createElement() {
+      return new Element('img', {
+        src: 'https://s3.amazonaws.com/github/ribbons/forkme_left_white_ffffff.png',
+        alt: 'Fork me on GitHub'
+      }).setStyle({ border: 'none' }).wrap(new Element('a', {
+        href: 'https://github.com/supercaracal/duelshooting_online'
+      })).setStyle({
+        position: 'fixed',
+        zIndex: this.Z_INDEX_BASE + 4000
+      });
+    },
 
-  getInitLeft: function() {
-    return 0;
-  }
-});
+    getInitTop: function getInitTop() {
+      return 0;
+    },
+
+    getInitLeft: function getInitLeft() {
+      return 0;
+    }
+  });
+}(window));

@@ -1,68 +1,73 @@
-var ShipRed = Class.create(Ship, {
-  
-  soundNewtype: null,
-  iField: null,
-  funnels: null,
+(function f(global) {
+  'use strict';
 
-  initialize: function($super, isEnemy) {
-    $super(isEnemy);
-    this.funnels = [];
-  },
+  var g = global;
 
-  getColor: function() {
-    return '#FF5555';
-  },
+  g.ShipRed = global.Class.create(global.Ship, {
+    soundNewtype: null,
+    iField: null,
+    funnels: null,
 
-  setSoundNewtype: function(audio) {
-    this.soundNewtype = audio;
-  },
+    initialize: function initialize($super, isEnemy) {
+      $super(isEnemy);
+      this.funnels = [];
+    },
 
-  playSoundNewtype: function() {
-    if (this.soundNewtype) this.soundNewtype.replay();
-  },
+    getColor: function getColor() {
+      return '#FF5555';
+    },
 
-  setIField: function(iField) {
-    this.iField = iField;
-  },
+    setSoundNewtype: function setSoundNewtype(audio) {
+      this.soundNewtype = audio;
+    },
 
-  getIField: function() {
-    return this.iField;
-  },
+    playSoundNewtype: function playSoundNewtype() {
+      if (this.soundNewtype) this.soundNewtype.replay();
+    },
 
-  getIFieldInfo: function() {
-    return {isActive: this.iField.isActive, height: this.iField.getHeight()};
-  },
+    setIField: function setIField(iField) {
+      this.iField = iField;
+    },
 
-  getFunnelInfo: function() {
-    return {
-      firstLeft: this.funnels[0] ? this.funnels[0].initLeft : null,
-      firstTheta: this.funnels[0] ? this.funnels[0].theta : null,
-      secondLeft: this.funnels[1] ? this.funnels[1].initLeft : null,
-      secondTheta: this.funnels[1] ? this.funnels[1].theta : null
-    };
-  },
+    getIField: function getIField() {
+      return this.iField;
+    },
 
-  addFunnel: function(funnel) {
-    this.funnels.push(funnel);
-  },
+    getIFieldInfo: function getIFieldInfo() {
+      return { isActive: this.iField.isActive, height: this.iField.getHeight() };
+    },
 
-  isIFieldEnable: function() {
-    return (!this.iField.isActive && !this.iField.waitCount);
-  },
+    getFunnelInfo: function getFunnelInfo() {
+      return {
+        firstLeft: this.funnels[0] ? this.funnels[0].initLeft : null,
+        firstTheta: this.funnels[0] ? this.funnels[0].theta : null,
+        secondLeft: this.funnels[1] ? this.funnels[1].initLeft : null,
+        secondTheta: this.funnels[1] ? this.funnels[1].theta : null
+      };
+    },
 
-  barrier: function() {
-    this.iField.barrier();
-  },
+    addFunnel: function addFunnel(funnel) {
+      this.funnels.push(funnel);
+    },
 
-  avoid: function() {
-    var sign = (this.getLeft() + 45) < this.clientWidth / 2 ? 1 : -1;
-    var top = this.getTop();
-    var left = this.getLeft();
-    this.setLeft(left + 90 * sign);
-    [left, left + (10 * 3 * sign), left + (10 * 6 * sign)].each((function(left) {
-      var shadow = new ShipAfterimage(this.isEnemy);
-      shadow.spot(top, left, this.hitPoint);
-    }).bind(this));
-    this.playSoundNewtype();
-  }
-});
+    isIFieldEnable: function isIFieldEnable() {
+      return (!this.iField.isActive && !this.iField.waitCount);
+    },
+
+    barrier: function barrier() {
+      this.iField.barrier();
+    },
+
+    avoid: function avoid() {
+      var sign = (this.getLeft() + 45) < this.clientWidth / 2 ? 1 : -1;
+      var top = this.getTop();
+      var left = this.getLeft();
+      this.setLeft(left + (90 * sign));
+      [left, left + (10 * 3 * sign), left + (10 * 6 * sign)].each((function sp(imgLeft) {
+        var shadow = new global.ShipAfterimage(this.isEnemy);
+        shadow.spot(top, imgLeft, this.hitPoint);
+      }).bind(this));
+      this.playSoundNewtype();
+    }
+  });
+}(window));

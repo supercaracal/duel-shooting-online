@@ -1,25 +1,30 @@
-var DuelistCounter = Class.create(Sprite, {
+(function f(global) {
+  'use strict';
 
-  createElement: function() {
-    return new Element('div').setStyle({
-      position: 'fixed',
-      zIndex: this.Z_INDEX_BASE,
-      fontSize: '20px',
-      fontWeight: 800
-    });
-  },
+  var g = global;
 
-  getInitTop: function() {
-    return this.clientHeight + 10;
-  },
+  g.DuelistCounter = global.Class.create(global.Sprite, {
+    createElement: function createElement() {
+      return new Element('div').setStyle({
+        position: 'fixed',
+        zIndex: this.Z_INDEX_BASE,
+        fontSize: '20px',
+        fontWeight: 800
+      });
+    },
 
-  getInitLeft: function() {
-    return 10;
-  },
+    getInitTop: function getInitTop() {
+      return this.clientHeight + 10;
+    },
 
-  update: function(text) {
-    this.elm.update(text);
-    this.remove();
-    this.renderElement();
-  }
-});
+    getInitLeft: function getInitLeft() {
+      return 10;
+    },
+
+    update: function update(text) {
+      this.elm.update(text);
+      this.remove();
+      this.renderElement();
+    }
+  });
+}(window));

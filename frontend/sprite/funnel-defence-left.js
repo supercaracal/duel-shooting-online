@@ -1,37 +1,44 @@
-var FunnelDefenceLeft = Class.create(Funnel, {
+(function f(global) {
+  'use strict';
 
-  iField: null,
+  var g = global;
 
-  initialize: function($super, carrier, iField) {
-    this.iField = iField;
-    $super(carrier);
-    this.setTransformRotate(this.getInitTransformRotate());
-  },
+  g.FunnelDefenceLeft = global.Class.create(global.Funnel, {
+    iField: null,
 
-  getInitTop: function() {
-    return this.carrier.getTop() + (this.isEnemy ? 60 : -30);
-  },
+    initialize: function initialize($super, carrier, iField) {
+      this.iField = iField;
+      $super(carrier);
+      this.setTransformRotate(this.getInitTransformRotate());
+    },
 
-  getInitLeft: function() {
-    return this.carrier.getLeft() - 40;
-  },
+    getInitTop: function getInitTop() {
+      return this.carrier.getTop() + (this.isEnemy ? 60 : -30);
+    },
 
-  getInitTransformRotate: function() {
-    return 135;
-  },
+    getInitLeft: function getInitLeft() {
+      return this.carrier.getLeft() - 40;
+    },
 
-  getColor: function() {
-    return '#FF9900';
-  },
+    getInitTransformRotate: function getInitTransformRotate() {
+      return 135;
+    },
 
-  move: function() {
-    if (this.iField.isActive) {
-      this.setTransformRotate(this.isEnemy ? 270 : 90);
-    } else {
-      var deg = this.getTransformRotate();
-      deg = deg > 360 ? 0 : deg;
-      this.setTransformRotate(++deg);
+    getColor: function getColor() {
+      return '#FF9900';
+    },
+
+    move: function move() {
+      var deg;
+      if (this.iField.isActive) {
+        this.setTransformRotate(this.isEnemy ? 270 : 90);
+      } else {
+        deg = this.getTransformRotate();
+        deg = deg > 360 ? 0 : deg;
+        deg += 1;
+        this.setTransformRotate(deg);
+      }
+      this.setPos({ top: this.getInitTop(), left: this.getInitLeft() });
     }
-    this.setPos({top: this.getInitTop(), left: this.getInitLeft()});
-  }
-});
+  });
+}(window));
