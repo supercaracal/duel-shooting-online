@@ -30,10 +30,10 @@
     },
 
     getInitLeft: function getInitLeft() {
-      return document.viewport.getWidth() ||
-        document.documentElement.clientWidth ||
-        document.body.clientWidth ||
-        document.body.scrollWidth ||
+      return global.document.viewport.getWidth() ||
+        global.document.documentElement.clientWidth ||
+        global.document.body.clientWidth ||
+        global.document.body.scrollWidth ||
         this.clientWidth;
     },
 

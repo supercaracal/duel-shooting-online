@@ -65,7 +65,7 @@
     },
 
     renderElement: function renderElement() {
-      global.$(document.body).insert(this.elm);
+      global.$(global.document.body).insert(this.elm);
     },
 
     getTop: function getTop() {

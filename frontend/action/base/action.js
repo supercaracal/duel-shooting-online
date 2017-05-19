@@ -21,25 +21,25 @@
 
     setEventListener: function setEventListener() {
       if (this.hasTouchEvent) {
-        global.$(document).observe('touchstart', this.handlerTouch.bindAsEventListener(this));
+        global.$(global.document).observe('touchstart', this.handlerTouch.bindAsEventListener(this));
       }
       if (this.hasMousedownEvent) {
-        global.$(document).observe('mousedown', this.handlerMouse.bindAsEventListener(this));
+        global.$(global.document).observe('mousedown', this.handlerMouse.bindAsEventListener(this));
       }
       if (this.hasKeydownEvent) {
-        global.$(document).observe('keydown', this.handler.bindAsEventListener(this));
+        global.$(global.document).observe('keydown', this.handler.bindAsEventListener(this));
       }
     },
 
     stop: function stop() {
       if (this.hasTouchEvent) {
-        global.$(document).stopObserving('touchstart');
+        global.$(global.document).stopObserving('touchstart');
       }
       if (this.hasMousedownEvent) {
-        global.$(document).stopObserving('mousedown');
+        global.$(global.document).stopObserving('mousedown');
       }
       if (this.hasKeydownEvent) {
-        global.$(document).stopObserving('keydown');
+        global.$(global.document).stopObserving('keydown');
       }
     },
 
