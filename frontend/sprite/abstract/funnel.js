@@ -23,13 +23,13 @@
     },
 
     createForShip: function createForShip(color) {
-      var obj = new Element('div').setStyle({
+      var obj = new global.Element('div').setStyle({
         width: '30px',
         height: '30px',
         zIndex: this.Z_INDEX_BASE + 4,
         position: 'fixed'
       });
-      obj.insert(new Element('div').setStyle({
+      obj.insert(new global.Element('div').setStyle({
         width: '6px',
         height: '20px',
         marginLeft: '12px',
@@ -37,7 +37,7 @@
         borderRadius: '2px',
         boxShadow: '0px 0px 10px ' + color
       }));
-      obj.insert(new Element('div').setStyle({
+      obj.insert(new global.Element('div').setStyle({
         width: '20px',
         height: '10px',
         margin: '0px 5px 0px 5px',
@@ -49,13 +49,13 @@
     },
 
     createForEnemy: function createForEnemy(color) {
-      var obj = new Element('div').setStyle({
+      var obj = new global.Element('div').setStyle({
         width: '30px',
         height: '30px',
         zIndex: this.Z_INDEX_BASE + 4,
         position: 'fixed'
       });
-      obj.insert(new Element('div').setStyle({
+      obj.insert(new global.Element('div').setStyle({
         width: '20px',
         height: '10px',
         margin: '0px 5px 0px 5px',
@@ -63,7 +63,7 @@
         borderRadius: '20px',
         boxShadow: '0px 0px 10px ' + color
       }));
-      obj.insert(new Element('div').setStyle({
+      obj.insert(new global.Element('div').setStyle({
         width: '6px',
         height: '20px',
         marginLeft: '12px',

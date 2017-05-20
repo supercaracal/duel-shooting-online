@@ -11,19 +11,19 @@
     handler: function handler(e) {
       if (e.altGraphKey || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
       switch (e.keyCode) {
-        case Event.KEY_RIGHT:
+        case global.Event.KEY_RIGHT:
           this.nextCommand = 'stepRight';
           e.stop();
           break;
-        case Event.KEY_LEFT:
+        case global.Event.KEY_LEFT:
           this.nextCommand = 'stepLeft';
           e.stop();
           break;
-        case Event.KEY_UP:
+        case global.Event.KEY_UP:
           this.nextCommand = 'attack';
           e.stop();
           break;
-        case Event.KEY_DOWN:
+        case global.Event.KEY_DOWN:
           this.nextCommand = 'wait';
           e.stop();
           break;

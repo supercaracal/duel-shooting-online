@@ -14,9 +14,9 @@
 
     checkAudio: function checkAudio() {
       var canPlayMpeg = typeof Audio === 'function' &&
-        Audio.name === 'HTMLAudioElement' &&
-        typeof Audio.prototype.canPlayType === 'function' &&
-        new Audio().canPlayType('audio/mpeg');
+        global.Audio.name === 'HTMLAudioElement' &&
+        typeof global.Audio.prototype.canPlayType === 'function' &&
+        new global.Audio().canPlayType('audio/mpeg');
       return canPlayMpeg === 'probably' || canPlayMpeg === 'maybe';
     },
 
@@ -24,7 +24,7 @@
       if (!this.hasAudioElement) {
         return;
       }
-      Element.addMethods('audio', {
+      global.Element.addMethods('audio', {
         stop: function stop(audio) {
           var a = audio;
           try {
@@ -48,7 +48,7 @@
     createAudio: function createAudio(src) {
       var audio;
       if (this.hasAudioElement) {
-        audio = new Element('audio', { src: src });
+        audio = new global.Element('audio', { src: src });
         if (global.Prototype.Browser.MobileSafari) {
           audio.load();
         }

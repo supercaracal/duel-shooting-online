@@ -27,13 +27,13 @@
 
     createElement: function createElement() {
       var color = this.getColor();
-      var outer = new Element('div').setStyle({
+      var outer = new global.Element('div').setStyle({
         width: '30px',
         height: '30px',
         zIndex: this.Z_INDEX_BASE + 6,
         position: 'fixed'
       });
-      var inner = new Element('div').setStyle({
+      var inner = new global.Element('div').setStyle({
         width: '20px',
         height: '20px',
         margin: '5px',

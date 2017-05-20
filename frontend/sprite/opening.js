@@ -15,7 +15,7 @@
     },
 
     createElement: function createElement() {
-      var background = new Element('div').setStyle({
+      var background = new global.Element('div').setStyle({
         display: 'block',
         position: 'fixed',
         zIndex: this.Z_INDEX_BASE + 100,
@@ -29,26 +29,26 @@
     show: function show() {
       this.title.renderElement();
       this.renderElement();
-      this.timerId = setInterval(this.appear.bind(this), 128);
+      this.timerId = global.setInterval(this.appear.bind(this), 128);
     },
 
     appear: function appear() {
       if (this.titleOpacity >= 1.0) {
-        clearInterval(this.timerId);
+        global.clearInterval(this.timerId);
       }
       this.titleOpacity += 0.1;
       this.title.setOpacity(this.titleOpacity);
     },
 
     hide: function hide() {
-      clearInterval(this.timerId);
+      global.clearInterval(this.timerId);
       this.title.remove();
-      this.timerId = setInterval(this.fade.bind(this), 32);
+      this.timerId = global.setInterval(this.fade.bind(this), 32);
     },
 
     fade: function fade() {
       if (this.backgroundOpacity <= 0.0) {
-        clearInterval(this.timerId);
+        global.clearInterval(this.timerId);
         this.elm.remove();
       }
       this.backgroundOpacity -= 0.1;

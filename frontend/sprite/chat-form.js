@@ -8,14 +8,14 @@
 
     createElement: function createElement() {
       var button;
-      var form = new Element('form', { action: '#', method: 'post' }).setStyle({
+      var form = new global.Element('form', { action: '#', method: 'post' }).setStyle({
         zIndex: this.Z_INDEX_BASE + 2000,
         position: 'fixed',
         backgroundColor: '#EFEFEF'
       });
-      this.textField = new Element('input', { type: 'text', value: '' })
+      this.textField = new global.Element('input', { type: 'text', value: '' })
         .setStyle({ width: '400px' });
-      button = new Element('input', { type: 'submit', value: 'send' });
+      button = new global.Element('input', { type: 'submit', value: 'send' });
       form.insert(this.textField).insert(button);
       return form;
     },

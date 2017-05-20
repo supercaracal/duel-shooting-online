@@ -16,7 +16,7 @@
 
     start: function start() {
       if (this.timerId !== null) return;
-      this.timerId = setInterval(this.routine, this.INTERVAL_WAIT_MSEC);
+      this.timerId = global.setInterval(this.routine, this.INTERVAL_WAIT_MSEC);
     },
 
     pause: function pause() {
@@ -28,7 +28,7 @@
     },
 
     stop: function stop() {
-      clearInterval(this.timerId);
+      global.clearInterval(this.timerId);
       this.timerId = null;
     }
   });

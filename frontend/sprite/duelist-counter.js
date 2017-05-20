@@ -5,7 +5,7 @@
 
   g.DuelistCounter = global.Class.create(global.Sprite, {
     createElement: function createElement() {
-      return new Element('div').setStyle({
+      return new global.Element('div').setStyle({
         position: 'fixed',
         zIndex: this.Z_INDEX_BASE,
         fontSize: '20px',

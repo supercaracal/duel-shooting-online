@@ -26,7 +26,7 @@
     },
 
     createEnemy: function createEnemy(color) {
-      var elm = new Element('div').setStyle({
+      var elm = new global.Element('div').setStyle({
         width: '90px',
         height: '60px',
         zIndex: this.Z_INDEX_BASE + 10,
@@ -34,7 +34,7 @@
         top: '0px',
         left: '0px'
       });
-      elm.insert(new Element('div').setStyle({
+      elm.insert(new global.Element('div').setStyle({
         width: '90px',
         height: '30px',
         backgroundColor: color,
@@ -44,7 +44,7 @@
         fontWeight: 800,
         fontSize: '20px'
       }).update(this.hitPoint));
-      elm.insert(new Element('div').setStyle({
+      elm.insert(new global.Element('div').setStyle({
         width: '30px',
         height: '30px',
         backgroundColor: color,
@@ -56,7 +56,7 @@
     },
 
     createShip: function createShip(color) {
-      var elm = new Element('div').setStyle({
+      var elm = new global.Element('div').setStyle({
         width: '90px',
         height: '60px',
         zIndex: this.Z_INDEX_BASE + 10,
@@ -64,7 +64,7 @@
         top: (this.clientHeight - 60) + 'px',
         left: (this.clientWidth - 90) + 'px'
       });
-      elm.insert(new Element('div').setStyle({
+      elm.insert(new global.Element('div').setStyle({
         width: '30px',
         height: '30px',
         backgroundColor: color,
@@ -72,7 +72,7 @@
         boxShadow: '0px 0px 10px ' + color,
         marginLeft: '30px'
       }));
-      elm.insert(new Element('div').setStyle({
+      elm.insert(new global.Element('div').setStyle({
         width: '90px',
         height: '30px',
         backgroundColor: color,

@@ -15,7 +15,7 @@
     },
 
     createElement: function createElement() {
-      return new Element('span').setStyle({
+      return new global.Element('span').setStyle({
         color: this.getColor(),
         fontSize: this.getSeed() + 8 + 'px',
         fontWeight: 'bolder',

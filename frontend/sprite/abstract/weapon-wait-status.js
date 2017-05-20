@@ -14,7 +14,7 @@
 
     createElement: function createElement() {
       var color = this.getColor();
-      return new Element('div').setStyle({
+      return new global.Element('div').setStyle({
         width: '0px',
         height: '6px',
         backgroundColor: color,

@@ -5,7 +5,7 @@
 
   g.Background = global.Class.create(global.Sprite, {
     createElement: function createElement() {
-      return new Element('div').setStyle({
+      return new global.Element('div').setStyle({
         display: 'block',
         position: 'fixed',
         zIndex: this.Z_INDEX_BASE,

@@ -31,7 +31,7 @@
     },
 
     createElement: function createElement() {
-      return new Element('div');
+      return new global.Element('div');
     },
 
     getInitTop: function getInitTop() {

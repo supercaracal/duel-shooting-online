@@ -24,7 +24,7 @@
 
     createElement: function createElement() {
       var color = '#FFFFFF';
-      return new Element('div')
+      return new global.Element('div')
         .setStyle({
           width: '100px',
           height: '20px',

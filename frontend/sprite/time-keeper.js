@@ -13,7 +13,7 @@
     },
 
     createElement: function createElement() {
-      return new Element('div').setStyle({
+      return new global.Element('div').setStyle({
         zIndex: this.Z_INDEX_BASE + 20,
         position: 'fixed',
         height: '30px',
@@ -40,11 +40,11 @@
 
     start: function start() {
       if (this.timerId !== null) return;
-      this.timerId = setInterval(this.increment.bind(this), 1000);
+      this.timerId = global.setInterval(this.increment.bind(this), 1000);
     },
 
     stop: function stop() {
-      clearInterval(this.timerId);
+      global.clearInterval(this.timerId);
       this.timerId = null;
     }
   });

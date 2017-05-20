@@ -7,7 +7,7 @@
     timerId: null,
 
     createElement: function createElement() {
-      return new Element('div').setStyle({
+      return new global.Element('div').setStyle({
         display: 'none',
         position: 'fixed',
         zIndex: this.Z_INDEX_BASE + 101,
@@ -28,7 +28,7 @@
     },
 
     update: function update(text, color) {
-      if (this.timerId) clearTimeout(this.timerId);
+      if (this.timerId) global.clearTimeout(this.timerId);
       this.elm.update(text);
       this.elm.setStyle({ color: color });
       this.setupPosition();

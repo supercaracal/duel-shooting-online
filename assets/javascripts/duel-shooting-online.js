@@ -7522,9 +7522,9 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     sprite: null,
 
     initialize: function initialize() {
-      this.hasTouchEvent = typeof new Element('div', { ontouchstart: 'return;' }).ontouchstart === 'function';
-      this.hasMousedownEvent = typeof new Element('div', { onmousedown: 'return;' }).onmousedown === 'function';
-      this.hasKeydownEvent = typeof new Element('div', { onkeydown: 'return;' }).onkeydown === 'function';
+      this.hasTouchEvent = typeof new global.Element('div', { ontouchstart: 'return;' }).ontouchstart === 'function';
+      this.hasMousedownEvent = typeof new global.Element('div', { onmousedown: 'return;' }).onmousedown === 'function';
+      this.hasKeydownEvent = typeof new global.Element('div', { onkeydown: 'return;' }).onkeydown === 'function';
       this.sprite = new global.Sprite();
       this.setEventListener();
     },
@@ -7913,7 +7913,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     },
 
     createElement: function createElement() {
-      return new Element('div');
+      return new global.Element('div');
     },
 
     getInitTop: function getInitTop() {
@@ -8029,13 +8029,13 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
     createElement: function createElement() {
       var color = this.getColor();
-      var outer = new Element('div').setStyle({
+      var outer = new global.Element('div').setStyle({
         width: '30px',
         height: '30px',
         zIndex: this.Z_INDEX_BASE + 6,
         position: 'fixed'
       });
-      var inner = new Element('div').setStyle({
+      var inner = new global.Element('div').setStyle({
         width: '20px',
         height: '20px',
         margin: '5px',
@@ -8076,13 +8076,13 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     },
 
     createForShip: function createForShip(color) {
-      var obj = new Element('div').setStyle({
+      var obj = new global.Element('div').setStyle({
         width: '30px',
         height: '30px',
         zIndex: this.Z_INDEX_BASE + 4,
         position: 'fixed'
       });
-      obj.insert(new Element('div').setStyle({
+      obj.insert(new global.Element('div').setStyle({
         width: '6px',
         height: '20px',
         marginLeft: '12px',
@@ -8090,7 +8090,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
         borderRadius: '2px',
         boxShadow: '0px 0px 10px ' + color
       }));
-      obj.insert(new Element('div').setStyle({
+      obj.insert(new global.Element('div').setStyle({
         width: '20px',
         height: '10px',
         margin: '0px 5px 0px 5px',
@@ -8102,13 +8102,13 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     },
 
     createForEnemy: function createForEnemy(color) {
-      var obj = new Element('div').setStyle({
+      var obj = new global.Element('div').setStyle({
         width: '30px',
         height: '30px',
         zIndex: this.Z_INDEX_BASE + 4,
         position: 'fixed'
       });
-      obj.insert(new Element('div').setStyle({
+      obj.insert(new global.Element('div').setStyle({
         width: '20px',
         height: '10px',
         margin: '0px 5px 0px 5px',
@@ -8116,7 +8116,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
         borderRadius: '20px',
         boxShadow: '0px 0px 10px ' + color
       }));
-      obj.insert(new Element('div').setStyle({
+      obj.insert(new global.Element('div').setStyle({
         width: '6px',
         height: '20px',
         marginLeft: '12px',
@@ -8156,7 +8156,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     },
 
     createEnemy: function createEnemy(color) {
-      var elm = new Element('div').setStyle({
+      var elm = new global.Element('div').setStyle({
         width: '90px',
         height: '60px',
         zIndex: this.Z_INDEX_BASE + 10,
@@ -8164,7 +8164,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
         top: '0px',
         left: '0px'
       });
-      elm.insert(new Element('div').setStyle({
+      elm.insert(new global.Element('div').setStyle({
         width: '90px',
         height: '30px',
         backgroundColor: color,
@@ -8174,7 +8174,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
         fontWeight: 800,
         fontSize: '20px'
       }).update(this.hitPoint));
-      elm.insert(new Element('div').setStyle({
+      elm.insert(new global.Element('div').setStyle({
         width: '30px',
         height: '30px',
         backgroundColor: color,
@@ -8186,7 +8186,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     },
 
     createShip: function createShip(color) {
-      var elm = new Element('div').setStyle({
+      var elm = new global.Element('div').setStyle({
         width: '90px',
         height: '60px',
         zIndex: this.Z_INDEX_BASE + 10,
@@ -8194,7 +8194,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
         top: (this.clientHeight - 60) + 'px',
         left: (this.clientWidth - 90) + 'px'
       });
-      elm.insert(new Element('div').setStyle({
+      elm.insert(new global.Element('div').setStyle({
         width: '30px',
         height: '30px',
         backgroundColor: color,
@@ -8202,7 +8202,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
         boxShadow: '0px 0px 10px ' + color,
         marginLeft: '30px'
       }));
-      elm.insert(new Element('div').setStyle({
+      elm.insert(new global.Element('div').setStyle({
         width: '90px',
         height: '30px',
         backgroundColor: color,
@@ -8348,7 +8348,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
     createElement: function createElement() {
       var color = this.getColor();
-      return new Element('div').setStyle({
+      return new global.Element('div').setStyle({
         width: '0px',
         height: '6px',
         backgroundColor: color,
@@ -8399,15 +8399,15 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     handler: function handler(e) {
       if (e.altGraphKey || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
       switch (e.keyCode) {
-        case Event.KEY_RIGHT:
+        case global.Event.KEY_RIGHT:
           this.nextCommand = 'stepRight';
           e.stop();
           break;
-        case Event.KEY_LEFT:
+        case global.Event.KEY_LEFT:
           this.nextCommand = 'stepLeft';
           e.stop();
           break;
-        case Event.KEY_UP:
+        case global.Event.KEY_UP:
           this.nextCommand = 'attack';
           e.stop();
           break;
@@ -8498,15 +8498,15 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     handler: function handler(e) {
       if (e.altGraphKey || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
       switch (e.keyCode) {
-        case Event.KEY_RIGHT:
+        case global.Event.KEY_RIGHT:
           this.nextCommand = 'stepRight';
           e.stop();
           break;
-        case Event.KEY_LEFT:
+        case global.Event.KEY_LEFT:
           this.nextCommand = 'stepLeft';
           e.stop();
           break;
-        case Event.KEY_UP:
+        case global.Event.KEY_UP:
           this.nextCommand = 'attack';
           e.stop();
           break;
@@ -8576,19 +8576,19 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     handler: function handler(e) {
       if (e.altGraphKey || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
       switch (e.keyCode) {
-        case Event.KEY_RIGHT:
+        case global.Event.KEY_RIGHT:
           this.nextCommand = 'stepRight';
           e.stop();
           break;
-        case Event.KEY_LEFT:
+        case global.Event.KEY_LEFT:
           this.nextCommand = 'stepLeft';
           e.stop();
           break;
-        case Event.KEY_UP:
+        case global.Event.KEY_UP:
           this.nextCommand = 'attack';
           e.stop();
           break;
-        case Event.KEY_DOWN:
+        case global.Event.KEY_DOWN:
           this.nextCommand = 'wait';
           e.stop();
           break;
@@ -9221,7 +9221,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
     start: function start() {
       if (this.timerId !== null) return;
-      this.timerId = setInterval(this.routine, this.INTERVAL_WAIT_MSEC);
+      this.timerId = global.setInterval(this.routine, this.INTERVAL_WAIT_MSEC);
     },
 
     pause: function pause() {
@@ -9233,7 +9233,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     },
 
     stop: function stop() {
-      clearInterval(this.timerId);
+      global.clearInterval(this.timerId);
       this.timerId = null;
     }
   });
@@ -9254,9 +9254,9 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
     checkAudio: function checkAudio() {
       var canPlayMpeg = typeof Audio === 'function' &&
-        Audio.name === 'HTMLAudioElement' &&
-        typeof Audio.prototype.canPlayType === 'function' &&
-        new Audio().canPlayType('audio/mpeg');
+        global.Audio.name === 'HTMLAudioElement' &&
+        typeof global.Audio.prototype.canPlayType === 'function' &&
+        new global.Audio().canPlayType('audio/mpeg');
       return canPlayMpeg === 'probably' || canPlayMpeg === 'maybe';
     },
 
@@ -9264,7 +9264,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
       if (!this.hasAudioElement) {
         return;
       }
-      Element.addMethods('audio', {
+      global.Element.addMethods('audio', {
         stop: function stop(audio) {
           var a = audio;
           try {
@@ -9288,7 +9288,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     createAudio: function createAudio(src) {
       var audio;
       if (this.hasAudioElement) {
-        audio = new Element('audio', { src: src });
+        audio = new global.Element('audio', { src: src });
         if (global.Prototype.Browser.MobileSafari) {
           audio.load();
         }
@@ -9305,7 +9305,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
   g.Background = global.Class.create(global.Sprite, {
     createElement: function createElement() {
-      return new Element('div').setStyle({
+      return new global.Element('div').setStyle({
         display: 'block',
         position: 'fixed',
         zIndex: this.Z_INDEX_BASE,
@@ -9446,14 +9446,14 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
     createElement: function createElement() {
       var button;
-      var form = new Element('form', { action: '#', method: 'post' }).setStyle({
+      var form = new global.Element('form', { action: '#', method: 'post' }).setStyle({
         zIndex: this.Z_INDEX_BASE + 2000,
         position: 'fixed',
         backgroundColor: '#EFEFEF'
       });
-      this.textField = new Element('input', { type: 'text', value: '' })
+      this.textField = new global.Element('input', { type: 'text', value: '' })
         .setStyle({ width: '400px' });
-      button = new Element('input', { type: 'submit', value: 'send' });
+      button = new global.Element('input', { type: 'submit', value: 'send' });
       form.insert(this.textField).insert(button);
       return form;
     },
@@ -9480,7 +9480,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     timerId: null,
 
     createElement: function createElement() {
-      return new Element('div').setStyle({
+      return new global.Element('div').setStyle({
         display: 'none',
         position: 'fixed',
         zIndex: this.Z_INDEX_BASE + 101,
@@ -9501,7 +9501,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     },
 
     update: function update(text, color) {
-      if (this.timerId) clearTimeout(this.timerId);
+      if (this.timerId) global.clearTimeout(this.timerId);
       this.elm.update(text);
       this.elm.setStyle({ color: color });
       this.setupPosition();
@@ -9521,7 +9521,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
   g.DuelistCounter = global.Class.create(global.Sprite, {
     createElement: function createElement() {
-      return new Element('div').setStyle({
+      return new global.Element('div').setStyle({
         position: 'fixed',
         zIndex: this.Z_INDEX_BASE,
         fontSize: '20px',
@@ -9551,10 +9551,10 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
   g.ForkMeOnGitHub = global.Class.create(global.Sprite, {
     createElement: function createElement() {
-      return new Element('img', {
+      return new global.Element('img', {
         src: 'https://s3.amazonaws.com/github/ribbons/forkme_left_white_ffffff.png',
         alt: 'Fork me on GitHub'
-      }).setStyle({ border: 'none' }).wrap(new Element('a', {
+      }).setStyle({ border: 'none' }).wrap(new global.Element('a', {
         href: 'https://github.com/supercaracal/duelshooting_online'
       })).setStyle({
         position: 'fixed',
@@ -9790,7 +9790,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
     createElement: function createElement() {
       var color = '#FFFFFF';
-      return new Element('div')
+      return new global.Element('div')
         .setStyle({
           width: '100px',
           height: '20px',
@@ -9909,7 +9909,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     },
 
     createElement: function createElement() {
-      return new Element('span').setStyle({
+      return new global.Element('span').setStyle({
         color: this.getColor(),
         fontSize: this.getSeed() + 8 + 'px',
         fontWeight: 'bolder',
@@ -10020,7 +10020,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     },
 
     createElement: function createElement() {
-      var background = new Element('div').setStyle({
+      var background = new global.Element('div').setStyle({
         display: 'block',
         position: 'fixed',
         zIndex: this.Z_INDEX_BASE + 100,
@@ -10034,26 +10034,26 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     show: function show() {
       this.title.renderElement();
       this.renderElement();
-      this.timerId = setInterval(this.appear.bind(this), 128);
+      this.timerId = global.setInterval(this.appear.bind(this), 128);
     },
 
     appear: function appear() {
       if (this.titleOpacity >= 1.0) {
-        clearInterval(this.timerId);
+        global.clearInterval(this.timerId);
       }
       this.titleOpacity += 0.1;
       this.title.setOpacity(this.titleOpacity);
     },
 
     hide: function hide() {
-      clearInterval(this.timerId);
+      global.clearInterval(this.timerId);
       this.title.remove();
-      this.timerId = setInterval(this.fade.bind(this), 32);
+      this.timerId = global.setInterval(this.fade.bind(this), 32);
     },
 
     fade: function fade() {
       if (this.backgroundOpacity <= 0.0) {
-        clearInterval(this.timerId);
+        global.clearInterval(this.timerId);
         this.elm.remove();
       }
       this.backgroundOpacity -= 0.1;
@@ -10233,7 +10233,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     },
 
     createElement: function createElement() {
-      return new Element('div').setStyle({
+      return new global.Element('div').setStyle({
         zIndex: this.Z_INDEX_BASE + 20,
         position: 'fixed',
         height: '30px',
@@ -10260,11 +10260,11 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
     start: function start() {
       if (this.timerId !== null) return;
-      this.timerId = setInterval(this.increment.bind(this), 1000);
+      this.timerId = global.setInterval(this.increment.bind(this), 1000);
     },
 
     stop: function stop() {
-      clearInterval(this.timerId);
+      global.clearInterval(this.timerId);
       this.timerId = null;
     }
   });
@@ -10278,7 +10278,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
     TITLE_TEXT: 'Duel Shooting',
 
     createElement: function createElement() {
-      return new Element('div').setStyle({
+      return new global.Element('div').setStyle({
         display: 'none',
         position: 'fixed',
         zIndex: this.Z_INDEX_BASE + 101,

@@ -12,9 +12,9 @@
     sprite: null,
 
     initialize: function initialize() {
-      this.hasTouchEvent = typeof new Element('div', { ontouchstart: 'return;' }).ontouchstart === 'function';
-      this.hasMousedownEvent = typeof new Element('div', { onmousedown: 'return;' }).onmousedown === 'function';
-      this.hasKeydownEvent = typeof new Element('div', { onkeydown: 'return;' }).onkeydown === 'function';
+      this.hasTouchEvent = typeof new global.Element('div', { ontouchstart: 'return;' }).ontouchstart === 'function';
+      this.hasMousedownEvent = typeof new global.Element('div', { onmousedown: 'return;' }).onmousedown === 'function';
+      this.hasKeydownEvent = typeof new global.Element('div', { onkeydown: 'return;' }).onkeydown === 'function';
       this.sprite = new global.Sprite();
       this.setEventListener();
     },
