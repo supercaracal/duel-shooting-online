@@ -9254,7 +9254,7 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
     checkAudio: function checkAudio() {
       var canPlayMpeg = typeof Audio === 'function' &&
-        global.Audio.name === 'HTMLAudioElement' &&
+        global.Audio.name === 'Audio' &&
         typeof global.Audio.prototype.canPlayType === 'function' &&
         new global.Audio().canPlayType('audio/mpeg');
       return canPlayMpeg === 'probably' || canPlayMpeg === 'maybe';
