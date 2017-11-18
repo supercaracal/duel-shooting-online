@@ -23,8 +23,11 @@
       this.cmds.ship = shipBuilder.buildCommand(this.ships.ship, this.weapons.ship);
       this.cmds.enemy = enemyBuilder.buildCommand(this.ships.enemy, this.weapons.enemy);
       this.actions.ship = shipBuilder.buildAction();
-      this.actions.enemy = enemyBuilder.buildAI(this.ships.enemy,
-        this.ships.ship, this.weapons.ship);
+      this.actions.enemy = enemyBuilder.buildAI(
+        this.ships.enemy,
+        this.ships.ship,
+        this.weapons.ship
+      );
     },
 
     renderInitialElements: function renderInitialElements() {

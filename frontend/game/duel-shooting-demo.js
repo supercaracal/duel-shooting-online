@@ -22,10 +22,16 @@
       this.weapons.enemy = enemyBuilder.buildWeapon(this.ships.enemy, this.ships.ship);
       this.cmds.ship = shipBuilder.buildCommand(this.ships.ship, this.weapons.ship);
       this.cmds.enemy = enemyBuilder.buildCommand(this.ships.enemy, this.weapons.enemy);
-      this.actions.ship = shipBuilder.buildAI(this.ships.ship,
-        this.ships.enemy, this.weapons.enemy);
-      this.actions.enemy = enemyBuilder.buildAI(this.ships.enemy,
-        this.ships.ship, this.weapons.ship);
+      this.actions.ship = shipBuilder.buildAI(
+        this.ships.ship,
+        this.ships.enemy,
+        this.weapons.enemy
+      );
+      this.actions.enemy = enemyBuilder.buildAI(
+        this.ships.enemy,
+        this.ships.ship,
+        this.weapons.ship
+      );
     },
 
     renderInitialElements: function renderInitialElements() {
